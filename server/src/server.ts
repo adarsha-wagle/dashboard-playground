@@ -72,6 +72,7 @@ class Server {
       AuthMiddleware.authenticateToken,
       this.invoiceController.deleteInvoice
     );
+    this.app.get("/health", (req, res) => res.send("OK"));
   }
 
   public start(): void {

@@ -1,31 +1,93 @@
-interface IUser {
-  username: string
-  avatar: string
-  id: string
-}
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import api from '@/lib/axios-instance'
+import { type IApiSuccessResponse } from '@/types/api'
+import { type IAuthRespose, type IUser } from './auth-type'
 
 type TAccessToken = string | null
 
-import { create } from 'zustand'
+type TAuthActions = {
+  setUser: (user: IUser | null) => void
+  setIsAuthLoading: (isAuthLoading: boolean) => void
+  setIsAuthenticated: (isAuthenticated: boolean) => void
+  setAccessToken: (token: TAccessToken | null) => void
+  resetAuth: (param?: Partial<TAuthState>) => void
+  hydrateAuth: () => Promise<boolean>
+  setIsPreviousLoggedIn: (status: boolean) => void
+}
 
 type TAuthState = {
   isAuthLoading: boolean
-  setIsAuthLoading: (isAuthLoading: boolean) => void
   user: IUser | null
-  setUser: (user: IUser | null) => void
   isAuthenticated: boolean
-  setIsAuthenticated: (isAuthenticated: boolean) => void
-  setAccessToken: (token: TAccessToken | null) => void
   accessToken: TAccessToken | null
+  isAuthError: boolean
+  isPreviousLoggedIn: boolean
 }
 
-export const useAuthStore = create<TAuthState>((set) => ({
+type TAuthStore = TAuthState & TAuthActions
+
+const initAuthState: TAuthState = {
   user: null,
-  setUser: (user: IUser | null) => set({ user }),
   isAuthenticated: false,
-  setIsAuthenticated: (isAuthenticated: boolean) => set({ isAuthenticated }),
-  setAccessToken: (token: TAccessToken | null) => set({ accessToken: token }),
   accessToken: null,
   isAuthLoading: true,
-  setIsAuthLoading: (isAuthLoading: boolean) => set({ isAuthLoading }),
-}))
+  isAuthError: false,
+  isPreviousLoggedIn: false,
+}
+
+export const useAuthStore = create<TAuthStore>()(
+  persist(
+    (set) => ({
+      ...initAuthState,
+
+      setUser: (user) => set({ user }),
+      setIsAuthLoading: (isAuthLoading) => set({ isAuthLoading }),
+      setIsAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
+      setAccessToken: (token) => set({ accessToken: token }),
+      setIsPreviousLoggedIn: (status) => set({ isPreviousLoggedIn: status }),
+
+      resetAuth: (param?: Partial<TAuthState>) =>
+        set({ ...initAuthState, ...(param || {}) }),
+
+      hydrateAuth: async () => {
+        try {
+          const result = await api.post<
+            IApiSuccessResponse<Omit<IAuthRespose, 'user'>>
+          >('/refresh', {})
+
+          const { accessToken } = result.data.data
+
+          set({
+            accessToken,
+            isAuthenticated: true,
+            isAuthLoading: false,
+            isAuthError: false,
+            isPreviousLoggedIn: true,
+          })
+
+          return true
+        } catch {
+          set({
+            ...initAuthState,
+            isAuthLoading: false,
+            isAuthError: true,
+          })
+          return false
+        }
+      },
+    }),
+    {
+      name: 'auth-storage',
+      partialize: (state) => ({
+        user: state.user,
+        isPreviousLoggedIn: state.isPreviousLoggedIn,
+      }),
+    },
+  ),
+)
+
+export const getAccessToken = () => useAuthStore.getState().accessToken
+export const resetAuth = (param?: Partial<TAuthState>) =>
+  useAuthStore.getState().resetAuth(param)
+export const hydrateAuth = () => useAuthStore.getState().hydrateAuth()

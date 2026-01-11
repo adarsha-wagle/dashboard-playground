@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { InvoiceService } from "../../features/invoice/invoice-service";
 import { ResponseFormatter } from "../../utils/responseFormatter";
-import { PaginationQuery } from "../../types/index";
+import { PaginationQuery, ESuccessCode, EErrorCode } from "../../types/index";
 
 export class InvoiceController {
   constructor(private invoiceService: InvoiceService) {}
@@ -25,15 +25,20 @@ export class InvoiceController {
     };
 
     const { invoices, total } = this.invoiceService.getInvoices(query);
-    const totalPages = Math.ceil(total / (query.limit || 10));
+    const paginatedResult = ResponseFormatter.paginated(
+      invoices,
+      query.page || 1,
+      query.limit || 10,
+      total
+    );
 
     res.json(
-      ResponseFormatter.success("Invoices retrieved successfully", invoices, {
-        page: query.page,
-        limit: query.limit,
-        total,
-        totalPages,
-      })
+      ResponseFormatter.success(
+        200,
+        ESuccessCode.FETCHED,
+        "Invoices retrieved successfully",
+        paginatedResult
+      )
     );
   };
 
@@ -42,12 +47,25 @@ export class InvoiceController {
     const invoice = this.invoiceService.getInvoiceById(id);
 
     if (!invoice) {
-      res.status(404).json(ResponseFormatter.error("Invoice not found"));
+      res
+        .status(404)
+        .json(
+          ResponseFormatter.error(
+            404,
+            EErrorCode.NOT_FOUND,
+            "Invoice not found"
+          )
+        );
       return;
     }
 
     res.json(
-      ResponseFormatter.success("Invoice retrieved successfully", invoice)
+      ResponseFormatter.success(
+        200,
+        ESuccessCode.FETCHED,
+        "Invoice retrieved successfully",
+        invoice
+      )
     );
   };
 
@@ -56,15 +74,39 @@ export class InvoiceController {
 
     // Validation
     if (!customer) {
-      res.status(400).json(ResponseFormatter.error("Customer is required"));
+      res
+        .status(400)
+        .json(
+          ResponseFormatter.error(
+            400,
+            EErrorCode.VALIDATION,
+            "Customer is required"
+          )
+        );
       return;
     }
     if (!date) {
-      res.status(400).json(ResponseFormatter.error("Invoice date is required"));
+      res
+        .status(400)
+        .json(
+          ResponseFormatter.error(
+            400,
+            EErrorCode.VALIDATION,
+            "Invoice date is required"
+          )
+        );
       return;
     }
     if (!dueDate) {
-      res.status(400).json(ResponseFormatter.error("Due date is required"));
+      res
+        .status(400)
+        .json(
+          ResponseFormatter.error(
+            400,
+            EErrorCode.VALIDATION,
+            "Due date is required"
+          )
+        );
       return;
     }
 
@@ -72,11 +114,27 @@ export class InvoiceController {
     const dueObj = new Date(dueDate);
 
     if (isNaN(dateObj.getTime())) {
-      res.status(400).json(ResponseFormatter.error("Invalid date format"));
+      res
+        .status(400)
+        .json(
+          ResponseFormatter.error(
+            400,
+            EErrorCode.VALIDATION,
+            "Invalid date format"
+          )
+        );
       return;
     }
     if (isNaN(dueObj.getTime())) {
-      res.status(400).json(ResponseFormatter.error("Invalid due date format"));
+      res
+        .status(400)
+        .json(
+          ResponseFormatter.error(
+            400,
+            EErrorCode.VALIDATION,
+            "Invalid due date format"
+          )
+        );
       return;
     }
     if (dueObj < dateObj) {
@@ -84,6 +142,8 @@ export class InvoiceController {
         .status(400)
         .json(
           ResponseFormatter.error(
+            400,
+            EErrorCode.VALIDATION,
             "Due date cannot be earlier than invoice date"
           )
         );
@@ -91,23 +151,53 @@ export class InvoiceController {
     }
 
     if (!items || !Array.isArray(items) || items.length === 0) {
-      res.status(400).json(ResponseFormatter.error("Items are required"));
+      res
+        .status(400)
+        .json(
+          ResponseFormatter.error(
+            400,
+            EErrorCode.VALIDATION,
+            "Items are required"
+          )
+        );
       return;
     }
 
     for (const item of items) {
       if (!item.item || typeof item.item !== "string") {
-        res.status(400).json(ResponseFormatter.error("Item name is required"));
+        res
+          .status(400)
+          .json(
+            ResponseFormatter.error(
+              400,
+              EErrorCode.VALIDATION,
+              "Item name is required"
+            )
+          );
         return;
       }
       if (!item.qty || item.qty <= 0) {
         res
           .status(400)
-          .json(ResponseFormatter.error("Item quantity must be > 0"));
+          .json(
+            ResponseFormatter.error(
+              400,
+              EErrorCode.VALIDATION,
+              "Item quantity must be > 0"
+            )
+          );
         return;
       }
       if (!item.price || item.price <= 0) {
-        res.status(400).json(ResponseFormatter.error("Item price must be > 0"));
+        res
+          .status(400)
+          .json(
+            ResponseFormatter.error(
+              400,
+              EErrorCode.VALIDATION,
+              "Item price must be > 0"
+            )
+          );
         return;
       }
     }
@@ -124,7 +214,12 @@ export class InvoiceController {
     res
       .status(201)
       .json(
-        ResponseFormatter.success("Invoice created successfully", newInvoice)
+        ResponseFormatter.success(
+          201,
+          ESuccessCode.CREATED,
+          "Invoice created successfully",
+          newInvoice
+        )
       );
   };
 
@@ -134,11 +229,27 @@ export class InvoiceController {
 
     // Date validation if provided
     if (updates.date && isNaN(new Date(updates.date).getTime())) {
-      res.status(400).json(ResponseFormatter.error("Invalid date format"));
+      res
+        .status(400)
+        .json(
+          ResponseFormatter.error(
+            400,
+            EErrorCode.VALIDATION,
+            "Invalid date format"
+          )
+        );
       return;
     }
     if (updates.dueDate && isNaN(new Date(updates.dueDate).getTime())) {
-      res.status(400).json(ResponseFormatter.error("Invalid due date format"));
+      res
+        .status(400)
+        .json(
+          ResponseFormatter.error(
+            400,
+            EErrorCode.VALIDATION,
+            "Invalid due date format"
+          )
+        );
       return;
     }
 
@@ -147,7 +258,13 @@ export class InvoiceController {
       if (!Array.isArray(updates.items) || updates.items.length === 0) {
         res
           .status(400)
-          .json(ResponseFormatter.error("Items must be a non-empty array"));
+          .json(
+            ResponseFormatter.error(
+              400,
+              EErrorCode.VALIDATION,
+              "Items must be a non-empty array"
+            )
+          );
         return;
       }
       for (const item of updates.items) {
@@ -156,6 +273,8 @@ export class InvoiceController {
             .status(400)
             .json(
               ResponseFormatter.error(
+                400,
+                EErrorCode.VALIDATION,
                 "Each item must have item, qty, and price"
               )
             );
@@ -166,12 +285,25 @@ export class InvoiceController {
 
     const updatedInvoice = this.invoiceService.updateInvoice(id, updates);
     if (!updatedInvoice) {
-      res.status(404).json(ResponseFormatter.error("Invoice not found"));
+      res
+        .status(404)
+        .json(
+          ResponseFormatter.error(
+            404,
+            EErrorCode.NOT_FOUND,
+            "Invoice not found"
+          )
+        );
       return;
     }
 
     res.json(
-      ResponseFormatter.success("Invoice updated successfully", updatedInvoice)
+      ResponseFormatter.success(
+        200,
+        ESuccessCode.UPDATED,
+        "Invoice updated successfully",
+        updatedInvoice
+      )
     );
   };
 
@@ -180,10 +312,25 @@ export class InvoiceController {
     const deleted = this.invoiceService.deleteInvoice(id);
 
     if (!deleted) {
-      res.status(404).json(ResponseFormatter.error("Invoice not found"));
+      res
+        .status(404)
+        .json(
+          ResponseFormatter.error(
+            404,
+            EErrorCode.NOT_FOUND,
+            "Invoice not found"
+          )
+        );
       return;
     }
 
-    res.json(ResponseFormatter.success("Invoice deleted successfully"));
+    res.json(
+      ResponseFormatter.success(
+        200,
+        ESuccessCode.DELETED,
+        "Invoice deleted successfully",
+        null
+      )
+    );
   };
 }

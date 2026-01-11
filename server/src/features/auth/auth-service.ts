@@ -12,6 +12,7 @@ export class AuthService {
     };
     return jwt.sign(user, CONFIG.ACCESS_TOKEN_SECRET, options);
   }
+
   generateRefreshToken(user: UserPayload): string {
     const options: SignOptions = {
       expiresIn: CONFIG.REFRESH_TOKEN_EXPIRY,

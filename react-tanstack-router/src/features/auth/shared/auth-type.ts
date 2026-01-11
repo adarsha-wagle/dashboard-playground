@@ -25,17 +25,8 @@ export interface IUser {
   id: string
   username: string
 }
-export interface ILoginResponse {
-  message: string
-  accessToken: string
-  refreshToken: string
-}
 
-export interface IRegisterResponse {
-  message: string
+export interface IAuthRespose {
+  accessToken: string
   user: IUser
-}
-
-export interface IRefreshResponse {
-  accessToken: string
 }

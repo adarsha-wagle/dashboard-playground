@@ -4,13 +4,14 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from 'axios'
 import { type IApiErrorResponse, type IApiSuccessResponse } from '@/types/api'
-import { useAuthStore } from '@/features/auth/shared/use-auth-store'
+import {
+  getAccessToken,
+  resetAuth,
+  useAuthStore,
+} from '@/features/auth/shared/use-auth-store'
 import { CONFIG } from '@/config/constant'
+import type { IAuthRespose } from '@/features/auth/shared/auth-type'
 
-// Auth types
-export interface IAuthToken {
-  accessToken: string
-}
 // Create axios instance
 const api = axios.create({
   baseURL: CONFIG.API_URL,
@@ -21,10 +22,10 @@ const api = axios.create({
   },
 })
 
-// Request interceptor
+// Request interceptor attach access token
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const { accessToken } = useAuthStore.getState()
+    const accessToken = getAccessToken()
 
     if (accessToken && config.headers) {
       config.headers.Authorization = `Bearer ${accessToken}`
@@ -42,32 +43,47 @@ api.interceptors.response.use(
       _retry?: boolean
     }
 
+    // Avoid refreshing the token if the request is for login or register endpoints
+    const isAuthEndpoint =
+      originalRequest.url?.includes('/login') ||
+      originalRequest.url?.includes('/register') ||
+      originalRequest.url?.includes('/refresh')
+
     // Handle token refresh for 401 errors
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !isAuthEndpoint
+    ) {
       originalRequest._retry = true
 
       try {
-        const response = await axios.post<IApiSuccessResponse<IAuthToken>>(
-          `${CONFIG.API_URL}/auth/refresh`,
-          {},
-          { withCredentials: true },
-        )
+        const response = await axios.post<
+          IApiSuccessResponse<Omit<IAuthRespose, 'user'>>
+        >(`${CONFIG.API_URL}/refresh`, {}, { withCredentials: true })
 
         const { accessToken: newAccessToken } = response.data.data
-        useAuthStore.getState().setAccessToken(newAccessToken)
-        useAuthStore.getState().setIsAuthenticated(true)
+
+        useAuthStore.getState().resetAuth({
+          accessToken: newAccessToken,
+          isAuthenticated: true,
+          isAuthError: false,
+          isAuthLoading: false,
+          isPreviousLoggedIn: true,
+        })
 
         if (originalRequest.headers) {
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
         }
         return api(originalRequest)
       } catch (refreshError) {
-        useAuthStore.getState().setAccessToken(null)
-        useAuthStore.getState().setIsAuthenticated(false)
-        useAuthStore.getState().setUser(null)
-        // if (typeof window !== "undefined") {
-        //   window.location.href = "/auth/login";
-        // }
+        console.error('Refresh Error', refreshError)
+        resetAuth({
+          isAuthError: true,
+          isAuthLoading: false,
+          isPreviousLoggedIn: false,
+        })
+        window.location.href = '/auth/login'
         return Promise.reject(refreshError)
       }
     }

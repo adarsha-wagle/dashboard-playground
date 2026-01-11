@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AuthService } from "../../features/auth/auth-service";
 import { ResponseFormatter } from "../../utils/responseFormatter";
+import { EErrorCode, ESuccessCode } from "../../types";
 
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -11,15 +12,28 @@ export class AuthController {
     if (!username || !password) {
       res
         .status(400)
-        .json(ResponseFormatter.error("Username and password required"));
+        .json(
+          ResponseFormatter.error(
+            400,
+            EErrorCode.VALIDATION,
+            "Username and password required"
+          )
+        );
       return;
     }
 
     const user = this.authService.validateUser(username, password);
+    console.log("user", user);
     if (!user) {
       res
         .status(401)
-        .json(ResponseFormatter.error("Invalid username or password"));
+        .json(
+          ResponseFormatter.error(
+            401,
+            EErrorCode.AUTHENTICATION,
+            "Invalid username or password"
+          )
+        );
       return;
     }
 
@@ -36,7 +50,7 @@ export class AuthController {
     });
 
     res.json(
-      ResponseFormatter.success("Login successful", {
+      ResponseFormatter.success(200, ESuccessCode.LOGIN, "Login successful", {
         accessToken,
         user: userPayload,
       })
@@ -49,20 +63,39 @@ export class AuthController {
     if (!username || !password) {
       res
         .status(400)
-        .json(ResponseFormatter.error("Username and password required"));
+        .json(
+          ResponseFormatter.error(
+            400,
+            EErrorCode.VALIDATION,
+            "Username and password required"
+          )
+        );
       return;
     }
 
     const newUser = this.authService.registerUser(username, password);
     if (!newUser) {
-      res.status(400).json(ResponseFormatter.error("User already exists"));
+      res
+        .status(400)
+        .json(
+          ResponseFormatter.error(
+            400,
+            EErrorCode.ALREADY_EXISTS,
+            "User already exists"
+          )
+        );
       return;
     }
 
-    res.json(
-      ResponseFormatter.success("User registered successfully", {
-        user: { id: newUser.id, username: newUser.username },
-      })
+    res.status(201).json(
+      ResponseFormatter.success(
+        201,
+        ESuccessCode.CREATED,
+        "User registered successfully",
+        {
+          user: { id: newUser.id, username: newUser.username },
+        }
+      )
     );
   };
 
@@ -70,13 +103,29 @@ export class AuthController {
     const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
-      res.status(401).json(ResponseFormatter.error("Refresh token required"));
+      res
+        .status(401)
+        .json(
+          ResponseFormatter.error(
+            401,
+            EErrorCode.AUTHENTICATION,
+            "Refresh token required"
+          )
+        );
       return;
     }
 
     const user = this.authService.verifyRefreshToken(refreshToken);
     if (!user) {
-      res.status(403).json(ResponseFormatter.error("Invalid refresh token"));
+      res
+        .status(403)
+        .json(
+          ResponseFormatter.error(
+            403,
+            EErrorCode.AUTHORIZATION,
+            "Invalid refresh token"
+          )
+        );
       return;
     }
 
@@ -85,7 +134,11 @@ export class AuthController {
       username: user.username,
     });
 
-    res.json(ResponseFormatter.success("Token refreshed", { accessToken }));
+    res.json(
+      ResponseFormatter.success(200, ESuccessCode.REFRESH, "Token refreshed", {
+        accessToken,
+      })
+    );
   };
 
   logout = (req: Request, res: Response): void => {
@@ -96,6 +149,13 @@ export class AuthController {
     }
 
     res.clearCookie("refreshToken");
-    res.json(ResponseFormatter.success("Logged out successfully"));
+    res.json(
+      ResponseFormatter.success(
+        200,
+        ESuccessCode.LOGOUT,
+        "Logged out successfully",
+        null
+      )
+    );
   };
 }

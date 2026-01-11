@@ -9,9 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
 import { Route as DemoStorybookRouteImport } from './routes/demo/storybook'
+import { Route as PublicAuthRouteRouteImport } from './routes/_public/auth/route'
 import { Route as PublicBlogsIndexRouteImport } from './routes/_public/blogs/index'
 import { Route as PublicAboutIndexRouteImport } from './routes/_public/about/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
@@ -19,6 +21,10 @@ import { Route as AuthenticatedInvoicesIndexRouteImport } from './routes/_authen
 import { Route as PublicAuthRegisterIndexRouteImport } from './routes/_public/auth/register/index'
 import { Route as PublicAuthLoginIndexRouteImport } from './routes/_public/auth/login/index'
 
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -34,6 +40,11 @@ const DemoStorybookRoute = DemoStorybookRouteImport.update({
   path: '/demo/storybook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PublicAuthRouteRoute = PublicAuthRouteRouteImport.update({
+  id: '/_public/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PublicBlogsIndexRoute = PublicBlogsIndexRouteImport.update({
   id: '/_public/blogs/',
   path: '/blogs/',
@@ -46,29 +57,30 @@ const PublicAboutIndexRoute = PublicAboutIndexRouteImport.update({
 } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
-    id: '/_authenticated/settings/',
+    id: '/settings/',
     path: '/settings/',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedInvoicesIndexRoute =
   AuthenticatedInvoicesIndexRouteImport.update({
-    id: '/_authenticated/invoices/',
+    id: '/invoices/',
     path: '/invoices/',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const PublicAuthRegisterIndexRoute = PublicAuthRegisterIndexRouteImport.update({
-  id: '/_public/auth/register/',
-  path: '/auth/register/',
-  getParentRoute: () => rootRouteImport,
+  id: '/register/',
+  path: '/register/',
+  getParentRoute: () => PublicAuthRouteRoute,
 } as any)
 const PublicAuthLoginIndexRoute = PublicAuthLoginIndexRouteImport.update({
-  id: '/_public/auth/login/',
-  path: '/auth/login/',
-  getParentRoute: () => rootRouteImport,
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => PublicAuthRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof PublicAuthRouteRouteWithChildren
   '/demo/storybook': typeof DemoStorybookRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/invoices': typeof AuthenticatedInvoicesIndexRoute
@@ -80,6 +92,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof PublicAuthRouteRouteWithChildren
   '/demo/storybook': typeof DemoStorybookRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/invoices': typeof AuthenticatedInvoicesIndexRoute
@@ -92,6 +105,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_public/auth': typeof PublicAuthRouteRouteWithChildren
   '/demo/storybook': typeof DemoStorybookRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/_authenticated/invoices/': typeof AuthenticatedInvoicesIndexRoute
@@ -105,6 +120,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/demo/storybook'
     | '/demo/tanstack-query'
     | '/invoices'
@@ -116,6 +132,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/demo/storybook'
     | '/demo/tanstack-query'
     | '/invoices'
@@ -127,6 +144,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/_public/auth'
     | '/demo/storybook'
     | '/demo/tanstack-query'
     | '/_authenticated/invoices/'
@@ -139,18 +158,23 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  PublicAuthRouteRoute: typeof PublicAuthRouteRouteWithChildren
   DemoStorybookRoute: typeof DemoStorybookRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
-  AuthenticatedInvoicesIndexRoute: typeof AuthenticatedInvoicesIndexRoute
-  AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
   PublicAboutIndexRoute: typeof PublicAboutIndexRoute
   PublicBlogsIndexRoute: typeof PublicBlogsIndexRoute
-  PublicAuthLoginIndexRoute: typeof PublicAuthLoginIndexRoute
-  PublicAuthRegisterIndexRoute: typeof PublicAuthRegisterIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -172,6 +196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoStorybookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_public/auth': {
+      id: '/_public/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof PublicAuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_public/blogs/': {
       id: '/_public/blogs/'
       path: '/blogs'
@@ -191,42 +222,67 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/invoices/': {
       id: '/_authenticated/invoices/'
       path: '/invoices'
       fullPath: '/invoices'
       preLoaderRoute: typeof AuthenticatedInvoicesIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_public/auth/register/': {
       id: '/_public/auth/register/'
-      path: '/auth/register'
+      path: '/register'
       fullPath: '/auth/register'
       preLoaderRoute: typeof PublicAuthRegisterIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PublicAuthRouteRoute
     }
     '/_public/auth/login/': {
       id: '/_public/auth/login/'
-      path: '/auth/login'
+      path: '/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof PublicAuthLoginIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PublicAuthRouteRoute
     }
   }
 }
 
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  DemoStorybookRoute: DemoStorybookRoute,
-  DemoTanstackQueryRoute: DemoTanstackQueryRoute,
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedInvoicesIndexRoute: typeof AuthenticatedInvoicesIndexRoute
+  AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedInvoicesIndexRoute: AuthenticatedInvoicesIndexRoute,
   AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
-  PublicAboutIndexRoute: PublicAboutIndexRoute,
-  PublicBlogsIndexRoute: PublicBlogsIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+interface PublicAuthRouteRouteChildren {
+  PublicAuthLoginIndexRoute: typeof PublicAuthLoginIndexRoute
+  PublicAuthRegisterIndexRoute: typeof PublicAuthRegisterIndexRoute
+}
+
+const PublicAuthRouteRouteChildren: PublicAuthRouteRouteChildren = {
   PublicAuthLoginIndexRoute: PublicAuthLoginIndexRoute,
   PublicAuthRegisterIndexRoute: PublicAuthRegisterIndexRoute,
+}
+
+const PublicAuthRouteRouteWithChildren = PublicAuthRouteRoute._addFileChildren(
+  PublicAuthRouteRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  PublicAuthRouteRoute: PublicAuthRouteRouteWithChildren,
+  DemoStorybookRoute: DemoStorybookRoute,
+  DemoTanstackQueryRoute: DemoTanstackQueryRoute,
+  PublicAboutIndexRoute: PublicAboutIndexRoute,
+  PublicBlogsIndexRoute: PublicBlogsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,20 +1,29 @@
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 
 import Header from '../components/header'
 
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
-
 import type { QueryClient } from '@tanstack/react-query'
+import { Toaster } from 'sonner'
+import { useAuthBootstrap } from '@/features/auth/shared/use-auth-bootstrap'
 
 interface MyRouterContext {
   queryClient: QueryClient
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  component: () => (
+  component: RootLayout,
+})
+
+function RootLayout() {
+  // Trigger bg auth hydration
+  useAuthBootstrap()
+
+  return (
     <>
+      <Toaster richColors />
       <Header />
       <Outlet />
       <TanStackDevtools
@@ -26,9 +35,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
             name: 'Tanstack Router',
             render: <TanStackRouterDevtoolsPanel />,
           },
-          TanStackQueryDevtools,
+          {
+            name: 'Tanstack Query',
+            render: <ReactQueryDevtoolsPanel />,
+          },
         ]}
       />
     </>
-  ),
-})
+  )
+}

@@ -13,14 +13,14 @@ import {
 import ControlledInputField from '@/components/reusables/controlled-input-field'
 
 import { LoginSchema, type TLoginSchema } from '../../shared/auth-type'
-import { useLoginMutation } from '../../shared/auth-api'
+import { useRegisterMutation } from '../../shared/auth-services'
 import { Link } from '@tanstack/react-router'
 
-export function LoginForm({
+export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
-  const loginMutation = useLoginMutation()
+  const registerMutation = useRegisterMutation()
 
   const {
     control,
@@ -31,16 +31,16 @@ export function LoginForm({
   })
 
   const onSubmit = async (data: TLoginSchema) => {
-    await loginMutation.mutateAsync(data)
+    await registerMutation.mutateAsync(data)
   }
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle>Register to your account</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Enter your email below to register to your account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -61,10 +61,9 @@ export function LoginForm({
               required
               errors={errors}
             />
-            <Button type="submit">Login</Button>
+            <Button type="submit">Register</Button>
             <p className="text-center">
-              Don&apos;t have an account?{' '}
-              <Link to="/auth/register">Sign up</Link>
+              Already have an account? <Link to="/auth/login">Login</Link>
             </p>
           </form>
         </CardContent>

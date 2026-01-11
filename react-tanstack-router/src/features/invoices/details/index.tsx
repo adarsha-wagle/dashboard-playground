@@ -1,7 +1,9 @@
-import React from 'react'
-
 function InvoiceDetails() {
-  return <div>InvoiceDetails</div>
+  return (
+    <section className="container">
+      This is supposed to be protected route (invoice details)
+    </section>
+  )
 }
 
 export default InvoiceDetails

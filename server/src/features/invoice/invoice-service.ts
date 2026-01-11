@@ -1,48 +1,8 @@
 import { Invoice, InvoiceItem, PaginationQuery } from "../../types/index";
+import { mockInvoices } from "./mock-data";
 
 export class InvoiceService {
-  private invoices: Invoice[] = [
-    {
-      id: 1,
-      invoiceNumber: "INV-1001",
-      customer: "John Doe",
-      amount: 250,
-      date: "2025-01-05",
-      dueDate: "2025-01-15",
-      status: "Paid",
-      description: "Web design services",
-      items: [
-        { item: "Website mockup", qty: 1, price: 150 },
-        { item: "Revisions", qty: 2, price: 50 },
-      ],
-    },
-    {
-      id: 2,
-      invoiceNumber: "INV-1002",
-      customer: "Alice Smith",
-      amount: 120,
-      date: "2025-01-08",
-      dueDate: "2025-01-18",
-      status: "Unpaid",
-      description: "Consultation session",
-      items: [{ item: "Consultation Session", qty: 2, price: 60 }],
-    },
-    {
-      id: 3,
-      invoiceNumber: "INV-1003",
-      customer: "Bob Johnson",
-      amount: 430,
-      date: "2025-01-12",
-      dueDate: "2025-01-22",
-      status: "Overdue",
-      description: "Office hardware supply",
-      items: [
-        { item: "Laptop", qty: 1, price: 300 },
-        { item: "Keyboard", qty: 2, price: 40 },
-        { item: "Mouse", qty: 2, price: 25 },
-      ],
-    },
-  ];
+  private invoices: Invoice[] = mockInvoices;
 
   private getNextInvoiceNumber(): string {
     if (this.invoices.length === 0) return "INV-1001";

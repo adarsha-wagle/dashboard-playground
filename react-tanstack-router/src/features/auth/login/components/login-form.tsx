@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
@@ -13,8 +14,7 @@ import {
 import ControlledInputField from '@/components/reusables/controlled-input-field'
 
 import { LoginSchema, type TLoginSchema } from '../../shared/auth-type'
-import { useLoginMutation } from '../../shared/auth-api'
-import { Link } from '@tanstack/react-router'
+import { useLoginMutation } from '../../shared/auth-services'
 
 export function LoginForm({
   className,
@@ -30,8 +30,8 @@ export function LoginForm({
     resolver: zodResolver(LoginSchema),
   })
 
-  const onSubmit = async (data: TLoginSchema) => {
-    await loginMutation.mutateAsync(data)
+  const onSubmit = (data: TLoginSchema) => {
+    loginMutation.mutate(data)
   }
 
   return (
@@ -63,7 +63,7 @@ export function LoginForm({
             />
             <Button type="submit">Login</Button>
             <p className="text-center">
-              Don&apos;t have an account?{' '}
+              Don&apos;t have an account?
               <Link to="/auth/register">Sign up</Link>
             </p>
           </form>

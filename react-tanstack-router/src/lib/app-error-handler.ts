@@ -30,47 +30,70 @@ export class AppErrorHandler {
 
     const { status, data } = error.response
 
-    const apiMessage = data?.message || 'An error occurred'
-    const apiCode = data?.code
+    // Check if response is HTML (wrong content-type or route not found)
+    const contentType = error.response.headers['content-type']
+    if (contentType?.includes('text/html')) {
+      return {
+        message: 'API endpoint not found. Please contact support.',
+        code: EErrorCode.NOT_FOUND,
+        statusCode: status,
+        originalError: error,
+      }
+    }
+
+    // Safely extract error data with fallbacks
+    const apiMessage = data?.message || this.getDefaultMessage(status)
+    const apiCode = data?.code || this.getDefaultCode(status)
     const apiDetails = data?.details
 
+    // Return consistent error structure
+    return {
+      message: apiMessage,
+      code: apiCode,
+      statusCode: status,
+      details: apiDetails as Record<string, unknown>,
+      originalError: error,
+    }
+  }
+
+  private static getDefaultMessage(status: number): string {
     switch (status) {
       case 400:
-        return {
-          message: apiMessage,
-          code: apiCode,
-          details: apiDetails as Record<string, unknown>,
-          originalError: error,
-        }
-
+        return 'Invalid request. Please check your input.'
       case 401:
-        return {
-          message: apiMessage,
-          code: apiCode,
-          originalError: error,
-        }
-
+        return 'Authentication required. Please log in.'
       case 403:
-        return {
-          message: apiMessage,
-          code: apiCode,
-          originalError: error,
-        }
-
+        return 'You do not have permission to perform this action.'
       case 404:
-        return {
-          message: apiMessage,
-          code: apiCode,
-          originalError: error,
-        }
+        return 'The requested resource was not found.'
+      case 422:
+        return 'Validation failed. Please check your input.'
+      case 429:
+        return 'Too many requests. Please try again later.'
+      case 500:
+        return 'Server error. Please try again later.'
+      case 503:
+        return 'Service temporarily unavailable. Please try again later.'
+      default:
+        return 'An unexpected error occurred.'
+    }
+  }
 
+  private static getDefaultCode(status: number): EErrorCode {
+    switch (status) {
+      case 400:
+        return EErrorCode.BAD_REQUEST
+      case 401:
+        return EErrorCode.AUTHENTICATION
+      case 403:
+        return EErrorCode.AUTHORIZATION
+      case 404:
+        return EErrorCode.NOT_FOUND
+      case 422:
+        return EErrorCode.VALIDATION
       case 500:
       default:
-        return {
-          message: apiMessage,
-          code: apiCode,
-          originalError: error,
-        }
+        return EErrorCode.SERVER
     }
   }
 
