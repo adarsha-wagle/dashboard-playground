@@ -27,7 +27,7 @@ export function DataTable<TData>({
       <div
         className={cn(
           'rounded-md border no-scrollbar',
-          limit >= 15 ? 'h-120 overflow-auto' : '',
+          limit >= 15 ? 'h-[65vh] xl:h-[70vh] overflow-auto' : '',
         )}
       >
         <Table className="table-fixed w-full">
@@ -39,6 +39,7 @@ export function DataTable<TData>({
                     <TableHead
                       key={header.id}
                       colSpan={header.colSpan}
+                      style={{ width: header.getSize() }}
                       className="text-center truncate"
                     >
                       {header.isPlaceholder

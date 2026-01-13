@@ -62,7 +62,7 @@ const SectionInvoiceTableList = () => {
   console.log('Section Re-rendered', table)
 
   return (
-    <section>
+    <section className="relative">
       <div>
         <InvoiceTableToolbar filterOptions={filterOptions} table={table} />
       </div>

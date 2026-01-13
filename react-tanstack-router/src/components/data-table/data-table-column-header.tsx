@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
-import { ArrowDown, ArrowUp, ChevronUp, EyeOff } from 'lucide-react'
+import { ArrowDown, ArrowUp, ChevronUp, EyeOff, X } from 'lucide-react'
 
 interface DataTableColumnHeaderProps<
   TData,
@@ -28,21 +28,21 @@ export function DataTableColumnHeader<TData, TValue>({
   }
 
   return (
-    <div className={cn('flex items-center space-x-2', className)}>
+    <div className={cn('flex items-center justify-center ', className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            className="-ml-1 h-8 data-[state=open]:bg-accent"
           >
             <span>{title}</span>
             {column.getIsSorted() === 'desc' ? (
-              <ArrowDown className="ml-2 h-4 w-4" />
+              <ArrowDown className="ml-1 h-4 w-4" />
             ) : column.getIsSorted() === 'asc' ? (
-              <ArrowUp className="ml-2 h-4 w-4" />
+              <ArrowUp className="ml-1 h-4 w-4" />
             ) : (
-              <ChevronUp className="ml-2 h-4 w-4" />
+              <ChevronUp className="ml-1 h-4 w-4" />
             )}
           </Button>
         </DropdownMenuTrigger>
@@ -54,6 +54,10 @@ export function DataTableColumnHeader<TData, TValue>({
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
             <ArrowDown className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Desc
+          </DropdownMenuItem>{' '}
+          <DropdownMenuItem onClick={() => column.clearSorting()}>
+            <X className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            Reset
           </DropdownMenuItem>
           {column.getCanHide() && (
             <>

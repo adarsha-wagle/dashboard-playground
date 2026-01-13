@@ -8,6 +8,28 @@ import { statusColors } from '../../shared/utils'
 export const useOrganizationColumns = () => {
   const columns: ColumnDef<IInvoice>[] = [
     {
+      id: 'select',
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllRowsSelected()}
+          ref={(el) => {
+            if (el) el.indeterminate = table.getIsSomeRowsSelected()
+          }}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      ),
+      enableSorting: false,
+      size: 40, // optional: adjust column width
+    },
+    {
       accessorKey: 'invoiceNumber',
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Invoice No." />
@@ -15,14 +37,17 @@ export const useOrganizationColumns = () => {
       cell: ({ row }) => <div>{row.getValue('invoiceNumber')}</div>,
       enableSorting: false,
       enableHiding: false,
+      size: 100,
     },
     {
       accessorKey: 'customer',
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Customer" />
       ),
-      cell: ({ row }) => <div>{row.getValue('customer')}</div>,
-      enableSorting: false, // Enable sorting
+      cell: ({ row }) => (
+        <div className="flex justify-center">{row.getValue('customer')}</div>
+      ),
+      enableSorting: true, // Enable sorting
       enableHiding: false,
     },
     {
@@ -45,6 +70,7 @@ export const useOrganizationColumns = () => {
       cell: ({ row }) => <div>{row.getValue('date')}</div>,
       enableSorting: false, // Enable sorting
       enableHiding: false,
+      size: 80,
     },
     {
       accessorKey: 'dueDate',
@@ -53,6 +79,7 @@ export const useOrganizationColumns = () => {
       ),
       cell: ({ row }) => <div>{row.original.dueDate}</div>,
       enableSorting: false, // Enable sorting
+      size: 80,
     },
     {
       accessorKey: 'status',
@@ -68,6 +95,7 @@ export const useOrganizationColumns = () => {
         </div>
       ),
       enableSorting: false, // Enable sorting
+      size: 80,
     },
     {
       id: 'actions',
@@ -76,6 +104,7 @@ export const useOrganizationColumns = () => {
       ),
       cell: ({ row }) => <OrganizationRowAction row={row} />,
       enableSorting: false,
+      size: 80,
     },
   ]
 
