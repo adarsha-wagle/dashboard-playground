@@ -301,3 +301,5 @@ Files prefixed with `demo` can be safely deleted. They are there to provide a st
 # Learn More
 
 You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+
+npm i reactjs-tiptap-editor @tiptap/extension-document @tiptap/extension-hard-break @tiptap/extension-list @tiptap/extension-paragraph @tiptap/extension-text @tiptap/extension-text-style @tiptap/extensions @tiptap/react mamoth

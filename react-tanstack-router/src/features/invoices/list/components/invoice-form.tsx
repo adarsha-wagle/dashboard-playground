@@ -25,6 +25,8 @@ export function InvoiceForm({ onSubmit, form }: TInvoiceFormProps) {
     name: 'items',
   })
 
+  console.log('Invoice Form Re-rendered')
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Customer & Dates */}

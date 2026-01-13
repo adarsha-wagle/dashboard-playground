@@ -1,5 +1,6 @@
+import { getDebouncer } from '@/lib/utils'
 import { type SingleParserBuilder, useQueryStates } from 'nuqs'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 export type FilterValues =
   | string
@@ -23,6 +24,15 @@ export const useFilters = (defaultFilters: InitFilters = {}) => {
     history: 'replace',
   })
 
+  const {
+    debounce: debounceFilterSetter,
+    cancelDebounce: debounceFilterCanceller,
+  } = useMemo(() => {
+    return getDebouncer((key: string, value: FilterValues) => {
+      setFilters({ [key]: value })
+    }, 300)
+  }, [setFilters])
+
   const setFilterValue = useCallback(
     (key: string, value: FilterValues) => {
       setFilters({ [key]: value })
@@ -39,9 +49,13 @@ export const useFilters = (defaultFilters: InitFilters = {}) => {
 
   const removeFilter = useCallback(
     (key: string) => {
-      setFilters({ [key]: null })
+      debounceFilterCanceller()
+      setFilters((prev) => ({
+        ...prev,
+        [key]: null,
+      }))
     },
-    [setFilters],
+    [setFilters, debounceFilterCanceller],
   )
 
   const replaceFilter = useCallback(
@@ -52,6 +66,13 @@ export const useFilters = (defaultFilters: InitFilters = {}) => {
       })
     },
     [setFilters],
+  )
+
+  const setFilterDebounce = useCallback(
+    (key: string, value: FilterValues) => {
+      debounceFilterSetter(key, value)
+    },
+    [debounceFilterSetter],
   )
 
   const resetFilters = useCallback(() => {
@@ -65,5 +86,6 @@ export const useFilters = (defaultFilters: InitFilters = {}) => {
     removeFilter,
     resetFilters,
     replaceFilter,
+    setFilterDebounce,
   }
 }

@@ -8,25 +8,39 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { BookDashed } from 'lucide-react'
-import { TableLoader } from './table-loader'
+import { Skeleton } from '../ui/skeleton'
+import { cn } from '@/lib/utils'
 
 interface DataTableProps<TData> {
   loading: boolean
   table: TableType<TData>
+  limit?: number
 }
 
-export function DataTable<TData>({ loading, table }: DataTableProps<TData>) {
-  console.log('Data table re-rendered')
+export function DataTable<TData>({
+  loading,
+  table,
+  limit = 10,
+}: DataTableProps<TData>) {
   return (
-    <div className="space-y-4">
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
+    <div className="space-y-4 relative">
+      <div
+        className={cn(
+          'rounded-md border no-scrollbar',
+          limit >= 15 ? 'h-120 overflow-auto' : '',
+        )}
+      >
+        <Table className="table-fixed w-full">
+          <TableHeader className="bg-accent sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      className="text-center truncate"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -41,11 +55,17 @@ export function DataTable<TData>({ loading, table }: DataTableProps<TData>) {
           </TableHeader>
           <TableBody>
             {loading ? (
-              <TableRow>
-                <TableCell colSpan={table.getAllColumns().length}>
-                  <TableLoader />
-                </TableCell>
-              </TableRow>
+              <>
+                {Array.from({ length: limit }).map((_, rowIndex) => (
+                  <TableRow key={rowIndex}>
+                    {table.getAllLeafColumns().map((column) => (
+                      <TableCell key={column.id} className="text-center ">
+                        <Skeleton className="h-4 w-full" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </>
             ) : table.getRowModel()?.rows?.length ? (
               table.getRowModel()?.rows.map((row) => (
                 <TableRow
@@ -53,7 +73,7 @@ export function DataTable<TData>({ loading, table }: DataTableProps<TData>) {
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="text-center">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

@@ -4,22 +4,21 @@ import { useFilters } from '@/hooks/use-filters'
 import { usePagination } from '@/hooks/use-pagination'
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
-import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import { useOrganizationColumns } from '../hooks/use-invoice-column'
 import { useGetPaginatedInvoices } from '../../shared/invoice-service'
-import InvoiceFilters, { invoiceFilterOptions } from './invoice-filters'
-import InvoiceAdd from './invoice-add'
+import { invoiceFilterOptions } from './invoice-filters'
 import { useMemo } from 'react'
 import { useSorting } from '@/hooks/use-sorting'
+import InvoiceTableToolbar from './invoice-table-toolbar'
 
 const SectionInvoiceTableList = () => {
-  const roleColumns = useOrganizationColumns()
   const paginationOptions = usePagination()
   const sortingOptions = useSorting()
+  const filterOptions = useFilters(invoiceFilterOptions)
+  const roleColumns = useOrganizationColumns()
 
   const { sortBy, sortOrder } = sortingOptions
 
-  const filterOptions = useFilters(invoiceFilterOptions)
   const { pagination } = paginationOptions
   const { data, isLoading, isFetching } = useGetPaginatedInvoices({
     limit: pagination.limit,
@@ -35,6 +34,8 @@ const SectionInvoiceTableList = () => {
     data: tableData,
     columns: roleColumns,
     manualPagination: true,
+    manualFiltering: true,
+    manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: (updater) => {
       if (typeof updater === 'function') {
@@ -58,26 +59,25 @@ const SectionInvoiceTableList = () => {
     },
   })
 
+  console.log('Section Re-rendered', table)
+
   return (
-    <section className="container flex justify-center items-center my-8">
-      <div className="max-w-7xl w-full">
-        <div>
-          <DataTableToolbar table={table}>
-            <div className="flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2">
-              <InvoiceFilters filterOptions={filterOptions} />
-            </div>
-            <InvoiceAdd />
-          </DataTableToolbar>
-        </div>
-        <div className="mt-4">
-          <DataTable loading={isFetching || isLoading} table={table} />
-        </div>
-        <div className="mt-4">
-          <DataTablePagination
-            paginationOptions={paginationOptions}
-            metadata={data?.metadata}
-          />
-        </div>
+    <section>
+      <div>
+        <InvoiceTableToolbar filterOptions={filterOptions} table={table} />
+      </div>
+      <div className="mt-4">
+        <DataTable
+          loading={isFetching || isLoading}
+          table={table}
+          limit={pagination.limit}
+        />
+      </div>
+      <div className="mt-4">
+        <DataTablePagination
+          paginationOptions={paginationOptions}
+          metadata={data?.metadata}
+        />
       </div>
     </section>
   )

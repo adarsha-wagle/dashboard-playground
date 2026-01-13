@@ -9,7 +9,7 @@ const navItems = [
   { label: 'Invoices', to: '/invoices' },
 ]
 
-export default function Header() {
+export default function Navbar() {
   return (
     <header className="w-full border-b bg-background">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">

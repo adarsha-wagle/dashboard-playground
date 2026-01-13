@@ -1,13 +1,16 @@
 import { createFileRoute, Link, Outlet, redirect } from '@tanstack/react-router'
 import { useAuthStore } from '@/features/auth/shared/use-auth-store'
+import { SidebarProvider } from '@/components/layouts/authenticated/sidebar/sidebar-context'
+import { AnimatedSidebar } from '@/components/layouts/authenticated/sidebar/app-sidebar'
+import { navigationData } from '@/components/layouts/authenticated/sidebar/data'
+import { DashboardHeader } from '@/components/layouts/authenticated/header/dashboard-header'
+import { BoxLoader } from '@/components/data-table/table-loader'
+import { SidebarFooter } from '@/components/layouts/authenticated/sidebar/sidebar-footer'
 
 export const Route = createFileRoute('/_authenticated')({
   component: RouteComponent,
   beforeLoad: async () => {
     const authStore = useAuthStore.getState()
-
-    // If access token already exits, allow immediately
-    if (authStore.isAuthenticated) return
 
     if (authStore.isAuthError || !authStore.isPreviousLoggedIn) {
       redirect({
@@ -15,13 +18,26 @@ export const Route = createFileRoute('/_authenticated')({
         throw: true,
       })
     }
+
+    // If access token already exits, allow immediately
+    if (!authStore.accessToken) {
+      const isSuccess = await authStore.hydrateAuth()
+      if (!isSuccess) {
+        redirect({
+          to: '/auth/login',
+          throw: true,
+        })
+      }
+    }
+    return
   },
+  pendingComponent: () => <BoxLoader />,
 })
 
 function RouteComponent() {
-  const { isAuthLoading, isAuthError } = useAuthStore()
+  const { isRefreshing, isAuthError } = useAuthStore()
 
-  if (isAuthLoading) return <div>Loading...</div>
+  if (isRefreshing) return <div>Loading...</div>
 
   if (isAuthError) {
     return (
@@ -33,8 +49,21 @@ function RouteComponent() {
   }
 
   return (
-    <div>
-      <Outlet />
-    </div>
+    <>
+      <SidebarProvider defaultExpanded={true}>
+        <div className="flex min-h-screen w-full">
+          <AnimatedSidebar
+            navigation={navigationData}
+            footer={<SidebarFooter />}
+          />
+          <div className="flex flex-1 flex-col">
+            <DashboardHeader title="Dashboard" subtitle="Welcome back, John" />
+            <div className="p-8">
+              <Outlet />
+            </div>
+          </div>
+        </div>
+      </SidebarProvider>
+    </>
   )
 }

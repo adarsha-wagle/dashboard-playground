@@ -16,13 +16,35 @@ import type { IAuthRespose } from '@/features/auth/shared/auth-type'
 const api = axios.create({
   baseURL: CONFIG.API_URL,
   withCredentials: true,
-  timeout: 10000, // 10 seconds
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
 })
 
-// Request interceptor attach access token
+// Token refresh state management
+let isRefreshing = false
+let failedQueue: Array<{
+  resolve: (value?: unknown) => void
+  reject: (reason?: unknown) => void
+}> = []
+
+const processQueue = (
+  error: AxiosError | null,
+  token: string | null = null,
+) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error)
+    } else {
+      prom.resolve(token)
+    }
+  })
+
+  failedQueue = []
+}
+
+// Request interceptor
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const accessToken = getAccessToken()
@@ -35,7 +57,7 @@ api.interceptors.request.use(
   (error: AxiosError) => Promise.reject(error),
 )
 
-// Response interceptor with enhanced error handling
+// Response interceptor
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError<IApiErrorResponse>) => {
@@ -43,19 +65,34 @@ api.interceptors.response.use(
       _retry?: boolean
     }
 
-    // Avoid refreshing the token if the request is for login or register endpoints
+    // Avoid refreshing for auth endpoints
     const isAuthEndpoint =
       originalRequest.url?.includes('/login') ||
       originalRequest.url?.includes('/register') ||
       originalRequest.url?.includes('/refresh')
 
-    // Handle token refresh for 401 errors
+    // Handle 401 errors
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
       !isAuthEndpoint
     ) {
+      if (isRefreshing) {
+        // If already refreshing, queue this request
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject })
+        })
+          .then((token) => {
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${token}`
+            }
+            return api(originalRequest)
+          })
+          .catch((err) => Promise.reject(err))
+      }
+
       originalRequest._retry = true
+      isRefreshing = true
 
       try {
         const response = await axios.post<
@@ -68,23 +105,33 @@ api.interceptors.response.use(
           accessToken: newAccessToken,
           isAuthenticated: true,
           isAuthError: false,
-          isAuthLoading: false,
+          isRefreshing: false,
           isPreviousLoggedIn: true,
         })
 
+        // Update the failed request's header
         if (originalRequest.headers) {
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
         }
+
+        // Process all queued requests with the new token
+        processQueue(null, newAccessToken)
+
         return api(originalRequest)
       } catch (refreshError) {
         console.error('Refresh Error', refreshError)
+        processQueue(refreshError as AxiosError, null)
+
         resetAuth({
           isAuthError: true,
-          isAuthLoading: false,
+          isRefreshing: false,
           isPreviousLoggedIn: false,
         })
+
         window.location.href = '/auth/login'
         return Promise.reject(refreshError)
+      } finally {
+        isRefreshing = false
       }
     }
 

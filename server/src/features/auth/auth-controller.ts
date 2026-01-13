@@ -118,11 +118,11 @@ export class AuthController {
     const user = this.authService.verifyRefreshToken(refreshToken);
     if (!user) {
       res
-        .status(403)
+        .status(401)
         .json(
           ResponseFormatter.error(
-            403,
-            EErrorCode.AUTHORIZATION,
+            401,
+            EErrorCode.AUTHENTICATION,
             "Invalid refresh token"
           )
         );

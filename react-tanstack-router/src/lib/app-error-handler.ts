@@ -108,10 +108,7 @@ export class AppErrorHandler {
   }
 
   static isAuthError(error: AppError): boolean {
-    return (
-      error.code === EErrorCode.AUTHENTICATION ||
-      error.code === EErrorCode.AUTHORIZATION
-    )
+    return error.code === EErrorCode.AUTHENTICATION || error.statusCode === 401
   }
 
   static isNetworkError(error: AppError): boolean {

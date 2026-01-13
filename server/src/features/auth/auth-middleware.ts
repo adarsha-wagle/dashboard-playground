@@ -37,11 +37,11 @@ export class AuthMiddleware {
     jwt.verify(token, CONFIG.ACCESS_TOKEN_SECRET, (err, decoded) => {
       if (err) {
         res
-          .status(403)
+          .status(401)
           .json(
             ResponseFormatter.error(
-              403,
-              EErrorCode.AUTHORIZATION,
+              401,
+              EErrorCode.AUTHENTICATION,
               "Invalid or expired access token"
             )
           );

@@ -31,20 +31,20 @@ const defaultValues: TInvoiceSchema = {
 }
 
 function InvoiceAdd() {
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false)
+  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false)
 
   const form = useForm<TInvoiceSchema>({
     resolver: zodResolver(InvoiceSchema) as any,
     defaultValues,
   })
 
-  console.log('invoice add re-rendering')
-
   const invoiceMutation = useCreateInvoice()
 
   const onSubmit = (data: TInvoiceSchema) => {
     console.log('form submitted ', data)
   }
+
+  console.log('Invoice Re-rendering')
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

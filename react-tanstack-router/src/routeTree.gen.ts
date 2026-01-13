@@ -9,8 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
 import { Route as DemoStorybookRouteImport } from './routes/demo/storybook'
 import { Route as PublicAuthRouteRouteImport } from './routes/_public/auth/route'
@@ -21,14 +22,18 @@ import { Route as AuthenticatedInvoicesIndexRouteImport } from './routes/_authen
 import { Route as PublicAuthRegisterIndexRouteImport } from './routes/_public/auth/register/index'
 import { Route as PublicAuthLoginIndexRouteImport } from './routes/_public/auth/login/index'
 
+const PublicRouteRoute = PublicRouteRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRouteRoute,
 } as any)
 const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
   id: '/demo/tanstack-query',
@@ -41,19 +46,19 @@ const DemoStorybookRoute = DemoStorybookRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicAuthRouteRoute = PublicAuthRouteRouteImport.update({
-  id: '/_public/auth',
+  id: '/auth',
   path: '/auth',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRouteRoute,
 } as any)
 const PublicBlogsIndexRoute = PublicBlogsIndexRouteImport.update({
-  id: '/_public/blogs/',
+  id: '/blogs/',
   path: '/blogs/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRouteRoute,
 } as any)
 const PublicAboutIndexRoute = PublicAboutIndexRouteImport.update({
-  id: '/_public/about/',
+  id: '/about/',
   path: '/about/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRouteRoute,
 } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
@@ -79,10 +84,10 @@ const PublicAuthLoginIndexRoute = PublicAuthLoginIndexRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/auth': typeof PublicAuthRouteRouteWithChildren
   '/demo/storybook': typeof DemoStorybookRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/': typeof PublicIndexRoute
   '/invoices': typeof AuthenticatedInvoicesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/about': typeof PublicAboutIndexRoute
@@ -91,10 +96,10 @@ export interface FileRoutesByFullPath {
   '/auth/register': typeof PublicAuthRegisterIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/auth': typeof PublicAuthRouteRouteWithChildren
   '/demo/storybook': typeof DemoStorybookRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/': typeof PublicIndexRoute
   '/invoices': typeof AuthenticatedInvoicesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/about': typeof PublicAboutIndexRoute
@@ -104,11 +109,12 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_public': typeof PublicRouteRouteWithChildren
   '/_public/auth': typeof PublicAuthRouteRouteWithChildren
   '/demo/storybook': typeof DemoStorybookRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/_public/': typeof PublicIndexRoute
   '/_authenticated/invoices/': typeof AuthenticatedInvoicesIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_public/about/': typeof PublicAboutIndexRoute
@@ -119,10 +125,10 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/auth'
     | '/demo/storybook'
     | '/demo/tanstack-query'
+    | '/'
     | '/invoices'
     | '/settings'
     | '/about'
@@ -131,10 +137,10 @@ export interface FileRouteTypes {
     | '/auth/register'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/auth'
     | '/demo/storybook'
     | '/demo/tanstack-query'
+    | '/'
     | '/invoices'
     | '/settings'
     | '/about'
@@ -143,11 +149,12 @@ export interface FileRouteTypes {
     | '/auth/register'
   id:
     | '__root__'
-    | '/'
     | '/_authenticated'
+    | '/_public'
     | '/_public/auth'
     | '/demo/storybook'
     | '/demo/tanstack-query'
+    | '/_public/'
     | '/_authenticated/invoices/'
     | '/_authenticated/settings/'
     | '/_public/about/'
@@ -157,17 +164,21 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  PublicAuthRouteRoute: typeof PublicAuthRouteRouteWithChildren
+  PublicRouteRoute: typeof PublicRouteRouteWithChildren
   DemoStorybookRoute: typeof DemoStorybookRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
-  PublicAboutIndexRoute: typeof PublicAboutIndexRoute
-  PublicBlogsIndexRoute: typeof PublicBlogsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PublicRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -175,12 +186,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_public/': {
+      id: '/_public/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRouteRoute
     }
     '/demo/tanstack-query': {
       id: '/demo/tanstack-query'
@@ -201,21 +212,21 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof PublicAuthRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PublicRouteRoute
     }
     '/_public/blogs/': {
       id: '/_public/blogs/'
       path: '/blogs'
       fullPath: '/blogs'
       preLoaderRoute: typeof PublicBlogsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PublicRouteRoute
     }
     '/_public/about/': {
       id: '/_public/about/'
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof PublicAboutIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PublicRouteRoute
     }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
@@ -275,14 +286,29 @@ const PublicAuthRouteRouteWithChildren = PublicAuthRouteRoute._addFileChildren(
   PublicAuthRouteRouteChildren,
 )
 
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+interface PublicRouteRouteChildren {
+  PublicAuthRouteRoute: typeof PublicAuthRouteRouteWithChildren
+  PublicIndexRoute: typeof PublicIndexRoute
+  PublicAboutIndexRoute: typeof PublicAboutIndexRoute
+  PublicBlogsIndexRoute: typeof PublicBlogsIndexRoute
+}
+
+const PublicRouteRouteChildren: PublicRouteRouteChildren = {
   PublicAuthRouteRoute: PublicAuthRouteRouteWithChildren,
-  DemoStorybookRoute: DemoStorybookRoute,
-  DemoTanstackQueryRoute: DemoTanstackQueryRoute,
+  PublicIndexRoute: PublicIndexRoute,
   PublicAboutIndexRoute: PublicAboutIndexRoute,
   PublicBlogsIndexRoute: PublicBlogsIndexRoute,
+}
+
+const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
+  PublicRouteRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  PublicRouteRoute: PublicRouteRouteWithChildren,
+  DemoStorybookRoute: DemoStorybookRoute,
+  DemoTanstackQueryRoute: DemoTanstackQueryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

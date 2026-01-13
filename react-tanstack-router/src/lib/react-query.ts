@@ -88,7 +88,7 @@ export const queryClient = new QueryClient({
 // Centralized auth error handler
 function handleAuthError(): void {
   resetAuth({
-    isAuthLoading: false,
+    isRefreshing: false,
     isAuthError: true,
     isPreviousLoggedIn: false,
   })

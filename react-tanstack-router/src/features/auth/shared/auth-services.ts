@@ -16,7 +16,7 @@ export const useLoginMutation = () => {
         accessToken,
         isAuthenticated: true,
         isAuthError: false,
-        isAuthLoading: false,
+        isRefreshing: false,
         isPreviousLoggedIn: true,
       })
 

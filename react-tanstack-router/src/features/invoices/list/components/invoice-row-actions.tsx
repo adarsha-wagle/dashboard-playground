@@ -23,7 +23,7 @@ const OrganizationRowAction: FC<OrganizationRowActionProps> = ({ row }) => {
   }
 
   return (
-    <div className="flex items-center justify-start gap-4 ">
+    <div className="flex items-center justify-center gap-4 w-full ">
       <InvoiceEdit invoice={row.original} />
       <Trash onClick={handleDelete} className="cursor-pointer" size={16} />
     </div>

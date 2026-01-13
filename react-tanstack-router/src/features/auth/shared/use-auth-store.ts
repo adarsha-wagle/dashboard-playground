@@ -1,14 +1,15 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import api from '@/lib/axios-instance'
-import { type IApiSuccessResponse } from '@/types/api'
+import { type IApiErrorResponse, type IApiSuccessResponse } from '@/types/api'
 import { type IAuthRespose, type IUser } from './auth-type'
+import type { AxiosError } from 'axios'
 
 type TAccessToken = string | null
 
 type TAuthActions = {
   setUser: (user: IUser | null) => void
-  setIsAuthLoading: (isAuthLoading: boolean) => void
+  setIsAuthLoading: (isRefreshing: boolean) => void
   setIsAuthenticated: (isAuthenticated: boolean) => void
   setAccessToken: (token: TAccessToken | null) => void
   resetAuth: (param?: Partial<TAuthState>) => void
@@ -17,7 +18,7 @@ type TAuthActions = {
 }
 
 type TAuthState = {
-  isAuthLoading: boolean
+  isRefreshing: boolean
   user: IUser | null
   isAuthenticated: boolean
   accessToken: TAccessToken | null
@@ -31,7 +32,7 @@ const initAuthState: TAuthState = {
   user: null,
   isAuthenticated: false,
   accessToken: null,
-  isAuthLoading: true,
+  isRefreshing: false,
   isAuthError: false,
   isPreviousLoggedIn: false,
 }
@@ -42,7 +43,7 @@ export const useAuthStore = create<TAuthStore>()(
       ...initAuthState,
 
       setUser: (user) => set({ user }),
-      setIsAuthLoading: (isAuthLoading) => set({ isAuthLoading }),
+      setIsAuthLoading: (isRefreshing) => set({ isRefreshing }),
       setIsAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
       setAccessToken: (token) => set({ accessToken: token }),
       setIsPreviousLoggedIn: (status) => set({ isPreviousLoggedIn: status }),
@@ -61,16 +62,18 @@ export const useAuthStore = create<TAuthStore>()(
           set({
             accessToken,
             isAuthenticated: true,
-            isAuthLoading: false,
+            isRefreshing: false,
             isAuthError: false,
             isPreviousLoggedIn: true,
           })
 
           return true
-        } catch {
+        } catch (err) {
+          console.log('Error', err)
+
           set({
             ...initAuthState,
-            isAuthLoading: false,
+            isRefreshing: false,
             isAuthError: true,
           })
           return false
