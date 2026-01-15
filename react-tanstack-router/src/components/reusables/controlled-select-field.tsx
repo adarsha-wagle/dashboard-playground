@@ -1,0 +1,112 @@
+import {
+  type Control,
+  type FieldValues,
+  type Path,
+  type PathValue,
+} from 'react-hook-form'
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+
+import { cn } from '@/lib/utils'
+import type { HTMLProps } from 'react'
+import type { HTMLDivElement } from 'happy-dom'
+
+export interface ISelectOption {
+  [key: string]: any
+  icon?: React.ComponentType<{ className?: string }>
+}
+
+type ControlledSelectFieldProps<
+  T extends FieldValues,
+  OptionType extends ISelectOption,
+> = {
+  name: Path<T>
+  label: string
+  control: Control<T>
+  options: OptionType[]
+  defaultValue?: PathValue<T, Path<T>> | ''
+  placeholder?: string
+  className?: HTMLProps<HTMLDivElement>['className']
+  inputClassName?: HTMLProps<HTMLElement>['className']
+  required?: boolean
+  setKey?: keyof OptionType // which key to store as value
+  showKey?: keyof OptionType // which key to display
+}
+
+export function ControlledSelectField<
+  T extends FieldValues,
+  OptionType extends ISelectOption,
+>({
+  name,
+  label,
+  control,
+  options,
+  placeholder = 'Select an option',
+  className = '',
+  inputClassName = '',
+  required = false,
+  setKey = 'value' as keyof OptionType,
+  showKey = 'label' as keyof OptionType,
+}: ControlledSelectFieldProps<T, OptionType>) {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={cn('w-full', className)}>
+          <FormLabel>
+            {label}
+            {required && <span className="text-pink-400 ml-1">*</span>}
+          </FormLabel>
+
+          <FormControl>
+            <Select
+              {...field}
+              onValueChange={field.onChange}
+              defaultValue={field.value as string}
+            >
+              <SelectTrigger className={cn('w-full', inputClassName)}>
+                <SelectValue
+                  placeholder={placeholder}
+                  className="text-gray-950 py-2 pl-4 capitalize"
+                />
+              </SelectTrigger>
+
+              <SelectContent className="bg-gray-100">
+                {options.map((option) => (
+                  <SelectItem
+                    key={String(option[setKey])}
+                    value={String(option[setKey])}
+                    className="responsive__fontsize17 font-afacad text-gray-950 capitalize flex items-center gap-2"
+                  >
+                    {/* Render icon if exists */}
+                    {option.icon && (
+                      <option.icon className="w-4 h-4 text-gray-600" />
+                    )}
+                    {String(option[showKey])}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </FormControl>
+
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  )
+}

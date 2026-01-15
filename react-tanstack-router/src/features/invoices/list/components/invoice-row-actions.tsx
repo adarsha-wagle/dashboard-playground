@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 import { type Row } from '@tanstack/react-table'
 import { Edit, Trash } from 'lucide-react'
-import type { IInvoice } from '../../shared/invoice-type'
+import type { IInvoice } from '../../../components/table/shared/invoice-type'
 import InvoiceEdit from './invoice-edit'
 
 type OrganizationRowActionProps = {

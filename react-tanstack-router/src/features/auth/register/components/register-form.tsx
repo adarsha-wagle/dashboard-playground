@@ -15,6 +15,7 @@ import ControlledInputField from '@/components/reusables/controlled-input-field'
 import { LoginSchema, type TLoginSchema } from '../../shared/auth-type'
 import { useRegisterMutation } from '../../shared/auth-services'
 import { Link } from '@tanstack/react-router'
+import { Form } from '@/components/ui/form'
 
 export function RegisterForm({
   className,
@@ -22,11 +23,7 @@ export function RegisterForm({
 }: React.ComponentProps<'div'>) {
   const registerMutation = useRegisterMutation()
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TLoginSchema>({
+  const form = useForm<TLoginSchema>({
     resolver: zodResolver(LoginSchema),
   })
 
@@ -44,27 +41,27 @@ export function RegisterForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <ControlledInputField
-              control={control}
-              name="username"
-              label="Username"
-              placeholder="Enter your username"
-              required
-              errors={errors}
-            />
-            <ControlledInputField
-              control={control}
-              name="password"
-              label="Password"
-              placeholder="Enter your password"
-              required
-              errors={errors}
-            />
-            <Button type="submit">Register</Button>
-            <p className="text-center">
-              Already have an account? <Link to="/auth/login">Login</Link>
-            </p>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <Form {...form}>
+              <ControlledInputField
+                control={form.control}
+                name="username"
+                label="Username"
+                placeholder="Enter your username"
+                required
+              />
+              <ControlledInputField
+                control={form.control}
+                name="password"
+                label="Password"
+                placeholder="Enter your password"
+                required
+              />
+              <Button type="submit">Register</Button>
+              <p className="text-center">
+                Already have an account? <Link to="/auth/login">Login</Link>
+              </p>
+            </Form>
           </form>
         </CardContent>
       </Card>

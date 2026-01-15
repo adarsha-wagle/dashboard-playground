@@ -15,10 +15,10 @@ import {
   InvoiceSchema,
   type IInvoice,
   type TInvoiceSchema,
-} from '../../shared/invoice-type'
+} from '../../../components/table/shared/invoice-type'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCreateInvoice } from '../../shared/invoice-service'
+import { useCreateInvoice } from '../../../components/table/shared/invoice-service'
 import { Edit } from 'lucide-react'
 
 type InvoiceEditProps = {

@@ -4,12 +4,12 @@ import { useFilters } from '@/hooks/use-filters'
 import { usePagination } from '@/hooks/use-pagination'
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
-import { useOrganizationColumns } from '../hooks/use-invoice-column'
-import { useGetPaginatedInvoices } from '../../shared/invoice-service'
+import { useGetPaginatedInvoices } from '../../../components/table/shared/invoice-service'
 import { invoiceFilterOptions } from './invoice-filters'
 import { useMemo } from 'react'
 import { useSorting } from '@/hooks/use-sorting'
 import InvoiceTableToolbar from './invoice-table-toolbar'
+import { useOrganizationColumns } from '@/features/components/table/hooks/use-invoice-column'
 
 const SectionInvoiceTableList = () => {
   const paginationOptions = usePagination()

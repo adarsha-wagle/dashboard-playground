@@ -17,10 +17,19 @@ import { Route as DemoStorybookRouteImport } from './routes/demo/storybook'
 import { Route as PublicAuthRouteRouteImport } from './routes/_public/auth/route'
 import { Route as PublicBlogsIndexRouteImport } from './routes/_public/blogs/index'
 import { Route as PublicAboutIndexRouteImport } from './routes/_public/about/index'
+import { Route as AuthenticatedSetupIndexRouteImport } from './routes/_authenticated/setup/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
-import { Route as AuthenticatedInvoicesIndexRouteImport } from './routes/_authenticated/invoices/index'
+import { Route as AuthenticatedMessagesIndexRouteImport } from './routes/_authenticated/messages/index'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as PublicAuthRegisterIndexRouteImport } from './routes/_public/auth/register/index'
 import { Route as PublicAuthLoginIndexRouteImport } from './routes/_public/auth/login/index'
+import { Route as AuthenticatedDashboardAuthRegisterIndexRouteImport } from './routes/_authenticated/dashboard-auth/register/index'
+import { Route as AuthenticatedDashboardAuthLoginIndexRouteImport } from './routes/_authenticated/dashboard-auth/login/index'
+import { Route as AuthenticatedDashboardAuthImplementationIndexRouteImport } from './routes/_authenticated/dashboard-auth/implementation/index'
+import { Route as AuthenticatedComponentsTextEditorIndexRouteImport } from './routes/_authenticated/components/text-editor/index'
+import { Route as AuthenticatedComponentsTableIndexRouteImport } from './routes/_authenticated/components/table/index'
+import { Route as AuthenticatedComponentsServerAutocompleteIndexRouteImport } from './routes/_authenticated/components/server-autocomplete/index'
+import { Route as AuthenticatedComponentsInputFieldsIndexRouteImport } from './routes/_authenticated/components/input-fields/index'
 
 const PublicRouteRoute = PublicRouteRouteImport.update({
   id: '/_public',
@@ -60,16 +69,27 @@ const PublicAboutIndexRoute = PublicAboutIndexRouteImport.update({
   path: '/about/',
   getParentRoute: () => PublicRouteRoute,
 } as any)
+const AuthenticatedSetupIndexRoute = AuthenticatedSetupIndexRouteImport.update({
+  id: '/setup/',
+  path: '/setup/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/settings/',
     path: '/settings/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedInvoicesIndexRoute =
-  AuthenticatedInvoicesIndexRouteImport.update({
-    id: '/invoices/',
-    path: '/invoices/',
+const AuthenticatedMessagesIndexRoute =
+  AuthenticatedMessagesIndexRouteImport.update({
+    id: '/messages/',
+    path: '/messages/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardIndexRoute =
+  AuthenticatedDashboardIndexRouteImport.update({
+    id: '/dashboard/',
+    path: '/dashboard/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const PublicAuthRegisterIndexRoute = PublicAuthRegisterIndexRouteImport.update({
@@ -82,16 +102,67 @@ const PublicAuthLoginIndexRoute = PublicAuthLoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => PublicAuthRouteRoute,
 } as any)
+const AuthenticatedDashboardAuthRegisterIndexRoute =
+  AuthenticatedDashboardAuthRegisterIndexRouteImport.update({
+    id: '/dashboard-auth/register/',
+    path: '/dashboard-auth/register/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardAuthLoginIndexRoute =
+  AuthenticatedDashboardAuthLoginIndexRouteImport.update({
+    id: '/dashboard-auth/login/',
+    path: '/dashboard-auth/login/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardAuthImplementationIndexRoute =
+  AuthenticatedDashboardAuthImplementationIndexRouteImport.update({
+    id: '/dashboard-auth/implementation/',
+    path: '/dashboard-auth/implementation/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedComponentsTextEditorIndexRoute =
+  AuthenticatedComponentsTextEditorIndexRouteImport.update({
+    id: '/components/text-editor/',
+    path: '/components/text-editor/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedComponentsTableIndexRoute =
+  AuthenticatedComponentsTableIndexRouteImport.update({
+    id: '/components/table/',
+    path: '/components/table/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedComponentsServerAutocompleteIndexRoute =
+  AuthenticatedComponentsServerAutocompleteIndexRouteImport.update({
+    id: '/components/server-autocomplete/',
+    path: '/components/server-autocomplete/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedComponentsInputFieldsIndexRoute =
+  AuthenticatedComponentsInputFieldsIndexRouteImport.update({
+    id: '/components/input-fields/',
+    path: '/components/input-fields/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof PublicAuthRouteRouteWithChildren
   '/demo/storybook': typeof DemoStorybookRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/': typeof PublicIndexRoute
-  '/invoices': typeof AuthenticatedInvoicesIndexRoute
+  '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/messages': typeof AuthenticatedMessagesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/setup': typeof AuthenticatedSetupIndexRoute
   '/about': typeof PublicAboutIndexRoute
   '/blogs': typeof PublicBlogsIndexRoute
+  '/components/input-fields': typeof AuthenticatedComponentsInputFieldsIndexRoute
+  '/components/server-autocomplete': typeof AuthenticatedComponentsServerAutocompleteIndexRoute
+  '/components/table': typeof AuthenticatedComponentsTableIndexRoute
+  '/components/text-editor': typeof AuthenticatedComponentsTextEditorIndexRoute
+  '/dashboard-auth/implementation': typeof AuthenticatedDashboardAuthImplementationIndexRoute
+  '/dashboard-auth/login': typeof AuthenticatedDashboardAuthLoginIndexRoute
+  '/dashboard-auth/register': typeof AuthenticatedDashboardAuthRegisterIndexRoute
   '/auth/login': typeof PublicAuthLoginIndexRoute
   '/auth/register': typeof PublicAuthRegisterIndexRoute
 }
@@ -100,10 +171,19 @@ export interface FileRoutesByTo {
   '/demo/storybook': typeof DemoStorybookRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/': typeof PublicIndexRoute
-  '/invoices': typeof AuthenticatedInvoicesIndexRoute
+  '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/messages': typeof AuthenticatedMessagesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/setup': typeof AuthenticatedSetupIndexRoute
   '/about': typeof PublicAboutIndexRoute
   '/blogs': typeof PublicBlogsIndexRoute
+  '/components/input-fields': typeof AuthenticatedComponentsInputFieldsIndexRoute
+  '/components/server-autocomplete': typeof AuthenticatedComponentsServerAutocompleteIndexRoute
+  '/components/table': typeof AuthenticatedComponentsTableIndexRoute
+  '/components/text-editor': typeof AuthenticatedComponentsTextEditorIndexRoute
+  '/dashboard-auth/implementation': typeof AuthenticatedDashboardAuthImplementationIndexRoute
+  '/dashboard-auth/login': typeof AuthenticatedDashboardAuthLoginIndexRoute
+  '/dashboard-auth/register': typeof AuthenticatedDashboardAuthRegisterIndexRoute
   '/auth/login': typeof PublicAuthLoginIndexRoute
   '/auth/register': typeof PublicAuthRegisterIndexRoute
 }
@@ -115,10 +195,19 @@ export interface FileRoutesById {
   '/demo/storybook': typeof DemoStorybookRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/_public/': typeof PublicIndexRoute
-  '/_authenticated/invoices/': typeof AuthenticatedInvoicesIndexRoute
+  '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/messages/': typeof AuthenticatedMessagesIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/setup/': typeof AuthenticatedSetupIndexRoute
   '/_public/about/': typeof PublicAboutIndexRoute
   '/_public/blogs/': typeof PublicBlogsIndexRoute
+  '/_authenticated/components/input-fields/': typeof AuthenticatedComponentsInputFieldsIndexRoute
+  '/_authenticated/components/server-autocomplete/': typeof AuthenticatedComponentsServerAutocompleteIndexRoute
+  '/_authenticated/components/table/': typeof AuthenticatedComponentsTableIndexRoute
+  '/_authenticated/components/text-editor/': typeof AuthenticatedComponentsTextEditorIndexRoute
+  '/_authenticated/dashboard-auth/implementation/': typeof AuthenticatedDashboardAuthImplementationIndexRoute
+  '/_authenticated/dashboard-auth/login/': typeof AuthenticatedDashboardAuthLoginIndexRoute
+  '/_authenticated/dashboard-auth/register/': typeof AuthenticatedDashboardAuthRegisterIndexRoute
   '/_public/auth/login/': typeof PublicAuthLoginIndexRoute
   '/_public/auth/register/': typeof PublicAuthRegisterIndexRoute
 }
@@ -129,10 +218,19 @@ export interface FileRouteTypes {
     | '/demo/storybook'
     | '/demo/tanstack-query'
     | '/'
-    | '/invoices'
+    | '/dashboard'
+    | '/messages'
     | '/settings'
+    | '/setup'
     | '/about'
     | '/blogs'
+    | '/components/input-fields'
+    | '/components/server-autocomplete'
+    | '/components/table'
+    | '/components/text-editor'
+    | '/dashboard-auth/implementation'
+    | '/dashboard-auth/login'
+    | '/dashboard-auth/register'
     | '/auth/login'
     | '/auth/register'
   fileRoutesByTo: FileRoutesByTo
@@ -141,10 +239,19 @@ export interface FileRouteTypes {
     | '/demo/storybook'
     | '/demo/tanstack-query'
     | '/'
-    | '/invoices'
+    | '/dashboard'
+    | '/messages'
     | '/settings'
+    | '/setup'
     | '/about'
     | '/blogs'
+    | '/components/input-fields'
+    | '/components/server-autocomplete'
+    | '/components/table'
+    | '/components/text-editor'
+    | '/dashboard-auth/implementation'
+    | '/dashboard-auth/login'
+    | '/dashboard-auth/register'
     | '/auth/login'
     | '/auth/register'
   id:
@@ -155,10 +262,19 @@ export interface FileRouteTypes {
     | '/demo/storybook'
     | '/demo/tanstack-query'
     | '/_public/'
-    | '/_authenticated/invoices/'
+    | '/_authenticated/dashboard/'
+    | '/_authenticated/messages/'
     | '/_authenticated/settings/'
+    | '/_authenticated/setup/'
     | '/_public/about/'
     | '/_public/blogs/'
+    | '/_authenticated/components/input-fields/'
+    | '/_authenticated/components/server-autocomplete/'
+    | '/_authenticated/components/table/'
+    | '/_authenticated/components/text-editor/'
+    | '/_authenticated/dashboard-auth/implementation/'
+    | '/_authenticated/dashboard-auth/login/'
+    | '/_authenticated/dashboard-auth/register/'
     | '/_public/auth/login/'
     | '/_public/auth/register/'
   fileRoutesById: FileRoutesById
@@ -228,6 +344,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicAboutIndexRouteImport
       parentRoute: typeof PublicRouteRoute
     }
+    '/_authenticated/setup/': {
+      id: '/_authenticated/setup/'
+      path: '/setup'
+      fullPath: '/setup'
+      preLoaderRoute: typeof AuthenticatedSetupIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/settings'
@@ -235,11 +358,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/invoices/': {
-      id: '/_authenticated/invoices/'
-      path: '/invoices'
-      fullPath: '/invoices'
-      preLoaderRoute: typeof AuthenticatedInvoicesIndexRouteImport
+    '/_authenticated/messages/': {
+      id: '/_authenticated/messages/'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_public/auth/register/': {
@@ -256,17 +386,91 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicAuthLoginIndexRouteImport
       parentRoute: typeof PublicAuthRouteRoute
     }
+    '/_authenticated/dashboard-auth/register/': {
+      id: '/_authenticated/dashboard-auth/register/'
+      path: '/dashboard-auth/register'
+      fullPath: '/dashboard-auth/register'
+      preLoaderRoute: typeof AuthenticatedDashboardAuthRegisterIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard-auth/login/': {
+      id: '/_authenticated/dashboard-auth/login/'
+      path: '/dashboard-auth/login'
+      fullPath: '/dashboard-auth/login'
+      preLoaderRoute: typeof AuthenticatedDashboardAuthLoginIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard-auth/implementation/': {
+      id: '/_authenticated/dashboard-auth/implementation/'
+      path: '/dashboard-auth/implementation'
+      fullPath: '/dashboard-auth/implementation'
+      preLoaderRoute: typeof AuthenticatedDashboardAuthImplementationIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/components/text-editor/': {
+      id: '/_authenticated/components/text-editor/'
+      path: '/components/text-editor'
+      fullPath: '/components/text-editor'
+      preLoaderRoute: typeof AuthenticatedComponentsTextEditorIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/components/table/': {
+      id: '/_authenticated/components/table/'
+      path: '/components/table'
+      fullPath: '/components/table'
+      preLoaderRoute: typeof AuthenticatedComponentsTableIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/components/server-autocomplete/': {
+      id: '/_authenticated/components/server-autocomplete/'
+      path: '/components/server-autocomplete'
+      fullPath: '/components/server-autocomplete'
+      preLoaderRoute: typeof AuthenticatedComponentsServerAutocompleteIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/components/input-fields/': {
+      id: '/_authenticated/components/input-fields/'
+      path: '/components/input-fields'
+      fullPath: '/components/input-fields'
+      preLoaderRoute: typeof AuthenticatedComponentsInputFieldsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedInvoicesIndexRoute: typeof AuthenticatedInvoicesIndexRoute
+  AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+  AuthenticatedMessagesIndexRoute: typeof AuthenticatedMessagesIndexRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
+  AuthenticatedSetupIndexRoute: typeof AuthenticatedSetupIndexRoute
+  AuthenticatedComponentsInputFieldsIndexRoute: typeof AuthenticatedComponentsInputFieldsIndexRoute
+  AuthenticatedComponentsServerAutocompleteIndexRoute: typeof AuthenticatedComponentsServerAutocompleteIndexRoute
+  AuthenticatedComponentsTableIndexRoute: typeof AuthenticatedComponentsTableIndexRoute
+  AuthenticatedComponentsTextEditorIndexRoute: typeof AuthenticatedComponentsTextEditorIndexRoute
+  AuthenticatedDashboardAuthImplementationIndexRoute: typeof AuthenticatedDashboardAuthImplementationIndexRoute
+  AuthenticatedDashboardAuthLoginIndexRoute: typeof AuthenticatedDashboardAuthLoginIndexRoute
+  AuthenticatedDashboardAuthRegisterIndexRoute: typeof AuthenticatedDashboardAuthRegisterIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedInvoicesIndexRoute: AuthenticatedInvoicesIndexRoute,
+  AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  AuthenticatedMessagesIndexRoute: AuthenticatedMessagesIndexRoute,
   AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
+  AuthenticatedSetupIndexRoute: AuthenticatedSetupIndexRoute,
+  AuthenticatedComponentsInputFieldsIndexRoute:
+    AuthenticatedComponentsInputFieldsIndexRoute,
+  AuthenticatedComponentsServerAutocompleteIndexRoute:
+    AuthenticatedComponentsServerAutocompleteIndexRoute,
+  AuthenticatedComponentsTableIndexRoute:
+    AuthenticatedComponentsTableIndexRoute,
+  AuthenticatedComponentsTextEditorIndexRoute:
+    AuthenticatedComponentsTextEditorIndexRoute,
+  AuthenticatedDashboardAuthImplementationIndexRoute:
+    AuthenticatedDashboardAuthImplementationIndexRoute,
+  AuthenticatedDashboardAuthLoginIndexRoute:
+    AuthenticatedDashboardAuthLoginIndexRoute,
+  AuthenticatedDashboardAuthRegisterIndexRoute:
+    AuthenticatedDashboardAuthRegisterIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

@@ -4,11 +4,11 @@ import { PanelLeftClose, PanelLeft } from 'lucide-react'
 import { useSidebarContext } from './sidebar-context'
 import { TreeItem } from './treeitem'
 import { TreePopover } from './treepopover'
-import { type TreeNode } from './types'
 import { cn } from '@/lib/utils'
+import type { ITreeNode } from './types'
 
 interface AnimatedSidebarProps {
-  navigation: TreeNode[]
+  navigation: ITreeNode[]
   header?: React.ReactNode
   footer?: React.ReactNode
 }
@@ -22,11 +22,11 @@ const sidebarSpring: Transition = {
 
 const sidebarVariants: Variants = {
   expanded: {
-    width: 260,
+    width: 'var(--sidebar-width)',
     transition: sidebarSpring,
   },
   collapsed: {
-    width: 64,
+    width: 'var(--sidebar-width-collapsed)',
     transition: sidebarSpring,
   },
 }
@@ -51,7 +51,7 @@ export const AnimatedSidebar: React.FC<AnimatedSidebarProps> = ({
       aria-label="Main navigation"
     >
       {/* Header */}
-      <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-4">
+      <div className="flex h-(--sidebar-header-height) items-center justify-between border-b border-sidebar-border p-(--sidebar-padding)">
         {header || (
           <motion.div
             initial={false}
@@ -60,12 +60,9 @@ export const AnimatedSidebar: React.FC<AnimatedSidebarProps> = ({
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <span className="text-sm font-bold text-primary-foreground">
-                L
+                AW
               </span>
             </div>
-            <span className="whitespace-nowrap font-semibold text-foreground">
-              AW
-            </span>
           </motion.div>
         )}
 
@@ -90,7 +87,7 @@ export const AnimatedSidebar: React.FC<AnimatedSidebarProps> = ({
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden p-3">
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden p-(--sidebar-padding) small-scrollbar">
         <div role="tree" aria-label="Navigation tree">
           {isExpanded
             ? navigation.map((node) => <TreeItem key={node.id} node={node} />)
@@ -102,7 +99,9 @@ export const AnimatedSidebar: React.FC<AnimatedSidebarProps> = ({
 
       {/* Footer */}
       {footer && (
-        <div className="border-t border-sidebar-border p-3">{footer}</div>
+        <div className="border-t border-sidebar-border flex items-center justify-center p-(--sidebar-padding) h-(--sidebar-header-height)">
+          {footer}
+        </div>
       )}
     </motion.aside>
   )

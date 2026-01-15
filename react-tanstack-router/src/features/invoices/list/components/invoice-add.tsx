@@ -11,10 +11,13 @@ import {
   DialogFooter,
   DialogClose,
 } from '@/components/ui/dialog'
-import { InvoiceSchema, type TInvoiceSchema } from '../../shared/invoice-type'
+import {
+  InvoiceSchema,
+  type TInvoiceSchema,
+} from '../../../components/table/shared/invoice-type'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCreateInvoice } from '../../shared/invoice-service'
+import { useCreateInvoice } from '../../../components/table/shared/invoice-service'
 
 const defaultValues: TInvoiceSchema = {
   customer: 'test',

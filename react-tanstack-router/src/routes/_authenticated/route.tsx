@@ -2,10 +2,10 @@ import { createFileRoute, Link, Outlet, redirect } from '@tanstack/react-router'
 import { useAuthStore } from '@/features/auth/shared/use-auth-store'
 import { SidebarProvider } from '@/components/layouts/authenticated/sidebar/sidebar-context'
 import { AnimatedSidebar } from '@/components/layouts/authenticated/sidebar/app-sidebar'
-import { navigationData } from '@/components/layouts/authenticated/sidebar/data'
 import { DashboardHeader } from '@/components/layouts/authenticated/header/dashboard-header'
 import { BoxLoader } from '@/components/data-table/table-loader'
 import { SidebarFooter } from '@/components/layouts/authenticated/sidebar/sidebar-footer'
+import { navigationData } from '@/config/sidebar'
 
 export const Route = createFileRoute('/_authenticated')({
   component: RouteComponent,
@@ -31,14 +31,15 @@ export const Route = createFileRoute('/_authenticated')({
     }
     return
   },
+  // Show loader while checking for access token (You can show skeleton ui of your dashboard)
   pendingComponent: () => <BoxLoader />,
+  onError: (error) => console.error(error),
 })
 
 function RouteComponent() {
-  const { isRefreshing, isAuthError } = useAuthStore()
+  const { isAuthError } = useAuthStore()
 
-  if (isRefreshing) return <div>Loading...</div>
-
+  // If there is refresh Error (refresh token deleted/expired) then show this error or you can create a custom error page
   if (isAuthError) {
     return (
       <div>
@@ -50,17 +51,17 @@ function RouteComponent() {
 
   return (
     <>
-      <SidebarProvider defaultExpanded={true}>
-        <div className="flex min-h-screen w-full">
+      <SidebarProvider defaultExpanded>
+        <div className="flex h-screen w-full">
           <AnimatedSidebar
             navigation={navigationData}
             footer={<SidebarFooter />}
           />
-          <div className="flex flex-1 flex-col">
+          <div className="flex flex-1 flex-col ">
             <DashboardHeader title="Dashboard" subtitle="Welcome back, John" />
-            <div className="p-8">
+            <main className="overflow-y-auto bg-background scrollbar-thin">
               <Outlet />
-            </div>
+            </main>
           </div>
         </div>
       </SidebarProvider>

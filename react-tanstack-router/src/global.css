@@ -1,0 +1,5 @@
+.reactjs-tiptap-editor-drag-handle button[data-testid='add-block'],
+.reactjs-tiptap-editor-drag-handle button:last-child,
+.reactjs-tiptap-editor-drag-handle .lucide-plus {
+  display: none !important;
+}

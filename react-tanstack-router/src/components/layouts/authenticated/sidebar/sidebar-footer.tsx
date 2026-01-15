@@ -6,7 +6,7 @@ const SidebarFooter = () => {
   const { isExpanded } = useSidebarContext()
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex w-full items-center gap-3">
       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
         <User className="h-4 w-4 text-primary" />
       </div>

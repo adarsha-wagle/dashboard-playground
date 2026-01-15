@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 
 import ControlledInputField from '@/components/reusables/controlled-input-field'
 
-import { type TInvoiceSchema } from '../../shared/invoice-type'
+import { type TInvoiceSchema } from '../../../components/table/shared/invoice-type'
 
 type TInvoiceFormProps = {
   onSubmit: (data: TInvoiceSchema) => void

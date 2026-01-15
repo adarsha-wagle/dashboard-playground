@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence, type Variants } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
-import { type TreeNode } from './types'
 import { useSidebarContext } from './sidebar-context'
 import { cn } from '@/lib/utils'
+import type { ITreeNode } from './data'
+import { Link } from '@tanstack/react-router'
 
 interface TreeItemProps {
-  node: TreeNode
+  node: ITreeNode
   level?: number
 }
 
@@ -125,7 +126,7 @@ export const TreeItem: React.FC<TreeItemProps> = ({ node, level = 0 }) => {
         {Icon && (
           <Icon
             className={cn(
-              'h-5 w-5 flex-shrink-0 transition-colors duration-150',
+              'h-5 w-5 shrink-0 transition-colors duration-150',
               isActive
                 ? 'text-sidebar-icon-active'
                 : 'text-sidebar-icon group-hover:text-sidebar-icon-active',
@@ -142,7 +143,17 @@ export const TreeItem: React.FC<TreeItemProps> = ({ node, level = 0 }) => {
               transition={{ duration: 0.2 }}
               className="flex-1 truncate text-left font-medium"
             >
-              {node.label}
+              {node.to ? (
+                <Link
+                  to={node.to}
+                  className="block w-full"
+                  onClick={() => setActiveItemId(node.id)}
+                >
+                  {node.label}
+                </Link>
+              ) : (
+                node.label
+              )}
             </motion.span>
           )}
         </AnimatePresence>

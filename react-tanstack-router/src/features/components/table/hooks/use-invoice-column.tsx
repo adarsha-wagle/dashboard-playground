@@ -1,9 +1,9 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import OrganizationRowAction from '../components/invoice-row-actions'
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
-import type { IInvoice } from '../../shared/invoice-type'
+import type { IInvoice } from '../shared/invoice-type'
 import { Badge } from '@/components/ui/badge'
-import { statusColors } from '../../shared/utils'
+import { statusColors } from '../shared/utils'
 
 export const useOrganizationColumns = () => {
   const columns: ColumnDef<IInvoice>[] = [

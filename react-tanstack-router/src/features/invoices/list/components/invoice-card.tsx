@@ -9,8 +9,12 @@ import {
 import { Badge } from '@/components/ui/badge'
 
 import { Skeleton } from '@/components/ui/skeleton'
-import type { IInvoice } from '../../shared/invoice-type'
-import { formatCurrency, formatDate, statusColors } from '../../shared/utils'
+import type { IInvoice } from '../../../components/table/shared/invoice-type'
+import {
+  formatCurrency,
+  formatDate,
+  statusColors,
+} from '../../../components/table/shared/utils'
 
 export const InvoiceCard = ({ invoice }: { invoice: IInvoice }) => {
   return (

@@ -1,27 +1,29 @@
-'use client'
-
 import {
   type Control,
-  type FieldErrors,
   type FieldValues,
   type Path,
   type PathValue,
-  Controller,
-  get,
 } from 'react-hook-form'
-import { type HTMLProps } from 'react'
+import { type HTMLProps, useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
-import { Label } from '../ui/label'
 import { Input } from '../ui/input'
+import { Button } from '../ui/button'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../ui/form'
 
 type TControlledInputFieldProps<T extends FieldValues> = {
   name: Path<T>
   label: string
   control: Control<T>
-  errors: FieldErrors<T>
-  type?: 'text' | 'number' | 'password' | 'email' | 'date'
+  type?: 'text' | 'password' | 'date-picker' | 'email'
   defaultValue?: PathValue<T, Path<T>> | ''
   className?: HTMLProps<HTMLElement>['className']
   inputClassName?: HTMLProps<HTMLElement>['className']
@@ -33,7 +35,6 @@ function ControlledInputField<T extends FieldValues>({
   name,
   label,
   control,
-  errors,
   type = 'text',
   defaultValue = '',
   inputClassName = '',
@@ -41,50 +42,48 @@ function ControlledInputField<T extends FieldValues>({
   placeholder = '',
   required = false,
 }: TControlledInputFieldProps<T>) {
-  const errorMessage = get(errors, name)?.message
-  const uniqueId = `${name}-input`
-  const labelId = `${uniqueId}-label`
+  const [showPassword, setShowPassword] = useState(false)
+  const isPassword = type === 'password'
 
   return (
-    <div className={cn('w-full', className)}>
-      <Label id={labelId} htmlFor={uniqueId}>
-        {label}
-        {required && <span className="text-red-400 text-xs"> *</span>}
-      </Label>
-
-      <Controller
-        name={name}
-        control={control}
-        defaultValue={defaultValue as PathValue<T, Path<T>>}
-        render={({ field }) => (
-          <>
-            <Input
-              {...field}
-              id={uniqueId}
-              type={type}
-              placeholder={placeholder}
-              className={cn('mt-2 border-2 h-11.5', inputClassName)}
-              value={field.value || ''}
-              onChange={(e) => field.onChange(e.target.value)}
-              required={required}
-              aria-invalid={!!errorMessage}
-              aria-labelledby={labelId}
-              aria-describedby={errorMessage ? `${uniqueId}-error` : undefined}
-            />
-
-            {errorMessage && (
-              <span
-                id={`${uniqueId}-error`}
-                className="text-xs text-red-400 pl-2"
-                role="alert"
-              >
-                {errorMessage as string}
-              </span>
-            )}
-          </>
-        )}
-      />
-    </div>
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={cn('w-full', className)}>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <div className="relative">
+              <Input
+                placeholder={placeholder}
+                {...field}
+                defaultValue={defaultValue}
+                type={isPassword && showPassword ? 'text' : type}
+                required={required}
+                className={cn(isPassword && 'pr-10', inputClassName)}
+              />
+              {isPassword && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </Button>
+              )}
+            </div>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   )
 }
 

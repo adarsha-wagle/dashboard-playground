@@ -9,7 +9,7 @@ type TSearchInputProps = {
 function SearchInput({ handleSearchChange, initialValue }: TSearchInputProps) {
   const [search, setSearch] = React.useState(initialValue)
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setSearch(value)
     handleSearchChange(value)

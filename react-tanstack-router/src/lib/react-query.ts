@@ -10,7 +10,7 @@ import { AxiosError } from 'axios'
 import { AppErrorHandler } from './app-error-handler'
 import { type IApiErrorResponse } from '@/types/api'
 import { resetAuth } from '@/features/auth/shared/use-auth-store'
-import type { IInvoiceFilter } from '@/features/invoices/shared/invoice-type'
+import type { IInvoiceFilter } from '@/features/components/table/shared/invoice-type'
 
 const queryConfig: DefaultOptions = {
   queries: {

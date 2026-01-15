@@ -11,12 +11,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { type TreeNode } from './types'
 import { useSidebarContext } from './sidebar-context'
 import { cn } from '@/lib/utils'
+import type { ITreeNode } from './data'
 
 interface TreePopoverProps {
-  node: TreeNode
+  node: ITreeNode
 }
 
 const treeHeightSpring: Transition = {
@@ -55,7 +55,7 @@ const childrenVariants: Variants = {
 
 // Recursive component for popover tree items
 const PopoverTreeItem: React.FC<{
-  node: TreeNode
+  node: ITreeNode
   level?: number
 }> = ({ node, level = 0 }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -147,7 +147,7 @@ export const TreePopover: React.FC<TreePopoverProps> = ({ node }) => {
   const Icon = node.icon
 
   // Check if any child is active
-  const isChildActive = (n: TreeNode): boolean => {
+  const isChildActive = (n: ITreeNode): boolean => {
     if (n.id === activeItemId) return true
     if (n.children) {
       return n.children.some(isChildActive)

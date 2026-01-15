@@ -1,69 +1,54 @@
+import type { ITreeNode } from '@/components/layouts/authenticated/sidebar/types'
 import {
   LayoutDashboard,
-  Users,
   FolderKanban,
-  FileText,
   Settings,
   BarChart3,
   MessageSquare,
   HelpCircle,
-  Calendar,
-  Mail,
-  Bell,
   Shield,
   Palette,
   Database,
   Webhook,
   CreditCard,
+  LogInIcon,
 } from 'lucide-react'
-import { type TreeNode } from './types'
 
-export const navigationData: TreeNode[] = [
+export const navigationData: ITreeNode[] = [
   {
     id: 'dashboard',
     label: 'Dashboard',
     icon: LayoutDashboard,
-    href: '/dashboard',
+    to: '/dashboard',
   },
   {
-    id: 'projects',
-    label: 'Projects',
+    id: 'components',
+    label: 'Components',
     icon: FolderKanban,
-    badge: 12,
     children: [
       {
-        id: 'projects-active',
-        label: 'Active Projects',
-        badge: 8,
-        children: [
-          { id: 'project-alpha', label: 'Project Alpha' },
-          { id: 'project-beta', label: 'Project Beta' },
-          { id: 'project-gamma', label: 'Project Gamma' },
-        ],
+        id: 'components-table',
+        label: 'Server Side Table',
+        to: '/components/table',
       },
       {
-        id: 'projects-archived',
-        label: 'Archived',
-        badge: 4,
-        children: [
-          { id: 'project-old-1', label: 'Legacy System' },
-          { id: 'project-old-2', label: 'V1 Migration' },
-        ],
+        id: 'components-server-autocomplete',
+        label: 'Server Side Autocomplete',
+        to: '/components/server-autocomplete',
       },
-      { id: 'projects-templates', label: 'Templates' },
+      {
+        id: 'components-input-fields',
+        label: 'Input Fields',
+        to: '/components/input-fields',
+      },
+      {
+        id: 'components-text-editor',
+        label: 'Text Editor',
+        to: '/components/text-editor',
+      },
     ],
   },
-  {
-    id: 'team',
-    label: 'Team',
-    icon: Users,
-    children: [
-      { id: 'team-members', label: 'Members', badge: 24 },
-      { id: 'team-groups', label: 'Groups' },
-      { id: 'team-roles', label: 'Roles & Permissions' },
-      { id: 'team-invites', label: 'Pending Invites', badge: 3 },
-    ],
-  },
+
   {
     id: 'analytics',
     label: 'Analytics',
@@ -75,30 +60,36 @@ export const navigationData: TreeNode[] = [
       { id: 'analytics-exports', label: 'Exports' },
     ],
   },
-  {
-    id: 'documents',
-    label: 'Documents',
-    icon: FileText,
-    href: '/documents',
-  },
-  {
-    id: 'calendar',
-    label: 'Calendar',
-    icon: Calendar,
-    href: '/calendar',
-  },
+
   {
     id: 'messages',
     label: 'Messages',
     icon: MessageSquare,
     badge: 5,
-    href: '/messages',
+    to: '/messages',
   },
+
   {
-    id: 'notifications',
-    label: 'Notifications',
-    icon: Bell,
-    href: '/notifications',
+    id: 'auth',
+    label: 'Authentication',
+    icon: LogInIcon,
+    children: [
+      {
+        id: 'auth-login',
+        label: 'Login',
+        to: '/dashboard-auth/login',
+      },
+      {
+        id: 'auth-signup',
+        label: 'Sign-up',
+        to: '/dashboard-auth/register',
+      },
+      {
+        id: 'auth-implementation',
+        label: 'ImplementationDetails',
+        to: '/dashboard-auth/implementation',
+      },
+    ],
   },
   {
     id: 'settings',
@@ -143,9 +134,9 @@ export const navigationData: TreeNode[] = [
     ],
   },
   {
-    id: 'help',
+    id: 'setup',
     label: 'Help & Support',
     icon: HelpCircle,
-    href: '/help',
+    to: '/setup',
   },
 ]

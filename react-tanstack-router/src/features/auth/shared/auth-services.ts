@@ -21,7 +21,7 @@ export const useLoginMutation = () => {
       })
 
       toast.success(data.message)
-      router.navigate({ to: '/invoices', replace: true })
+      router.navigate({ to: '/dashboard', replace: true })
     },
   })
 }

@@ -1,4 +1,4 @@
-import { useGetInfiniteInvoices } from '../../shared/invoice-service'
+import { useGetInfiniteInvoices } from '../../../components/table/shared/invoice-service'
 import { InvoiceCard, InvoiceCardSkeleton } from './invoice-card'
 
 function SectionInvoiceList() {
