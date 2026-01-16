@@ -107,6 +107,7 @@ export const FormSchema = z.object({
   thumbnail: requiredSingleFileSchema,
   gallery: imageGallerySchema.optional(),
   attachment: singleFileSchema.optional(),
+  fullDescription: z.string().optional(),
 })
 
 export type TFormSchema = z.infer<typeof FormSchema>

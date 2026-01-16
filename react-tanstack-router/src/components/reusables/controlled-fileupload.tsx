@@ -22,7 +22,6 @@ type ControlledFileUploadProps<T extends FieldValues> = {
   maxFiles?: number
   required?: boolean
   className?: string
-  inputClassName?: string
   placeholder?: string
 }
 
@@ -36,7 +35,6 @@ export function ControlledFileUpload<T extends FieldValues>({
   maxFiles = 1,
   required = false,
   className,
-  inputClassName,
   placeholder = 'Click or drag files to upload',
 }: ControlledFileUploadProps<T>) {
   const inputRef = React.useRef<HTMLInputElement>(null)

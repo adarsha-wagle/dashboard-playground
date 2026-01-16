@@ -87,7 +87,7 @@ export const AnimatedSidebar: React.FC<AnimatedSidebarProps> = ({
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden p-(--sidebar-padding) small-scrollbar">
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden p-(--sidebar-padding) scrollbar-thin">
         <div role="tree" aria-label="Navigation tree">
           {isExpanded
             ? navigation.map((node) => <TreeItem key={node.id} node={node} />)

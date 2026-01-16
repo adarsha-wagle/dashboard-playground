@@ -8,6 +8,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { cn } from '@/lib/utils'
+import type { HTMLProps } from 'react'
 import { type Control, type FieldValues, type Path } from 'react-hook-form'
 
 type RadioOption = {
@@ -19,6 +21,7 @@ type ControlledRadioGroupProps<T extends FieldValues> = {
   name: Path<T>
   label: string
   options: RadioOption[]
+  className?: HTMLProps<HTMLDivElement>['className']
 }
 
 export function ControlledRadioGroup<T extends FieldValues>({
@@ -26,13 +29,14 @@ export function ControlledRadioGroup<T extends FieldValues>({
   name,
   label,
   options,
+  className,
 }: ControlledRadioGroupProps<T>) {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={cn('w-full', className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <RadioGroup

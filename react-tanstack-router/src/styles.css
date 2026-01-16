@@ -74,6 +74,10 @@
   --sidebar-icon: 240 3.8% 46.1%;
   --sidebar-icon-active: 221 83% 53%;
 
+  /* Content */
+
+  --content-padding: 32px;
+
   /* Transitions */
   --transition-fast: 150ms;
   --transition-base: 200ms;
@@ -263,12 +267,17 @@
   border-color: hsl(var(--border));
 }
 
+html,
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 /* ============================================

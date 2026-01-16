@@ -30,6 +30,12 @@ import { Route as AuthenticatedComponentsTextEditorIndexRouteImport } from './ro
 import { Route as AuthenticatedComponentsTableIndexRouteImport } from './routes/_authenticated/components/table/index'
 import { Route as AuthenticatedComponentsServerAutocompleteIndexRouteImport } from './routes/_authenticated/components/server-autocomplete/index'
 import { Route as AuthenticatedComponentsInputFieldsIndexRouteImport } from './routes/_authenticated/components/input-fields/index'
+import { Route as AuthenticatedAnalyticsScatterChartIndexRouteImport } from './routes/_authenticated/analytics/scatter-chart/index'
+import { Route as AuthenticatedAnalyticsPieChartIndexRouteImport } from './routes/_authenticated/analytics/pie-chart/index'
+import { Route as AuthenticatedAnalyticsLineChartIndexRouteImport } from './routes/_authenticated/analytics/line-chart/index'
+import { Route as AuthenticatedAnalyticsComposedChartIndexRouteImport } from './routes/_authenticated/analytics/composed-chart/index'
+import { Route as AuthenticatedAnalyticsBarChartIndexRouteImport } from './routes/_authenticated/analytics/bar-chart/index'
+import { Route as AuthenticatedAnalyticsAreaChartIndexRouteImport } from './routes/_authenticated/analytics/area-chart/index'
 
 const PublicRouteRoute = PublicRouteRouteImport.update({
   id: '/_public',
@@ -144,6 +150,42 @@ const AuthenticatedComponentsInputFieldsIndexRoute =
     path: '/components/input-fields/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAnalyticsScatterChartIndexRoute =
+  AuthenticatedAnalyticsScatterChartIndexRouteImport.update({
+    id: '/analytics/scatter-chart/',
+    path: '/analytics/scatter-chart/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAnalyticsPieChartIndexRoute =
+  AuthenticatedAnalyticsPieChartIndexRouteImport.update({
+    id: '/analytics/pie-chart/',
+    path: '/analytics/pie-chart/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAnalyticsLineChartIndexRoute =
+  AuthenticatedAnalyticsLineChartIndexRouteImport.update({
+    id: '/analytics/line-chart/',
+    path: '/analytics/line-chart/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAnalyticsComposedChartIndexRoute =
+  AuthenticatedAnalyticsComposedChartIndexRouteImport.update({
+    id: '/analytics/composed-chart/',
+    path: '/analytics/composed-chart/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAnalyticsBarChartIndexRoute =
+  AuthenticatedAnalyticsBarChartIndexRouteImport.update({
+    id: '/analytics/bar-chart/',
+    path: '/analytics/bar-chart/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAnalyticsAreaChartIndexRoute =
+  AuthenticatedAnalyticsAreaChartIndexRouteImport.update({
+    id: '/analytics/area-chart/',
+    path: '/analytics/area-chart/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof PublicAuthRouteRouteWithChildren
@@ -156,6 +198,12 @@ export interface FileRoutesByFullPath {
   '/setup': typeof AuthenticatedSetupIndexRoute
   '/about': typeof PublicAboutIndexRoute
   '/blogs': typeof PublicBlogsIndexRoute
+  '/analytics/area-chart': typeof AuthenticatedAnalyticsAreaChartIndexRoute
+  '/analytics/bar-chart': typeof AuthenticatedAnalyticsBarChartIndexRoute
+  '/analytics/composed-chart': typeof AuthenticatedAnalyticsComposedChartIndexRoute
+  '/analytics/line-chart': typeof AuthenticatedAnalyticsLineChartIndexRoute
+  '/analytics/pie-chart': typeof AuthenticatedAnalyticsPieChartIndexRoute
+  '/analytics/scatter-chart': typeof AuthenticatedAnalyticsScatterChartIndexRoute
   '/components/input-fields': typeof AuthenticatedComponentsInputFieldsIndexRoute
   '/components/server-autocomplete': typeof AuthenticatedComponentsServerAutocompleteIndexRoute
   '/components/table': typeof AuthenticatedComponentsTableIndexRoute
@@ -177,6 +225,12 @@ export interface FileRoutesByTo {
   '/setup': typeof AuthenticatedSetupIndexRoute
   '/about': typeof PublicAboutIndexRoute
   '/blogs': typeof PublicBlogsIndexRoute
+  '/analytics/area-chart': typeof AuthenticatedAnalyticsAreaChartIndexRoute
+  '/analytics/bar-chart': typeof AuthenticatedAnalyticsBarChartIndexRoute
+  '/analytics/composed-chart': typeof AuthenticatedAnalyticsComposedChartIndexRoute
+  '/analytics/line-chart': typeof AuthenticatedAnalyticsLineChartIndexRoute
+  '/analytics/pie-chart': typeof AuthenticatedAnalyticsPieChartIndexRoute
+  '/analytics/scatter-chart': typeof AuthenticatedAnalyticsScatterChartIndexRoute
   '/components/input-fields': typeof AuthenticatedComponentsInputFieldsIndexRoute
   '/components/server-autocomplete': typeof AuthenticatedComponentsServerAutocompleteIndexRoute
   '/components/table': typeof AuthenticatedComponentsTableIndexRoute
@@ -201,6 +255,12 @@ export interface FileRoutesById {
   '/_authenticated/setup/': typeof AuthenticatedSetupIndexRoute
   '/_public/about/': typeof PublicAboutIndexRoute
   '/_public/blogs/': typeof PublicBlogsIndexRoute
+  '/_authenticated/analytics/area-chart/': typeof AuthenticatedAnalyticsAreaChartIndexRoute
+  '/_authenticated/analytics/bar-chart/': typeof AuthenticatedAnalyticsBarChartIndexRoute
+  '/_authenticated/analytics/composed-chart/': typeof AuthenticatedAnalyticsComposedChartIndexRoute
+  '/_authenticated/analytics/line-chart/': typeof AuthenticatedAnalyticsLineChartIndexRoute
+  '/_authenticated/analytics/pie-chart/': typeof AuthenticatedAnalyticsPieChartIndexRoute
+  '/_authenticated/analytics/scatter-chart/': typeof AuthenticatedAnalyticsScatterChartIndexRoute
   '/_authenticated/components/input-fields/': typeof AuthenticatedComponentsInputFieldsIndexRoute
   '/_authenticated/components/server-autocomplete/': typeof AuthenticatedComponentsServerAutocompleteIndexRoute
   '/_authenticated/components/table/': typeof AuthenticatedComponentsTableIndexRoute
@@ -224,6 +284,12 @@ export interface FileRouteTypes {
     | '/setup'
     | '/about'
     | '/blogs'
+    | '/analytics/area-chart'
+    | '/analytics/bar-chart'
+    | '/analytics/composed-chart'
+    | '/analytics/line-chart'
+    | '/analytics/pie-chart'
+    | '/analytics/scatter-chart'
     | '/components/input-fields'
     | '/components/server-autocomplete'
     | '/components/table'
@@ -245,6 +311,12 @@ export interface FileRouteTypes {
     | '/setup'
     | '/about'
     | '/blogs'
+    | '/analytics/area-chart'
+    | '/analytics/bar-chart'
+    | '/analytics/composed-chart'
+    | '/analytics/line-chart'
+    | '/analytics/pie-chart'
+    | '/analytics/scatter-chart'
     | '/components/input-fields'
     | '/components/server-autocomplete'
     | '/components/table'
@@ -268,6 +340,12 @@ export interface FileRouteTypes {
     | '/_authenticated/setup/'
     | '/_public/about/'
     | '/_public/blogs/'
+    | '/_authenticated/analytics/area-chart/'
+    | '/_authenticated/analytics/bar-chart/'
+    | '/_authenticated/analytics/composed-chart/'
+    | '/_authenticated/analytics/line-chart/'
+    | '/_authenticated/analytics/pie-chart/'
+    | '/_authenticated/analytics/scatter-chart/'
     | '/_authenticated/components/input-fields/'
     | '/_authenticated/components/server-autocomplete/'
     | '/_authenticated/components/table/'
@@ -435,6 +513,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedComponentsInputFieldsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/analytics/scatter-chart/': {
+      id: '/_authenticated/analytics/scatter-chart/'
+      path: '/analytics/scatter-chart'
+      fullPath: '/analytics/scatter-chart'
+      preLoaderRoute: typeof AuthenticatedAnalyticsScatterChartIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics/pie-chart/': {
+      id: '/_authenticated/analytics/pie-chart/'
+      path: '/analytics/pie-chart'
+      fullPath: '/analytics/pie-chart'
+      preLoaderRoute: typeof AuthenticatedAnalyticsPieChartIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics/line-chart/': {
+      id: '/_authenticated/analytics/line-chart/'
+      path: '/analytics/line-chart'
+      fullPath: '/analytics/line-chart'
+      preLoaderRoute: typeof AuthenticatedAnalyticsLineChartIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics/composed-chart/': {
+      id: '/_authenticated/analytics/composed-chart/'
+      path: '/analytics/composed-chart'
+      fullPath: '/analytics/composed-chart'
+      preLoaderRoute: typeof AuthenticatedAnalyticsComposedChartIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics/bar-chart/': {
+      id: '/_authenticated/analytics/bar-chart/'
+      path: '/analytics/bar-chart'
+      fullPath: '/analytics/bar-chart'
+      preLoaderRoute: typeof AuthenticatedAnalyticsBarChartIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics/area-chart/': {
+      id: '/_authenticated/analytics/area-chart/'
+      path: '/analytics/area-chart'
+      fullPath: '/analytics/area-chart'
+      preLoaderRoute: typeof AuthenticatedAnalyticsAreaChartIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -443,6 +563,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMessagesIndexRoute: typeof AuthenticatedMessagesIndexRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
   AuthenticatedSetupIndexRoute: typeof AuthenticatedSetupIndexRoute
+  AuthenticatedAnalyticsAreaChartIndexRoute: typeof AuthenticatedAnalyticsAreaChartIndexRoute
+  AuthenticatedAnalyticsBarChartIndexRoute: typeof AuthenticatedAnalyticsBarChartIndexRoute
+  AuthenticatedAnalyticsComposedChartIndexRoute: typeof AuthenticatedAnalyticsComposedChartIndexRoute
+  AuthenticatedAnalyticsLineChartIndexRoute: typeof AuthenticatedAnalyticsLineChartIndexRoute
+  AuthenticatedAnalyticsPieChartIndexRoute: typeof AuthenticatedAnalyticsPieChartIndexRoute
+  AuthenticatedAnalyticsScatterChartIndexRoute: typeof AuthenticatedAnalyticsScatterChartIndexRoute
   AuthenticatedComponentsInputFieldsIndexRoute: typeof AuthenticatedComponentsInputFieldsIndexRoute
   AuthenticatedComponentsServerAutocompleteIndexRoute: typeof AuthenticatedComponentsServerAutocompleteIndexRoute
   AuthenticatedComponentsTableIndexRoute: typeof AuthenticatedComponentsTableIndexRoute
@@ -457,6 +583,18 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMessagesIndexRoute: AuthenticatedMessagesIndexRoute,
   AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
   AuthenticatedSetupIndexRoute: AuthenticatedSetupIndexRoute,
+  AuthenticatedAnalyticsAreaChartIndexRoute:
+    AuthenticatedAnalyticsAreaChartIndexRoute,
+  AuthenticatedAnalyticsBarChartIndexRoute:
+    AuthenticatedAnalyticsBarChartIndexRoute,
+  AuthenticatedAnalyticsComposedChartIndexRoute:
+    AuthenticatedAnalyticsComposedChartIndexRoute,
+  AuthenticatedAnalyticsLineChartIndexRoute:
+    AuthenticatedAnalyticsLineChartIndexRoute,
+  AuthenticatedAnalyticsPieChartIndexRoute:
+    AuthenticatedAnalyticsPieChartIndexRoute,
+  AuthenticatedAnalyticsScatterChartIndexRoute:
+    AuthenticatedAnalyticsScatterChartIndexRoute,
   AuthenticatedComponentsInputFieldsIndexRoute:
     AuthenticatedComponentsInputFieldsIndexRoute,
   AuthenticatedComponentsServerAutocompleteIndexRoute:

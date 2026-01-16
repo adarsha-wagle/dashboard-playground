@@ -38,7 +38,7 @@ export const navigationData: ITreeNode[] = [
       },
       {
         id: 'components-input-fields',
-        label: 'Input Fields',
+        label: 'Form Fields',
         to: '/components/input-fields',
       },
       {
@@ -54,10 +54,36 @@ export const navigationData: ITreeNode[] = [
     label: 'Analytics',
     icon: BarChart3,
     children: [
-      { id: 'analytics-overview', label: 'Overview' },
-      { id: 'analytics-reports', label: 'Reports' },
-      { id: 'analytics-realtime', label: 'Real-time' },
-      { id: 'analytics-exports', label: 'Exports' },
+      {
+        id: 'analytics-piechart',
+        label: 'Pie Chart',
+        to: '/analytics/pie-chart',
+      },
+      {
+        id: 'analytics-areachart',
+        label: 'Area Chart',
+        to: '/analytics/area-chart',
+      },
+      {
+        id: 'analytics-linechart',
+        label: 'Line Chart',
+        to: '/analytics/line-chart',
+      },
+      {
+        id: 'analytics-bargraph',
+        label: 'Bar Graph',
+        to: '/analytics/bar-chart',
+      },
+      {
+        id: 'analytics-composedchart',
+        label: 'Composed Chart',
+        to: '/analytics/composed-chart',
+      },
+      {
+        id: 'analytics-scatterchart',
+        label: 'Scatter Chart',
+        to: '/analytics/scatter-chart',
+      },
     ],
   },
 

@@ -2,46 +2,44 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { RichTextProvider } from 'reactjs-tiptap-editor'
 
+// Slash Command
+import { SlashCommandList } from 'reactjs-tiptap-editor/slashcommand'
+
 // Bubble
 import {
+  RichTextBubbleColumns,
   RichTextBubbleIframe,
   RichTextBubbleImage,
   RichTextBubbleLink,
+  RichTextBubbleMermaid,
   RichTextBubbleTable,
   RichTextBubbleText,
-  RichTextBubbleCallout,
+  RichTextBubbleMenuDragHandle,
 } from 'reactjs-tiptap-editor/bubble'
 
-import { extensions } from './toolbar'
-
-// import 'prism-code-editor-lightweight/layout.css'
-// import 'prism-code-editor-lightweight/themes/github-dark.css'
+import 'easydrawer/styles.css'
+import 'prism-code-editor-lightweight/layout.css'
+import 'prism-code-editor-lightweight/themes/github-dark.css'
 import 'reactjs-tiptap-editor/style.css'
 
-import {
-  Editor,
-  EditorContent,
-  useEditor,
-  type Editor as EditorType,
-} from '@tiptap/react'
+import { EditorContent, useEditor, Editor } from '@tiptap/react'
 import { RichTextToolbar } from './toolbar'
+import { extensions } from './extension'
 import { debounce } from '@/lib/utils'
 
 declare global {
   interface Window {
-    editor: EditorType | null
+    editor?: Editor
   }
 }
 
-const DEFAULT = ''
-
 function TextEditor() {
-  const [content, setContent] = useState(DEFAULT)
+  const [content, setContent] = useState('')
 
   const onValueChange = useCallback(
     debounce((value: any) => {
       setContent(value)
-    }, 50),
+    }, 100),
     [],
   )
 
@@ -49,7 +47,7 @@ function TextEditor() {
     // shouldRerenderOnTransaction:  false,
     textDirection: 'auto', // global text direction
     content,
-    extensions,
+    extensions: extensions,
     // content,
     immediatelyRender: false, // error duplicate plugin key
     onUpdate: ({ editor }) => {
@@ -59,39 +57,37 @@ function TextEditor() {
   })
 
   useEffect(() => {
+    // @ts-ignore
     window['editor'] = editor
   }, [editor])
 
-  if (!editor) {
-    return null
-  }
+  if (!editor) return null
 
   return (
     <>
-      <div className=" w-full max-w-7xl mx-auto my-0 px-4">
-        <RichTextProvider editor={editor as Editor}>
-          <div className="overflow-hidden rounded-xl bg-background border! border-border!">
+      <div className=" w-full max-w-300 mx-auto my-0">
+        <RichTextProvider editor={editor}>
+          <div className="overflow-hidden rounded-lg bg-background border! border-border!">
             <div className="flex max-h-full w-full flex-col">
               <RichTextToolbar />
 
               <EditorContent editor={editor} />
 
               {/* Bubble */}
+              <RichTextBubbleColumns />
               <RichTextBubbleIframe />
               <RichTextBubbleLink />
 
               <RichTextBubbleImage />
 
+              <RichTextBubbleMermaid />
               <RichTextBubbleTable />
               <RichTextBubbleText />
-              <RichTextBubbleCallout />
 
               {/* Command List */}
-              {/* <SlashCommandList /> */}
-              {/* <RichTextBubbleMenuDragHandle /> */}
+              <SlashCommandList />
+              <RichTextBubbleMenuDragHandle />
             </div>
-
-            {/* <Count editor={editor} limit={LIMIT} /> */}
           </div>
         </RichTextProvider>
       </div>

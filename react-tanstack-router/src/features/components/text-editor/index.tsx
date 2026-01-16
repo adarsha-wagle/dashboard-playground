@@ -1,10 +1,15 @@
-import TextEditor from '@/components/text-editor/editor'
+import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
+import TextEditor from '@/components/text-editor/text-editor'
 
 function TextEditorPage() {
   return (
-    <div>
+    <>
+      <PrimaryHeader
+        title="Text Editor"
+        description="Lightweight text editors that can be extended easily. Tip Tap Editor"
+      />
       <TextEditor />
-    </div>
+    </>
   )
 }
 

@@ -52,14 +52,14 @@ function RouteComponent() {
   return (
     <>
       <SidebarProvider defaultExpanded>
-        <div className="flex h-screen w-full">
+        <div className="flex h-screen overflow-hidden w-full">
           <AnimatedSidebar
             navigation={navigationData}
             footer={<SidebarFooter />}
           />
-          <div className="flex flex-1 flex-col ">
+          <div className="flex flex-1 flex-col">
             <DashboardHeader title="Dashboard" subtitle="Welcome back, John" />
-            <main className="overflow-y-auto bg-background scrollbar-thin">
+            <main className="p-8 overflow-y-scroll scrollbar-thin space-y-8">
               <Outlet />
             </main>
           </div>
