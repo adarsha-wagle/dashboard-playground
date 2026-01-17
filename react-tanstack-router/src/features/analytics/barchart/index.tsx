@@ -9,19 +9,36 @@ const barChartData = [
   { month: 'May', sales: 460 },
 ]
 
-const userGrowthData = [
-  { week: 'Week 1', users: 120 },
-  { week: 'Week 2', users: 180 },
-  { week: 'Week 3', users: 240 },
-  { week: 'Week 4', users: 310 },
+export const barMonthlyComparison = [
+  { month: 'Jan', revenue: 12000, expenses: 8000, profit: 4000 },
+  { month: 'Feb', revenue: 15000, expenses: 9500, profit: 5500 },
+  { month: 'Mar', revenue: 13000, expenses: 8800, profit: 4200 },
+  { month: 'Apr', revenue: 18000, expenses: 11000, profit: 7000 },
+  { month: 'May', revenue: 16000, expenses: 10200, profit: 5800 },
+  { month: 'Jun', revenue: 20000, expenses: 12500, profit: 7500 },
 ]
 
 function BarChartPage() {
   return (
     <>
-      <PrimaryHeader title="Bar Chart" />
-      <CustomBarChart chartData={barChartData} xKey="month" dataKey="sales" />
-      <CustomBarChart chartData={userGrowthData} xKey="week" dataKey="users" />
+      <PrimaryHeader
+        title="Bar Chart"
+        description="Recharts Bar Chart abstracted - just copy and paste"
+      />
+
+      <CustomBarChart
+        chartData={barChartData}
+        xKey="month"
+        dataKey="sales"
+        title="Sales"
+      />
+
+      <CustomBarChart
+        chartData={barMonthlyComparison}
+        xKey="month"
+        dataKey={['expenses', 'profit', 'revenue']}
+        title="Multiple Bar Chart"
+      />
     </>
   )
 }

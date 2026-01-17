@@ -31,6 +31,7 @@ import { Route as AuthenticatedComponentsTableIndexRouteImport } from './routes/
 import { Route as AuthenticatedComponentsServerAutocompleteIndexRouteImport } from './routes/_authenticated/components/server-autocomplete/index'
 import { Route as AuthenticatedComponentsInputFieldsIndexRouteImport } from './routes/_authenticated/components/input-fields/index'
 import { Route as AuthenticatedAnalyticsScatterChartIndexRouteImport } from './routes/_authenticated/analytics/scatter-chart/index'
+import { Route as AuthenticatedAnalyticsRadarChartIndexRouteImport } from './routes/_authenticated/analytics/radar-chart/index'
 import { Route as AuthenticatedAnalyticsPieChartIndexRouteImport } from './routes/_authenticated/analytics/pie-chart/index'
 import { Route as AuthenticatedAnalyticsLineChartIndexRouteImport } from './routes/_authenticated/analytics/line-chart/index'
 import { Route as AuthenticatedAnalyticsComposedChartIndexRouteImport } from './routes/_authenticated/analytics/composed-chart/index'
@@ -156,6 +157,12 @@ const AuthenticatedAnalyticsScatterChartIndexRoute =
     path: '/analytics/scatter-chart/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAnalyticsRadarChartIndexRoute =
+  AuthenticatedAnalyticsRadarChartIndexRouteImport.update({
+    id: '/analytics/radar-chart/',
+    path: '/analytics/radar-chart/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAnalyticsPieChartIndexRoute =
   AuthenticatedAnalyticsPieChartIndexRouteImport.update({
     id: '/analytics/pie-chart/',
@@ -203,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/analytics/composed-chart': typeof AuthenticatedAnalyticsComposedChartIndexRoute
   '/analytics/line-chart': typeof AuthenticatedAnalyticsLineChartIndexRoute
   '/analytics/pie-chart': typeof AuthenticatedAnalyticsPieChartIndexRoute
+  '/analytics/radar-chart': typeof AuthenticatedAnalyticsRadarChartIndexRoute
   '/analytics/scatter-chart': typeof AuthenticatedAnalyticsScatterChartIndexRoute
   '/components/input-fields': typeof AuthenticatedComponentsInputFieldsIndexRoute
   '/components/server-autocomplete': typeof AuthenticatedComponentsServerAutocompleteIndexRoute
@@ -230,6 +238,7 @@ export interface FileRoutesByTo {
   '/analytics/composed-chart': typeof AuthenticatedAnalyticsComposedChartIndexRoute
   '/analytics/line-chart': typeof AuthenticatedAnalyticsLineChartIndexRoute
   '/analytics/pie-chart': typeof AuthenticatedAnalyticsPieChartIndexRoute
+  '/analytics/radar-chart': typeof AuthenticatedAnalyticsRadarChartIndexRoute
   '/analytics/scatter-chart': typeof AuthenticatedAnalyticsScatterChartIndexRoute
   '/components/input-fields': typeof AuthenticatedComponentsInputFieldsIndexRoute
   '/components/server-autocomplete': typeof AuthenticatedComponentsServerAutocompleteIndexRoute
@@ -260,6 +269,7 @@ export interface FileRoutesById {
   '/_authenticated/analytics/composed-chart/': typeof AuthenticatedAnalyticsComposedChartIndexRoute
   '/_authenticated/analytics/line-chart/': typeof AuthenticatedAnalyticsLineChartIndexRoute
   '/_authenticated/analytics/pie-chart/': typeof AuthenticatedAnalyticsPieChartIndexRoute
+  '/_authenticated/analytics/radar-chart/': typeof AuthenticatedAnalyticsRadarChartIndexRoute
   '/_authenticated/analytics/scatter-chart/': typeof AuthenticatedAnalyticsScatterChartIndexRoute
   '/_authenticated/components/input-fields/': typeof AuthenticatedComponentsInputFieldsIndexRoute
   '/_authenticated/components/server-autocomplete/': typeof AuthenticatedComponentsServerAutocompleteIndexRoute
@@ -289,6 +299,7 @@ export interface FileRouteTypes {
     | '/analytics/composed-chart'
     | '/analytics/line-chart'
     | '/analytics/pie-chart'
+    | '/analytics/radar-chart'
     | '/analytics/scatter-chart'
     | '/components/input-fields'
     | '/components/server-autocomplete'
@@ -316,6 +327,7 @@ export interface FileRouteTypes {
     | '/analytics/composed-chart'
     | '/analytics/line-chart'
     | '/analytics/pie-chart'
+    | '/analytics/radar-chart'
     | '/analytics/scatter-chart'
     | '/components/input-fields'
     | '/components/server-autocomplete'
@@ -345,6 +357,7 @@ export interface FileRouteTypes {
     | '/_authenticated/analytics/composed-chart/'
     | '/_authenticated/analytics/line-chart/'
     | '/_authenticated/analytics/pie-chart/'
+    | '/_authenticated/analytics/radar-chart/'
     | '/_authenticated/analytics/scatter-chart/'
     | '/_authenticated/components/input-fields/'
     | '/_authenticated/components/server-autocomplete/'
@@ -520,6 +533,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalyticsScatterChartIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/analytics/radar-chart/': {
+      id: '/_authenticated/analytics/radar-chart/'
+      path: '/analytics/radar-chart'
+      fullPath: '/analytics/radar-chart'
+      preLoaderRoute: typeof AuthenticatedAnalyticsRadarChartIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/analytics/pie-chart/': {
       id: '/_authenticated/analytics/pie-chart/'
       path: '/analytics/pie-chart'
@@ -568,6 +588,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsComposedChartIndexRoute: typeof AuthenticatedAnalyticsComposedChartIndexRoute
   AuthenticatedAnalyticsLineChartIndexRoute: typeof AuthenticatedAnalyticsLineChartIndexRoute
   AuthenticatedAnalyticsPieChartIndexRoute: typeof AuthenticatedAnalyticsPieChartIndexRoute
+  AuthenticatedAnalyticsRadarChartIndexRoute: typeof AuthenticatedAnalyticsRadarChartIndexRoute
   AuthenticatedAnalyticsScatterChartIndexRoute: typeof AuthenticatedAnalyticsScatterChartIndexRoute
   AuthenticatedComponentsInputFieldsIndexRoute: typeof AuthenticatedComponentsInputFieldsIndexRoute
   AuthenticatedComponentsServerAutocompleteIndexRoute: typeof AuthenticatedComponentsServerAutocompleteIndexRoute
@@ -593,6 +614,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedAnalyticsLineChartIndexRoute,
   AuthenticatedAnalyticsPieChartIndexRoute:
     AuthenticatedAnalyticsPieChartIndexRoute,
+  AuthenticatedAnalyticsRadarChartIndexRoute:
+    AuthenticatedAnalyticsRadarChartIndexRoute,
   AuthenticatedAnalyticsScatterChartIndexRoute:
     AuthenticatedAnalyticsScatterChartIndexRoute,
   AuthenticatedComponentsInputFieldsIndexRoute:

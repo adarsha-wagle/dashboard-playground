@@ -1,6 +1,5 @@
-import { CustomPieChart } from '@/components/charts/custom-pie-chart'
+import CustomPieChart from '@/components/charts/custom-pie-chart'
 import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
-import React from 'react'
 
 const browserPieData = [
   { name: 'Chrome', value: 68 },
@@ -18,22 +17,35 @@ const productRevenuePieData = [
 function PieChartPage() {
   return (
     <>
-      <PrimaryHeader title="Pie Chart" />
-      <section className="flex justify-center">
-        <div className="w-xs">
-          <CustomPieChart
-            chartData={browserPieData}
-            dataKey="value"
-            nameKey="name"
-          />
-        </div>
-        <div className="w-xs">
-          <CustomPieChart
-            chartData={productRevenuePieData}
-            dataKey="revenue"
-            nameKey="category"
-          />
-        </div>
+      <PrimaryHeader
+        title="Pie Chart"
+        description="Recharts Piechart abstracted just copy and paste "
+      />
+      <section className="flex justify-between">
+        <CustomPieChart
+          chartData={browserPieData}
+          dataKey="value"
+          nameKey="name"
+          pieConfig={{
+            innerRadius: 100,
+            outerRadius: 160,
+            legendPosition: 'right',
+          }}
+          title="Browser Data"
+          totalLabel="Total Data"
+        />
+        <CustomPieChart
+          chartData={productRevenuePieData}
+          dataKey="revenue"
+          nameKey="category"
+          pieConfig={{
+            innerRadius: 100,
+            outerRadius: 160,
+            legendPosition: 'right',
+          }}
+          title="Product Revenue"
+          totalLabel="Total Revenue"
+        />
       </section>
     </>
   )

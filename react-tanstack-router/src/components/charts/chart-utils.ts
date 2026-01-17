@@ -1,3 +1,5 @@
+import type { ChartStyle } from './chart-type'
+
 export const defaultChartColors = [
   '#6366F1', // Indigo
   '#EC4899', // Pink
@@ -11,4 +13,26 @@ export const defaultChartColors = [
   '#FACC15', // Yellow
   '#22D3EE', // Cyan
   '#F97316', // Orange
-] as const
+]
+
+export const defaultChartStyle: ChartStyle = {
+  width: 500,
+  height: 300,
+  colors: defaultChartColors,
+  color: defaultChartColors[0],
+  xAxis: {
+    stroke: '#888',
+    tickColor: '#555',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  yAxis: {
+    stroke: '#888',
+    tickColor: '#555',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  tooltip: { enabled: true, backgroundColor: '#fff', textColor: '#000' },
+  legend: { enabled: true, position: 'top', textColor: '#000', fontSize: 12 },
+  backgroundColor: '#fff',
+}

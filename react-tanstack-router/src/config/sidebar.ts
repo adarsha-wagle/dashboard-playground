@@ -84,6 +84,11 @@ export const navigationData: ITreeNode[] = [
         label: 'Scatter Chart',
         to: '/analytics/scatter-chart',
       },
+      {
+        id: 'analytics-radarchart',
+        label: 'Radar Chart',
+        to: '/analytics/radar-chart',
+      },
     ],
   },
 

@@ -14,9 +14,10 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import type { TLabelKey, TNumericKey } from './chart-type'
+import type { IAxisStyle, TLabelKey, TNumericKey } from './chart-type'
 import type { HTMLProps } from 'react'
 import { cn } from '@/lib/utils'
+import { defaultChartStyle } from './chart-utils'
 
 type AreaDatumBase = Record<string, unknown>
 
@@ -28,26 +29,20 @@ export interface AreaChartConfig {
   color?: string
 
   // Axis styling moved here
-  xAxis?: {
-    stroke?: string
-    tickColor?: string
-    fontSize?: number
-  }
-  yAxis?: {
-    stroke?: string
-    tickColor?: string
-    fontSize?: number
-  }
+  xAxis?: IAxisStyle
+  yAxis?: IAxisStyle
+  className?: HTMLProps<HTMLDivElement>['className']
 }
 
 // Props
 type TCustomAreaChartProps<T extends AreaDatumBase> = {
-  chartConfig?: any // keep shared chartConfig if needed
+  chartConfig?: any
   areaConfig?: AreaChartConfig
   chartData: T[]
   xKey: TLabelKey<T>
-  dataKey: TNumericKey<T>
+  dataKey: TNumericKey<T> | TNumericKey<T>[] // Support single or multiple keys
   className?: HTMLProps<HTMLDivElement>['className']
+  title?: string
 }
 
 export function CustomAreaChart<T extends AreaDatumBase>({
@@ -57,52 +52,76 @@ export function CustomAreaChart<T extends AreaDatumBase>({
   xKey,
   dataKey,
   className = '',
+  title = '',
 }: TCustomAreaChartProps<T>) {
   const {
     type = 'monotone',
     strokeWidth = 2,
     fillOpacity = 0.2,
-    color = '#8884d8',
-    xAxis = {},
-    yAxis = {},
+    color = defaultChartStyle.color,
+    xAxis = defaultChartStyle.xAxis,
+    yAxis = defaultChartStyle.yAxis,
+    className: areaClassName = '',
   } = areaConfig
 
+  // Convert dataKey to array for consistent handling
+  const dataKeys = Array.isArray(dataKey) ? dataKey : [dataKey]
+
   return (
-    <ChartContainer
-      config={chartConfig}
-      className={cn('mx-auto w-full h-75', className)}
-    >
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
+    <div className={cn('border p-6 rounded-lg', className)}>
+      <div>
+        {title && <h3 className="text-lg font-semibold mb-4">{title}</h3>}
+        <ChartContainer
+          config={chartConfig}
+          className={cn('mx-auto w-full h-75', areaClassName)}
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
 
-          <XAxis
-            dataKey={xKey as string}
-            stroke={xAxis.stroke}
-            tick={{ fill: xAxis.tickColor, fontSize: xAxis.fontSize }}
-          />
-          <YAxis
-            stroke={yAxis.stroke}
-            tick={{ fill: yAxis.tickColor, fontSize: yAxis.fontSize }}
-          />
+              <XAxis
+                dataKey={xKey as string}
+                stroke={xAxis?.stroke}
+                tick={{
+                  fill: xAxis?.tickColor,
+                  fontSize: xAxis?.fontSize,
+                  fontWeight: xAxis?.fontWeight,
+                }}
+              />
+              <YAxis
+                stroke={yAxis?.stroke}
+                tick={{
+                  fill: yAxis?.tickColor,
+                  fontSize: yAxis?.fontSize,
+                  fontWeight: yAxis?.fontWeight,
+                }}
+              />
 
-          <ChartTooltip
-            cursor
-            content={
-              <ChartTooltipContent className="bg-white dark:bg-primaryBlack text-themePink dark:text-primaryWhite" />
-            }
-          />
+              <ChartTooltip cursor content={<ChartTooltipContent />} />
 
-          <Area
-            type={type}
-            dataKey={dataKey as string}
-            stroke={color}
-            fill={color}
-            strokeWidth={strokeWidth}
-            fillOpacity={fillOpacity}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
-    </ChartContainer>
+              {dataKeys.map((key, index) => (
+                <Area
+                  key={key as string}
+                  type={type}
+                  dataKey={key as string}
+                  stroke={
+                    defaultChartStyle?.colors?.[
+                      index % (defaultChartStyle?.colors?.length || 1)
+                    ] || color
+                  }
+                  fill={
+                    defaultChartStyle?.colors?.[
+                      index % (defaultChartStyle?.colors?.length || 1)
+                    ] || color
+                  }
+                  strokeWidth={strokeWidth}
+                  fillOpacity={fillOpacity}
+                />
+              ))}
+            </AreaChart>
+          </ResponsiveContainer>
+        </ChartContainer>
+      </div>
+    </div>
   )
 }

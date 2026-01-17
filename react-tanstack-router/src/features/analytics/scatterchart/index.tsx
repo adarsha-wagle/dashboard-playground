@@ -10,13 +10,28 @@ const scatterHeightWeight = [
   { height: 185, weight: 80 },
 ]
 
-const scatterStudyScore = [
-  { hours: 2, score: 70 },
-  { hours: 4, score: 80 },
-  { hours: 1, score: 60 },
-  { hours: 5, score: 90 },
-  { hours: 3, score: 75 },
-  { hours: 6, score: 95 },
+const scatterProductA = [
+  { price: 10, sales: 120 },
+  { price: 15, sales: 95 },
+  { price: 20, sales: 75 },
+  { price: 25, sales: 60 },
+  { price: 30, sales: 45 },
+]
+
+const scatterProductB = [
+  { price: 12, sales: 150 },
+  { price: 18, sales: 125 },
+  { price: 22, sales: 100 },
+  { price: 28, sales: 80 },
+  { price: 35, sales: 65 },
+]
+
+const scatterProductC = [
+  { price: 8, sales: 180 },
+  { price: 14, sales: 140 },
+  { price: 19, sales: 110 },
+  { price: 24, sales: 90 },
+  { price: 32, sales: 70 },
 ]
 
 function ScatterChartPage() {
@@ -27,11 +42,30 @@ function ScatterChartPage() {
         chartData={scatterHeightWeight}
         xKey="height"
         yKey="weight"
+        title="Height & Weight"
       />
       <CustomScatterChart
-        chartData={scatterStudyScore}
-        xKey="hours"
-        yKey="score"
+        series={[
+          {
+            data: scatterProductA,
+            xKey: 'price',
+            yKey: 'sales',
+            name: 'Product A',
+          },
+          {
+            data: scatterProductB,
+            xKey: 'price',
+            yKey: 'sales',
+            name: 'Product B',
+          },
+          {
+            data: scatterProductC,
+            xKey: 'price',
+            yKey: 'sales',
+            name: 'Product C',
+          },
+        ]}
+        title="Price vs Sales by Product"
       />
     </>
   )

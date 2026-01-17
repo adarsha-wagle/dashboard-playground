@@ -9,11 +9,13 @@ const salesProfitData = [
   { month: 'May', sales: 5890, profit: 4800 },
 ]
 
-const revenueUsersData = [
-  { quarter: 'Q1', revenue: 1200, users: 120, profit: 500 },
-  { quarter: 'Q2', revenue: 1850, users: 300, profit: 800 },
-  { quarter: 'Q3', revenue: 1620, users: 200, profit: 620 },
-  { quarter: 'Q4', revenue: 2100, users: 1000, profit: 900 },
+const composedBusinessMetrics = [
+  { month: 'Jan', revenue: 12000, expenses: 8000, users: 450, growth: 320 },
+  { month: 'Feb', revenue: 15000, expenses: 9500, users: 520, growth: 380 },
+  { month: 'Mar', revenue: 13000, expenses: 8800, users: 4800, growth: 340 },
+  { month: 'Apr', revenue: 18000, expenses: 11000, users: 6300, growth: 450 },
+  { month: 'May', revenue: 16000, expenses: 10200, users: 5800, growth: 410 },
+  { month: 'Jun', revenue: 20000, expenses: 12500, users: 7200, growth: 520 },
 ]
 
 function ComposedChartPage() {
@@ -21,17 +23,19 @@ function ComposedChartPage() {
     <>
       <PrimaryHeader title="Composed Chart" />
       <CustomComposedChart
-        chartData={revenueUsersData}
-        xKey="quarter"
-        barKey="revenue"
-        areaKey="users"
-        lineKey="profit"
-      />
-      <CustomComposedChart
         chartData={salesProfitData}
         xKey="month"
         barKey="sales"
         lineKey="profit"
+        title="Sales and Profit"
+      />
+      <CustomComposedChart
+        chartData={composedBusinessMetrics}
+        xKey="month"
+        barKey={['revenue', 'expenses']}
+        areaKey={['expenses']}
+        lineKey={['users', 'growth']}
+        title="Multiple Metrics Comparison"
       />
     </>
   )

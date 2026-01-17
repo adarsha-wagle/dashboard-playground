@@ -16,9 +16,10 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import type { TLabelKey, TNumericKey } from './chart-type'
+import type { IAxisStyle, TLabelKey, TNumericKey } from './chart-type'
 import type { HTMLProps } from 'react'
 import { cn } from '@/lib/utils'
+import { defaultChartStyle } from './chart-utils'
 
 type ComposedDatumBase = Record<string, unknown>
 
@@ -26,23 +27,13 @@ type ComposedDatumBase = Record<string, unknown>
 export interface ComposedChartConfig {
   barSize?: number
   barRadius?: [number, number, number, number]
-  barColor?: string
   lineStrokeWidth?: number
-  lineColor?: string
   lineDot?: boolean
   areaFillOpacity?: number
-  areaColor?: string
 
-  xAxis?: {
-    stroke?: string
-    tickColor?: string
-    fontSize?: number
-  }
-  yAxis?: {
-    stroke?: string
-    tickColor?: string
-    fontSize?: number
-  }
+  xAxis?: IAxisStyle
+  yAxis?: IAxisStyle
+  className?: HTMLProps<HTMLDivElement>['className']
 }
 
 // Props
@@ -51,10 +42,11 @@ type TCustomComposedChartProps<T extends ComposedDatumBase> = {
   composedConfig?: ComposedChartConfig
   chartData: T[]
   xKey: TLabelKey<T>
-  barKey?: TNumericKey<T>
-  lineKey?: TNumericKey<T>
-  areaKey?: TNumericKey<T>
+  barKey?: TNumericKey<T> | TNumericKey<T>[] // Support single or multiple keys
+  lineKey?: TNumericKey<T> | TNumericKey<T>[] // Support single or multiple keys
+  areaKey?: TNumericKey<T> | TNumericKey<T>[] // Support single or multiple keys
   className?: HTMLProps<HTMLDivElement>['className']
+  title?: string
 }
 
 export function CustomComposedChart<T extends ComposedDatumBase>({
@@ -66,75 +58,112 @@ export function CustomComposedChart<T extends ComposedDatumBase>({
   lineKey,
   areaKey,
   className = '',
+  title = '',
 }: TCustomComposedChartProps<T>) {
   const {
-    barSize = 20,
+    barSize = 30,
     barRadius = [4, 4, 0, 0],
-    barColor = '#4f46e5',
     lineStrokeWidth = 2,
-    lineColor = '#4f46e5',
     lineDot = false,
     areaFillOpacity = 0.2,
-    areaColor = '#4f46e5',
-    xAxis = {},
-    yAxis = {},
+    xAxis = defaultChartStyle.xAxis,
+    yAxis = defaultChartStyle.yAxis,
+    className: composedClassName = '',
   } = composedConfig
 
+  // Convert keys to arrays for consistent handling
+  const barKeys = barKey ? (Array.isArray(barKey) ? barKey : [barKey]) : []
+  const lineKeys = lineKey ? (Array.isArray(lineKey) ? lineKey : [lineKey]) : []
+  const areaKeys = areaKey ? (Array.isArray(areaKey) ? areaKey : [areaKey]) : []
+
   return (
-    <ChartContainer
-      config={chartConfig}
-      className={cn('mx-auto w-full h-80', className)}
-    >
-      <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
+    <div className={cn('border p-6 rounded-lg', className)}>
+      <div>
+        {title && <h3 className="text-lg font-semibold mb-4">{title}</h3>}
 
-          <XAxis
-            dataKey={xKey as string}
-            stroke={xAxis.stroke}
-            tick={{ fill: xAxis.tickColor, fontSize: xAxis.fontSize }}
-          />
-          <YAxis
-            stroke={yAxis.stroke}
-            tick={{ fill: yAxis.tickColor, fontSize: yAxis.fontSize }}
-          />
+        <ChartContainer
+          config={chartConfig}
+          className={cn('mx-auto w-full h-75', composedClassName)}
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
 
-          <ChartTooltip
-            cursor
-            content={
-              <ChartTooltipContent className="bg-white dark:bg-primaryBlack text-themePink dark:text-primaryWhite" />
-            }
-          />
+              <XAxis
+                dataKey={xKey as string}
+                stroke={xAxis.stroke}
+                tick={{
+                  fill: xAxis.tickColor,
+                  fontSize: xAxis.fontSize,
+                  fontWeight: xAxis.fontWeight,
+                }}
+              />
+              <YAxis
+                stroke={yAxis.stroke}
+                tick={{
+                  fill: yAxis.tickColor,
+                  fontSize: yAxis.fontSize,
+                  fontWeight: yAxis.fontWeight,
+                }}
+              />
 
-          {barKey && (
-            <Bar
-              dataKey={barKey as string}
-              barSize={barSize}
-              radius={barRadius}
-              fill={barColor}
-            />
-          )}
+              <ChartTooltip cursor content={<ChartTooltipContent />} />
 
-          {areaKey && (
-            <Area
-              type="monotone"
-              dataKey={areaKey as string}
-              fill={areaColor}
-              fillOpacity={areaFillOpacity}
-            />
-          )}
+              {/* Render multiple bars */}
+              {barKeys.map((key, index) => (
+                <Bar
+                  key={`bar-${key as string}`}
+                  dataKey={key as string}
+                  barSize={barSize}
+                  radius={barRadius}
+                  fill={
+                    defaultChartStyle?.colors[
+                      index % defaultChartStyle.colors.length
+                    ]
+                  }
+                />
+              ))}
 
-          {lineKey && (
-            <Line
-              type="monotone"
-              dataKey={lineKey as string}
-              stroke={lineColor}
-              strokeWidth={lineStrokeWidth}
-              dot={lineDot}
-            />
-          )}
-        </ComposedChart>
-      </ResponsiveContainer>
-    </ChartContainer>
+              {/* Render multiple areas */}
+              {areaKeys.map((key, index) => (
+                <Area
+                  key={`area-${key as string}`}
+                  type="monotone"
+                  dataKey={key as string}
+                  fill={
+                    defaultChartStyle?.colors[
+                      (index + barKeys.length) % defaultChartStyle.colors.length
+                    ]
+                  }
+                  stroke={
+                    defaultChartStyle?.colors[
+                      (index + barKeys.length) % defaultChartStyle.colors.length
+                    ]
+                  }
+                  fillOpacity={areaFillOpacity}
+                />
+              ))}
+
+              {/* Render multiple lines */}
+              {lineKeys.map((key, index) => (
+                <Line
+                  key={`line-${key as string}`}
+                  type="monotone"
+                  dataKey={key as string}
+                  stroke={
+                    defaultChartStyle?.colors[
+                      (index + barKeys.length + areaKeys.length) %
+                        defaultChartStyle.colors.length
+                    ]
+                  }
+                  strokeWidth={lineStrokeWidth}
+                  dot={lineDot}
+                />
+              ))}
+            </ComposedChart>
+          </ResponsiveContainer>
+        </ChartContainer>
+      </div>
+    </div>
   )
 }

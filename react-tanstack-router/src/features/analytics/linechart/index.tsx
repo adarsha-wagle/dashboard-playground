@@ -29,11 +29,13 @@ function LineChartPage() {
         chartData={lineChartData}
         xKey="day"
         dataKey="visitors"
+        title="Visitors"
       />
       <CustomLineChart
         chartData={multiLineChartData}
         xKey="day"
-        dataKey="visitors"
+        dataKey={['revenue', 'visitors']}
+        title="Multi Line Chart"
       />
     </>
   )

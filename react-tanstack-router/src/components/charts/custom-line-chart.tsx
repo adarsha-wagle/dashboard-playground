@@ -14,9 +14,10 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import type { TLabelKey, TNumericKey } from './chart-type'
+import type { IAxisStyle, TLabelKey, TNumericKey } from './chart-type'
 import type { HTMLProps } from 'react'
 import { cn } from '@/lib/utils'
+import { defaultChartStyle } from './chart-utils'
 
 type LineDatumBase = Record<string, unknown>
 
@@ -28,16 +29,8 @@ export interface LineChartConfig {
   color?: string
 
   // Axis styling
-  xAxis?: {
-    stroke?: string
-    tickColor?: string
-    fontSize?: number
-  }
-  yAxis?: {
-    stroke?: string
-    tickColor?: string
-    fontSize?: number
-  }
+  xAxis?: IAxisStyle
+  yAxis?: IAxisStyle
 }
 
 // Props
@@ -46,8 +39,9 @@ type TCustomLineChartProps<T extends LineDatumBase> = {
   lineConfig?: LineChartConfig
   chartData: T[]
   xKey: TLabelKey<T>
-  dataKey: TNumericKey<T>
+  dataKey: TNumericKey<T> | TNumericKey<T>[] // Support single or multiple keys
   className?: HTMLProps<HTMLDivElement>['className']
+  title?: string
 }
 
 export function CustomLineChart<T extends LineDatumBase>({
@@ -57,51 +51,71 @@ export function CustomLineChart<T extends LineDatumBase>({
   xKey,
   dataKey,
   className = '',
+  title = '',
 }: TCustomLineChartProps<T>) {
   const {
     type = 'monotone',
     strokeWidth = 2,
     dot = false,
-    color = '#4f46e5',
-    xAxis = {},
-    yAxis = {},
+    color = defaultChartStyle.color,
+    xAxis = defaultChartStyle.xAxis,
+    yAxis = defaultChartStyle.yAxis,
   } = lineConfig
 
+  // Convert dataKey to array for consistent handling
+  const dataKeys = Array.isArray(dataKey) ? dataKey : [dataKey]
+
   return (
-    <ChartContainer
-      config={chartConfig}
-      className={cn('mx-auto w-full h-75', className)}
-    >
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
+    <div className="border p-6 rounded-lg">
+      <div>
+        {title && <h3 className="text-lg font-semibold mb-4">{title}</h3>}
 
-          <XAxis
-            dataKey={xKey as string}
-            stroke={xAxis.stroke}
-            tick={{ fill: xAxis.tickColor, fontSize: xAxis.fontSize }}
-          />
-          <YAxis
-            stroke={yAxis.stroke}
-            tick={{ fill: yAxis.tickColor, fontSize: yAxis.fontSize }}
-          />
+        <ChartContainer
+          config={chartConfig}
+          className={cn('mx-auto w-full h-75', className)}
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
 
-          <ChartTooltip
-            cursor
-            content={
-              <ChartTooltipContent className="bg-white dark:bg-primaryBlack text-themePink dark:text-primaryWhite" />
-            }
-          />
+              <XAxis
+                dataKey={xKey as string}
+                stroke={xAxis.stroke}
+                tick={{
+                  fill: xAxis.tickColor,
+                  fontSize: xAxis.fontSize,
+                  fontWeight: xAxis.fontWeight,
+                }}
+              />
+              <YAxis
+                stroke={yAxis.stroke}
+                tick={{
+                  fill: yAxis.tickColor,
+                  fontSize: yAxis.fontSize,
+                  fontWeight: yAxis.fontWeight,
+                }}
+              />
 
-          <Line
-            type={type}
-            dataKey={dataKey as string}
-            stroke={color}
-            strokeWidth={strokeWidth}
-            dot={dot}
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </ChartContainer>
+              <ChartTooltip cursor content={<ChartTooltipContent />} />
+
+              {dataKeys.map((key, index) => (
+                <Line
+                  key={key as string}
+                  type={type}
+                  dataKey={key as string}
+                  stroke={
+                    defaultChartStyle?.colors?.[
+                      index % (defaultChartStyle?.colors?.length || 1)
+                    ] || color
+                  }
+                  strokeWidth={strokeWidth}
+                  dot={dot}
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
+        </ChartContainer>
+      </div>
+    </div>
   )
 }
