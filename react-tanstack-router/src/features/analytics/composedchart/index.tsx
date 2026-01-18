@@ -1,4 +1,5 @@
 import { CustomComposedChart } from '@/components/charts/custom-composed-chart'
+import Main from '@/components/layouts/authenticated/main'
 import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
 
 const salesProfitData = [
@@ -20,7 +21,7 @@ const composedBusinessMetrics = [
 
 function ComposedChartPage() {
   return (
-    <>
+    <Main>
       <PrimaryHeader title="Composed Chart" />
       <CustomComposedChart
         chartData={salesProfitData}
@@ -37,7 +38,7 @@ function ComposedChartPage() {
         lineKey={['users', 'growth']}
         title="Multiple Metrics Comparison"
       />
-    </>
+    </Main>
   )
 }
 

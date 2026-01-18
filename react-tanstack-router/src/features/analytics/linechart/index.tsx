@@ -1,4 +1,5 @@
 import { CustomLineChart } from '@/components/charts/custom-line-chart'
+import Main from '@/components/layouts/authenticated/main'
 import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
 
 const lineChartData = [
@@ -23,7 +24,7 @@ const multiLineChartData = [
 
 function LineChartPage() {
   return (
-    <>
+    <Main>
       <PrimaryHeader title="Line Chart" />
       <CustomLineChart
         chartData={lineChartData}
@@ -37,7 +38,7 @@ function LineChartPage() {
         dataKey={['revenue', 'visitors']}
         title="Multi Line Chart"
       />
-    </>
+    </Main>
   )
 }
 

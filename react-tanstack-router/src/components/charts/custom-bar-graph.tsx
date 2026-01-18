@@ -72,13 +72,13 @@ export function CustomBarChart<T extends BarDatumBase>({
     : chartData
 
   return (
-    <div className="border p-6 rounded-lg">
+    <div className="rounded-lg border p-6">
       <div>
-        {title && <h3 className="text-lg font-semibold mb-4">{title}</h3>}
+        {title && <h3 className="mb-4 text-lg font-semibold">{title}</h3>}
 
         <ChartContainer
           config={chartConfig}
-          className={cn('mx-auto w-full h-75', className)}
+          className={cn('mx-auto h-75 w-full', className)}
         >
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={enrichedData}>

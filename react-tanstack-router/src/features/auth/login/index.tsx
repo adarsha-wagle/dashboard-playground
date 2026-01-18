@@ -2,7 +2,7 @@ import { LoginForm } from './components/login-form'
 
 function Login() {
   return (
-    <section className="max-w-md w-full">
+    <section className="w-full max-w-md">
       <LoginForm />
     </section>
   )

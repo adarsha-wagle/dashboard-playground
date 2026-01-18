@@ -1,4 +1,5 @@
 import { CustomRadarChart } from '@/components/charts/custom-radar-chart'
+import Main from '@/components/layouts/authenticated/main'
 import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
 
 // Single series
@@ -41,7 +42,7 @@ export const radarHealthMetrics = [
 
 function RadarChartPage() {
   return (
-    <>
+    <Main>
       <PrimaryHeader title="Radar Chart" />
       <CustomRadarChart
         chartData={radarSkillsSingle}
@@ -72,7 +73,7 @@ function RadarChartPage() {
           dot: true,
         }}
       />{' '}
-    </>
+    </Main>
   )
 }
 

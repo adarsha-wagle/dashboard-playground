@@ -1,5 +1,6 @@
 import { defaultChartColors } from '@/components/charts/chart-utils'
 import { CustomAreaChart } from '@/components/charts/custom-area-chart'
+import Main from '@/components/layouts/authenticated/main'
 import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
 
 export const areaDailyVisitors = [
@@ -24,7 +25,7 @@ export const areaTrafficData = [
 
 function AreaChartPage() {
   return (
-    <>
+    <Main>
       <PrimaryHeader title="Area Chart" />
       <CustomAreaChart
         chartData={areaDailyVisitors}
@@ -39,7 +40,7 @@ function AreaChartPage() {
         title="Multiple Area Chart Traffic Data"
         areaConfig={{ color: defaultChartColors[2] }}
       />
-    </>
+    </Main>
   )
 }
 

@@ -1,17 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence, type Variants } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 import { useSidebarContext } from './sidebar-context'
 import { cn } from '@/lib/utils'
-import type { ITreeNode } from './data'
 import { Link } from '@tanstack/react-router'
+import type { ITreeNode } from './types'
 
 interface TreeItemProps {
   node: ITreeNode
   level?: number
 }
 
-// Animation variants
+// ---------------- Animations ----------------
+
 const itemVariants = {
   initial: { opacity: 0, x: -8 },
   animate: { opacity: 1, x: 0 },
@@ -27,29 +28,16 @@ const childrenVariants: Variants = {
     height: 'auto',
     opacity: 1,
     transition: {
-      height: {
-        type: 'spring',
-        stiffness: 500,
-        damping: 40,
-      },
-      opacity: {
-        duration: 0.2,
-        delay: 0.05,
-      },
+      height: { type: 'spring', stiffness: 500, damping: 40 },
+      opacity: { duration: 0.2, delay: 0.05 },
     },
   },
   exit: {
     height: 0,
     opacity: 0,
     transition: {
-      height: {
-        type: 'spring',
-        stiffness: 500,
-        damping: 40,
-      },
-      opacity: {
-        duration: 0.1,
-      },
+      height: { type: 'spring', stiffness: 500, damping: 40 },
+      opacity: { duration: 0.1 },
     },
   },
 }
@@ -59,16 +47,35 @@ const chevronVariants = {
   open: { rotate: 90 },
 }
 
+// ---------------- Component ----------------
+
 export const TreeItem: React.FC<TreeItemProps> = ({ node, level = 0 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const { isExpanded, activeItemId, setActiveItemId } = useSidebarContext()
-  const hasChildren = node.children && node.children.length > 0
-  const isActive = activeItemId === node.id
+
+  const hasChildren = !!node.children?.length
   const Icon = node.icon
 
+  // -------- Recursive active detection --------
+  const isNodeActive = (n: ITreeNode): boolean => {
+    if (n.id === activeItemId) return true
+    if (!n.children) return false
+    return n.children.some(isNodeActive)
+  }
+
+  const isActive = isNodeActive(node)
+
+  // -------- Auto-open parent if child is active --------
+  useEffect(() => {
+    if (hasChildren && isActive) {
+      setIsOpen(true)
+    }
+  }, [hasChildren, isActive])
+
+  // -------- Handlers --------
   const handleClick = () => {
     if (hasChildren) {
-      setIsOpen(!isOpen)
+      setIsOpen((prev) => !prev)
     } else {
       setActiveItemId(node.id)
     }
@@ -98,10 +105,10 @@ export const TreeItem: React.FC<TreeItemProps> = ({ node, level = 0 }) => {
         onKeyDown={handleKeyDown}
         className={cn(
           'group relative flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-150',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+          'focus-visible:ring-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
           isActive
-            ? 'bg-sidebar-active text-sidebar-text-active'
-            : 'text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active',
+            ? 'bg-primary-lighter text-primary-dark'
+            : 'text-sidebar-text hover:bg-sidebar-hover hover:text-primary-main',
           level > 0 && 'ml-4',
         )}
         style={{ paddingLeft: isExpanded ? `${12 + level * 12}px` : '12px' }}
@@ -112,7 +119,7 @@ export const TreeItem: React.FC<TreeItemProps> = ({ node, level = 0 }) => {
           {isActive && (
             <motion.div
               layoutId="activeIndicator"
-              className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-sidebar-active-border"
+              className="bg-primary absolute top-1/2 left-0 h-6 w-1 -translate-y-1/2 rounded-r-full"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
@@ -120,7 +127,6 @@ export const TreeItem: React.FC<TreeItemProps> = ({ node, level = 0 }) => {
             />
           )}
         </AnimatePresence>
-        {/* Chevron for items with children */}
 
         {/* Icon */}
         {Icon && (
@@ -128,12 +134,13 @@ export const TreeItem: React.FC<TreeItemProps> = ({ node, level = 0 }) => {
             className={cn(
               'h-5 w-5 shrink-0 transition-colors duration-150',
               isActive
-                ? 'text-sidebar-icon-active'
-                : 'text-sidebar-icon group-hover:text-sidebar-icon-active',
+                ? 'text-primary'
+                : 'text-sidebar-icon group-hover:text-primary',
             )}
           />
         )}
-        {/* Label - only show when expanded */}
+
+        {/* Label */}
         <AnimatePresence>
           {isExpanded && (
             <motion.span
@@ -147,7 +154,9 @@ export const TreeItem: React.FC<TreeItemProps> = ({ node, level = 0 }) => {
                 <Link
                   to={node.to}
                   className="block w-full"
-                  onClick={() => setActiveItemId(node.id)}
+                  onClick={() => {
+                    if (!hasChildren) setActiveItemId(node.id)
+                  }}
                 >
                   {node.label}
                 </Link>
@@ -157,6 +166,8 @@ export const TreeItem: React.FC<TreeItemProps> = ({ node, level = 0 }) => {
             </motion.span>
           )}
         </AnimatePresence>
+
+        {/* Chevron */}
         {hasChildren && isExpanded && (
           <motion.span
             variants={chevronVariants}
@@ -164,12 +175,7 @@ export const TreeItem: React.FC<TreeItemProps> = ({ node, level = 0 }) => {
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             className="shrink-0"
           >
-            <ChevronRight
-              className={cn(
-                'h-4 w-4 transition-colors',
-                isActive ? 'text-sidebar-icon-active' : 'text-sidebar-icon',
-              )}
-            />
+            <ChevronRight className="text-sidebar-icon h-4 w-4" />
           </motion.span>
         )}
 
@@ -179,7 +185,7 @@ export const TreeItem: React.FC<TreeItemProps> = ({ node, level = 0 }) => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="ml-auto rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
+            className="bg-primary/10 text-primary ml-auto rounded-full px-2 py-0.5 text-xs font-medium"
           >
             {node.badge}
           </motion.span>

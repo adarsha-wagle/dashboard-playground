@@ -4,6 +4,7 @@ import { ServerAutocompleteInput } from './components/server-autocomplete-input'
 
 import { useForm } from 'react-hook-form'
 import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
+import Main from '@/components/layouts/authenticated/main'
 
 function ServerAutocompletePage() {
   const form = useForm({
@@ -15,7 +16,7 @@ function ServerAutocompletePage() {
   })
 
   return (
-    <>
+    <Main>
       <PrimaryHeader
         title="Server Side Autocomplete"
         description="Server Side autocomplete field that has downshift feature, debounce fetching and integrates with seamlessly with reactquery"
@@ -36,7 +37,7 @@ function ServerAutocompletePage() {
           }}
         />
       </Form>
-    </>
+    </Main>
   )
 }
 

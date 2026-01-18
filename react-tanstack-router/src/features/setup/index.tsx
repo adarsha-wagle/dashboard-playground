@@ -1,7 +1,8 @@
+import Main from '@/components/layouts/authenticated/main'
 import React from 'react'
 
 function SetupPage() {
-  return <div>SetupPage</div>
+  return <Main>SetupPage</Main>
 }
 
 export default SetupPage

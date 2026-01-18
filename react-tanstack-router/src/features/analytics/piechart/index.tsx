@@ -1,4 +1,5 @@
 import CustomPieChart from '@/components/charts/custom-pie-chart'
+import Main from '@/components/layouts/authenticated/main'
 import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
 
 const browserPieData = [
@@ -16,7 +17,7 @@ const productRevenuePieData = [
 
 function PieChartPage() {
   return (
-    <>
+    <Main>
       <PrimaryHeader
         title="Pie Chart"
         description="Recharts Piechart abstracted just copy and paste "
@@ -47,7 +48,7 @@ function PieChartPage() {
           totalLabel="Total Revenue"
         />
       </section>
-    </>
+    </Main>
   )
 }
 

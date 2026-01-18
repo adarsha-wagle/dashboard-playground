@@ -1,13 +1,6 @@
 import type { LinkProps } from '@tanstack/react-router'
 import { type LucideIcon } from 'lucide-react'
 
-export interface SidebarContextType {
-  isExpanded: boolean
-  toggleSidebar: () => void
-  activeItemId: string | null
-  setActiveItemId: (id: string | null) => void
-}
-
 export interface ITreeNode {
   id: string
   label: string

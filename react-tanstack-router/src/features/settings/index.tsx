@@ -1,5 +1,7 @@
+import Main from '@/components/layouts/authenticated/main'
+
 function SettingsPage() {
-  return <div>Settings</div>
+  return <Main>Settings</Main>
 }
 
 export default SettingsPage

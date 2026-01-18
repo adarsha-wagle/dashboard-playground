@@ -1,4 +1,5 @@
 import { CustomBarChart } from '@/components/charts/custom-bar-graph'
+import Main from '@/components/layouts/authenticated/main'
 import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
 
 const barChartData = [
@@ -20,7 +21,7 @@ export const barMonthlyComparison = [
 
 function BarChartPage() {
   return (
-    <>
+    <Main>
       <PrimaryHeader
         title="Bar Chart"
         description="Recharts Bar Chart abstracted - just copy and paste"
@@ -39,7 +40,7 @@ function BarChartPage() {
         dataKey={['expenses', 'profit', 'revenue']}
         title="Multiple Bar Chart"
       />
-    </>
+    </Main>
   )
 }
 

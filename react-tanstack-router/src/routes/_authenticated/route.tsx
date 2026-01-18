@@ -4,11 +4,10 @@ import { SidebarProvider } from '@/components/layouts/authenticated/sidebar/side
 import { AnimatedSidebar } from '@/components/layouts/authenticated/sidebar/app-sidebar'
 import { DashboardHeader } from '@/components/layouts/authenticated/header/dashboard-header'
 import { BoxLoader } from '@/components/data-table/table-loader'
-import { SidebarFooter } from '@/components/layouts/authenticated/sidebar/sidebar-footer'
 import { navigationData } from '@/config/sidebar'
 
 export const Route = createFileRoute('/_authenticated')({
-  component: RouteComponent,
+  component: AuthenticatedRouteLayout,
   beforeLoad: async () => {
     const authStore = useAuthStore.getState()
 
@@ -36,7 +35,7 @@ export const Route = createFileRoute('/_authenticated')({
   onError: (error) => console.error(error),
 })
 
-function RouteComponent() {
+function AuthenticatedRouteLayout() {
   const { isAuthError } = useAuthStore()
 
   // If there is refresh Error (refresh token deleted/expired) then show this error or you can create a custom error page
@@ -52,16 +51,11 @@ function RouteComponent() {
   return (
     <>
       <SidebarProvider defaultExpanded>
-        <div className="flex h-screen overflow-hidden w-full">
-          <AnimatedSidebar
-            navigation={navigationData}
-            footer={<SidebarFooter />}
-          />
+        <div className="flex h-screen w-full overflow-hidden">
+          <AnimatedSidebar navigation={navigationData} />
           <div className="flex flex-1 flex-col">
-            <DashboardHeader title="Dashboard" subtitle="Welcome back, John" />
-            <main className="p-8 overflow-y-scroll scrollbar-thin space-y-8">
-              <Outlet />
-            </main>
+            <DashboardHeader />
+            <Outlet />
           </div>
         </div>
       </SidebarProvider>

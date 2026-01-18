@@ -1,4 +1,5 @@
 import { CustomScatterChart } from '@/components/charts/custom-scatter-chart'
+import Main from '@/components/layouts/authenticated/main'
 import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
 
 const scatterHeightWeight = [
@@ -36,7 +37,7 @@ const scatterProductC = [
 
 function ScatterChartPage() {
   return (
-    <>
+    <Main>
       <PrimaryHeader title="Scatter Chart" />
       <CustomScatterChart
         chartData={scatterHeightWeight}
@@ -67,7 +68,7 @@ function ScatterChartPage() {
         ]}
         title="Price vs Sales by Product"
       />
-    </>
+    </Main>
   )
 }
 

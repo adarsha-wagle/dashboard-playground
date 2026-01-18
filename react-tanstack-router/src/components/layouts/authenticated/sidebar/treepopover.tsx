@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/popover'
 import { useSidebarContext } from './sidebar-context'
 import { cn } from '@/lib/utils'
-import type { ITreeNode } from './data'
+import type { ITreeNode } from './types'
 
 interface TreePopoverProps {
   node: ITreeNode
@@ -89,13 +89,13 @@ const PopoverTreeItem: React.FC<{
             animate={{ rotate: isOpen ? 90 : 0 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
           >
-            <ChevronRight className="h-3.5 w-3.5 text-sidebar-icon" />
+            <ChevronRight className="text-sidebar-icon h-3.5 w-3.5" />
           </motion.span>
         )}
-        {Icon && !hasChildren && <Icon className="h-4 w-4 text-sidebar-icon" />}
+        {Icon && !hasChildren && <Icon className="text-sidebar-icon h-4 w-4" />}
         <span className="truncate">{node.label}</span>
         {node.badge && (
-          <span className="ml-auto rounded-full bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
+          <span className="bg-primary/10 text-primary ml-auto rounded-full px-1.5 py-0.5 text-xs font-medium">
             {node.badge}
           </span>
         )}
@@ -169,7 +169,7 @@ export const TreePopover: React.FC<TreePopoverProps> = ({ node }) => {
         onClick={handleClick}
         className={cn(
           'group relative flex w-full items-center justify-center rounded-lg p-3 transition-colors duration-150',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+          'focus-visible:ring-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
           isActive
             ? 'bg-sidebar-active text-sidebar-text-active'
             : 'text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active',
@@ -179,7 +179,7 @@ export const TreePopover: React.FC<TreePopoverProps> = ({ node }) => {
         {isActive && (
           <motion.div
             layoutId="activeIndicatorCollapsed"
-            className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-sidebar-active-border"
+            className="bg-sidebar-active-border absolute top-1/2 left-0 h-6 w-1 -translate-y-1/2 rounded-r-full"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ type: 'spring', stiffness: 500, damping: 30 }}
@@ -205,7 +205,7 @@ export const TreePopover: React.FC<TreePopoverProps> = ({ node }) => {
         <button
           className={cn(
             'group relative flex w-full items-center justify-center rounded-lg p-3 transition-colors duration-150',
-            'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+            'focus-visible:ring-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
             hasActiveChild
               ? 'bg-sidebar-active text-sidebar-text-active'
               : 'text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active',
@@ -214,7 +214,7 @@ export const TreePopover: React.FC<TreePopoverProps> = ({ node }) => {
         >
           {hasActiveChild && (
             <motion.div
-              className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-sidebar-active-border"
+              className="bg-sidebar-active-border absolute top-1/2 left-0 h-6 w-1 -translate-y-1/2 rounded-r-full"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             />
@@ -235,7 +235,7 @@ export const TreePopover: React.FC<TreePopoverProps> = ({ node }) => {
         side="right"
         align="start"
         sideOffset={8}
-        className="w-56 p-2 shadow-popover"
+        className="shadow-popover w-56 p-2"
         asChild
       >
         <motion.div
@@ -244,7 +244,7 @@ export const TreePopover: React.FC<TreePopoverProps> = ({ node }) => {
           animate="animate"
           exit="exit"
         >
-          <div className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <div className="text-muted-foreground mb-2 px-2 text-xs font-semibold tracking-wider uppercase">
             {node.label}
           </div>
           {node.children!.map((child) => (

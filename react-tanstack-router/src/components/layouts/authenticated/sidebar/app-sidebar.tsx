@@ -6,11 +6,10 @@ import { TreeItem } from './treeitem'
 import { TreePopover } from './treepopover'
 import { cn } from '@/lib/utils'
 import type { ITreeNode } from './types'
+import { SidebarFooter } from './sidebar-footer'
 
 interface AnimatedSidebarProps {
   navigation: ITreeNode[]
-  header?: React.ReactNode
-  footer?: React.ReactNode
 }
 
 // Spring animation for sidebar width
@@ -33,8 +32,6 @@ const sidebarVariants: Variants = {
 
 export const AnimatedSidebar: React.FC<AnimatedSidebarProps> = ({
   navigation,
-  header,
-  footer,
 }) => {
   const { isExpanded, toggleSidebar } = useSidebarContext()
 
@@ -44,22 +41,22 @@ export const AnimatedSidebar: React.FC<AnimatedSidebarProps> = ({
       initial={false}
       animate={isExpanded ? 'expanded' : 'collapsed'}
       className={cn(
-        'relative flex h-screen flex-col border-r bg-sidebar',
-        'border-sidebar-border',
+        'bg-background-secondary relative flex h-screen flex-col border-r',
+        'border-border',
       )}
       role="navigation"
       aria-label="Main navigation"
     >
       {/* Header */}
-      <div className="flex h-(--sidebar-header-height) items-center justify-between border-b border-sidebar-border p-(--sidebar-padding)">
-        {header || (
+      <div className="h-header-height border-border px-surface-padding flex items-center justify-between border-b">
+        {isExpanded && (
           <motion.div
             initial={false}
             animate={{ opacity: isExpanded ? 1 : 0 }}
             className="flex items-center gap-2 overflow-hidden"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <span className="text-sm font-bold text-primary-foreground">
+            <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
+              <span className="text-primary-foreground text-sm font-bold">
                 AW
               </span>
             </div>
@@ -72,7 +69,7 @@ export const AnimatedSidebar: React.FC<AnimatedSidebarProps> = ({
           className={cn(
             'flex h-8 w-8 items-center justify-center rounded-lg transition-colors',
             'text-sidebar-icon hover:bg-sidebar-hover hover:text-sidebar-text-active',
-            'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+            'focus-visible:ring-primary focus:outline-none focus-visible:ring-2',
           )}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -87,7 +84,7 @@ export const AnimatedSidebar: React.FC<AnimatedSidebarProps> = ({
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden p-(--sidebar-padding) scrollbar-thin">
+      <nav className="scrollbar-thin p-surface-padding flex-1 overflow-x-hidden overflow-y-auto">
         <div role="tree" aria-label="Navigation tree">
           {isExpanded
             ? navigation.map((node) => <TreeItem key={node.id} node={node} />)
@@ -97,12 +94,9 @@ export const AnimatedSidebar: React.FC<AnimatedSidebarProps> = ({
         </div>
       </nav>
 
-      {/* Footer */}
-      {footer && (
-        <div className="border-t border-sidebar-border flex items-center justify-center p-(--sidebar-padding) h-(--sidebar-header-height)">
-          {footer}
-        </div>
-      )}
+      <div className="border-sidebar-border p-surface-padding h-header-height flex items-center justify-center border-t">
+        <SidebarFooter />
+      </div>
     </motion.aside>
   )
 }

@@ -27,6 +27,7 @@ import { ControlledFileUpload } from '@/components/reusables/controlled-fileuplo
 import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
 import SecondaryHeader from '@/components/layouts/authenticated/secondary-header'
 import ControlledTextEditor from '@/components/reusables/controlled-text-editor'
+import Main from '@/components/layouts/authenticated/main'
 
 function InputFieldsPage() {
   const form = useForm<TFormSchema>({
@@ -42,7 +43,7 @@ function InputFieldsPage() {
   }
 
   return (
-    <>
+    <Main>
       <PrimaryHeader
         title="Controlled Form Fields"
         description="Integrated with react hook form, zod and Shadcn Components. Easy to use just define your schema, add in your form and no need to configure anything. Ready to send to server. "
@@ -237,7 +238,7 @@ function InputFieldsPage() {
           </form>
         </Form>
       </div>
-    </>
+    </Main>
   )
 }
 

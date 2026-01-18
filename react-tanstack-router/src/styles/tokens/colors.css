@@ -1,0 +1,185 @@
+:root {
+  /* ===== PRIMARY COLORS ===== */
+  --color-primary-lighter: 221 83% 97%;
+  --color-primary-light: 221 83% 85%;
+  --color-primary-main: 221 83% 53%;
+  --color-primary-dark: 221 83% 40%;
+  --color-primary-darker: 221 83% 30%;
+
+  /* ===== SECONDARY COLORS ===== */
+  --color-secondary-lighter: 240 5% 96%;
+  --color-secondary-light: 240 5% 85%;
+  --color-secondary-main: 240 6% 50%;
+  --color-secondary-dark: 240 6% 35%;
+  --color-secondary-darker: 240 6% 25%;
+
+  /* ===== ACCENT COLORS ===== */
+  --color-accent-light: 280 65% 75%;
+  --color-accent-main: 280 65% 60%;
+  --color-accent-dark: 280 65% 45%;
+
+  /* ===== SUCCESS COLORS ===== */
+  --color-success-light: 142 76% 55%;
+  --color-success-main: 142 76% 36%;
+  --color-success-dark: 142 76% 25%;
+
+  /* ===== WARNING COLORS ===== */
+  --color-warning-light: 38 92% 65%;
+  --color-warning-main: 38 92% 50%;
+  --color-warning-dark: 38 92% 35%;
+
+  /* ===== ERROR COLORS ===== */
+  --color-error-light: 0 84% 75%;
+  --color-error-main: 0 84% 60%;
+  --color-error-dark: 0 84% 45%;
+
+  /* ===== INFO COLORS ===== */
+  --color-info-light: 199 89% 65%;
+  --color-info-main: 199 89% 48%;
+  --color-info-dark: 199 89% 35%;
+
+  /* ===== NEUTRAL COLORS ===== */
+  --color-neutral-light: 240 5% 85%;
+  --color-neutral-main: 240 5% 50%;
+  --color-neutral-dark: 240 5% 25%;
+
+  /* ===== BASE LAYOUT ===== */
+  --color-background: 0 0% 100%;
+  --color-background-secondary: 0 0% 98%;
+  --color-background-tertiary: 240 5% 96%;
+
+  --color-surface: var(--color-background);
+  --color-surface-variant: var(--color-background-secondary);
+  --color-surface-hover: var(--color-background-tertiary);
+  --color-surface-active: 240 5% 94%;
+
+  /* ===== TEXT COLORS ===== */
+  --color-text-primary: 240 10% 10%;
+  --color-text-secondary: 240 5% 45%;
+  --color-text-tertiary: 240 5% 65%;
+  --color-text-disabled: 240 5% 75%;
+  --color-text-inverse: 0 0% 100%;
+
+  /* ===== BORDER COLORS ===== */
+  --color-border: 240 6% 90%;
+
+  /* ===== COMPONENT COLORS ===== */
+  --color-input-background: var(--color-background);
+  --color-input-border: var(--color-border);
+  --color-input-border-hover: var(--color-border);
+  --color-input-border-focus: var(--color-primary-main);
+  --color-input-placeholder: var(--color-text-tertiary);
+  --color-input-disabled-background: var(--color-background-tertiary);
+
+  /* ===== SHADOWS ===== */
+  --shadow-sm: 0 1px 2px 0 hsl(var(--color-text-primary) / 0.05);
+  --shadow-md:
+    0 4px 6px -1px hsl(var(--color-text-primary) / 0.1),
+    0 2px 4px -2px hsl(var(--color-text-primary) / 0.1);
+  --shadow-lg:
+    0 10px 15px -3px hsl(var(--color-text-primary) / 0.1),
+    0 4px 6px -4px hsl(var(--color-text-primary) / 0.1);
+  --shadow-xl:
+    0 20px 25px -5px hsl(var(--color-text-primary) / 0.1),
+    0 8px 10px -6px hsl(var(--color-text-primary) / 0.1);
+}
+
+.dark {
+  /* ===== PRIMARY COLORS ===== */
+  --color-primary-lighter: 217 91% 25%;
+  --color-primary-light: 217 91% 35%;
+  --color-primary-main: 217 91% 60%;
+  --color-primary-dark: 217 91% 70%;
+  --color-primary-darker: 217 91% 80%;
+
+  /* ===== SECONDARY COLORS ===== */
+  --color-secondary-lighter: 240 4% 16%;
+  --color-secondary-light: 240 4% 25%;
+  --color-secondary-main: 240 5% 50%;
+  --color-secondary-dark: 240 5% 65%;
+  --color-secondary-darker: 240 5% 75%;
+
+  /* ===== ACCENT COLORS ===== */
+  --color-accent-light: 280 65% 45%;
+  --color-accent-main: 280 65% 60%;
+  --color-accent-dark: 280 65% 75%;
+
+  /* ===== SUCCESS COLORS ===== */
+  --color-success-light: 142 71% 30%;
+  --color-success-main: 142 71% 45%;
+  --color-success-dark: 142 71% 60%;
+
+  /* ===== WARNING COLORS ===== */
+  --color-warning-light: 38 92% 40%;
+  --color-warning-main: 38 92% 50%;
+  --color-warning-dark: 38 92% 60%;
+
+  /* ===== ERROR COLORS ===== */
+  --color-error-light: 0 63% 40%;
+  --color-error-main: 0 63% 51%;
+  --color-error-dark: 0 63% 65%;
+
+  /* ===== INFO COLORS ===== */
+  --color-info-light: 199 89% 40%;
+  --color-info-main: 199 89% 48%;
+  --color-info-dark: 199 89% 60%;
+
+  /* ===== NEUTRAL COLORS ===== */
+  --color-neutral-light: 240 4% 25%;
+  --color-neutral-main: 240 5% 50%;
+  --color-neutral-dark: 240 5% 75%;
+
+  /* ===== BASE LAYOUT ===== */
+  --color-background: 240 10% 4%;
+  --color-background-secondary: 240 10% 6%;
+  --color-background-tertiary: 240 4% 10%;
+
+  --color-surface: var(--color-background-secondary);
+  --color-surface-variant: var(--color-background-tertiary);
+  --color-surface-hover: 240 4% 14%;
+  --color-surface-active: 240 4% 18%;
+
+  /* ===== TEXT COLORS ===== */
+  --color-text-primary: 0 0% 98%;
+  --color-text-secondary: 240 5% 65%;
+  --color-text-tertiary: 240 5% 50%;
+  --color-text-disabled: 240 5% 35%;
+  --color-text-inverse: var(--color-background);
+
+  /* ===== TEXT ON COLORED BACKGROUNDS ===== */
+  --color-text-on-primary: 0 0% 100%;
+  --color-text-on-secondary: 0 0% 100%;
+  --color-text-on-accent: 0 0% 100%;
+  --color-text-on-success: 0 0% 100%;
+  --color-text-on-warning: var(--color-background);
+  --color-text-on-error: 0 0% 100%;
+  --color-text-on-info: 0 0% 100%;
+
+  /* ===== BORDER COLORS ===== */
+  --color-border: 240 4% 16%;
+  --color-border-strong: 240 4% 25%;
+  --color-border-hover: 240 4% 35%;
+  --color-border-focus: var(--color-primary-main);
+
+  /* ===== COMPONENT COLORS ===== */
+  --color-input-background: var(--color-background-secondary);
+  --color-input-border: var(--color-border);
+  --color-input-border-hover: var(--color-border-strong);
+  --color-input-border-focus: var(--color-border-focus);
+  --color-input-placeholder: var(--color-text-tertiary);
+  --color-input-disabled-background: var(--color-background-tertiary);
+
+  --color-overlay: 0 0% 0% / 0.7;
+
+  /* ===== SHADOWS ===== */
+  --shadow-sm: 0 1px 2px 0 hsl(var(--color-background) / 0.3);
+  --shadow-md:
+    0 4px 6px -1px hsl(var(--color-background) / 0.4),
+    0 2px 4px -2px hsl(var(--color-background) / 0.3);
+  --shadow-lg:
+    0 10px 15px -3px hsl(var(--color-background) / 0.5),
+    0 4px 6px -4px hsl(var(--color-background) / 0.3);
+  --shadow-xl:
+    0 20px 25px -5px hsl(var(--color-background) / 0.6),
+    0 8px 10px -6px hsl(var(--color-background) / 0.4);
+}
