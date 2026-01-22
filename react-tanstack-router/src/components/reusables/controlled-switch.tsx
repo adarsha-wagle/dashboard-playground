@@ -35,6 +35,7 @@ export function ControlledSwitch<T extends FieldValues>({
               checked={field.value}
               onCheckedChange={field.onChange}
               disabled={disabled}
+              className="form-switch!"
             />
           </FormControl>
           <FormMessage />

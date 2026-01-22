@@ -28,7 +28,11 @@ export function ControlledCheckbox<T extends FieldValues>({
       render={({ field }) => (
         <FormItem className="flex items-center gap-3">
           <FormControl>
-            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+            <Checkbox
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              className="form-checkbox!"
+            />
           </FormControl>
           <FormLabel>{label}</FormLabel>
           <FormMessage />

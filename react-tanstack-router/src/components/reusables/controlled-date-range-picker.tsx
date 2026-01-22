@@ -1,6 +1,5 @@
 'use client'
 
-import * as React from 'react'
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { type Control, type FieldValues, type Path } from 'react-hook-form'
@@ -43,7 +42,7 @@ export function ControlledDateRangePicker<T extends FieldValues>({
     <FormItem className={cn('w-full', className)}>
       <FormLabel>
         {label}
-        {required && <span className="text-pink-400 ml-1">*</span>}
+        {required && <span className="ml-1 text-pink-400">*</span>}
       </FormLabel>
 
       {/* FROM FIELD */}
@@ -65,7 +64,7 @@ export function ControlledDateRangePicker<T extends FieldValues>({
                         <Button
                           variant="outline"
                           className={cn(
-                            'w-full pl-3 text-left font-normal',
+                            'form-input!',
                             !fromField.value && 'text-muted-foreground',
                             hasError
                               ? 'border-red-500'
@@ -89,7 +88,7 @@ export function ControlledDateRangePicker<T extends FieldValues>({
                       </PopoverTrigger>
 
                       <PopoverContent
-                        className="w-auto p-0 bg-gray-100"
+                        className="form-content w-auto p-0"
                         align="start"
                       >
                         <Calendar

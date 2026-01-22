@@ -10,7 +10,6 @@ import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
 import { Button } from '@/components/ui/button'
 import { Download, Trash } from 'lucide-react'
 import type { useFilters } from '@/hooks/use-filters'
-import { input } from '@testing-library/user-event/dist/cjs/event/input.js'
 
 interface TInvoiceTableToolbarProps<TData> {
   table: TableType<TData>
@@ -60,7 +59,7 @@ function InvoiceTableToolbar<TData extends { customer?: string }>({
   }
 
   return (
-    <div className="flex items-center justify-between gap-4 ">
+    <div className="flex items-center justify-between gap-4">
       <div className="flex flex-1">
         <InvoiceFilters filterOptions={filterOptions} />
       </div>
@@ -72,7 +71,7 @@ function InvoiceTableToolbar<TData extends { customer?: string }>({
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="absolute bottom-[10%] left-1/2 -translate-x-1/2 z-20 flex items-center gap-4 bg-black/80 text-white p-2 rounded-2xl"
+            className="absolute bottom-[10%] left-1/2 z-20 flex -translate-x-1/2 items-center gap-4 rounded-2xl bg-black/80 p-2 text-white"
           >
             <div>{selectedCount} selected</div>
 

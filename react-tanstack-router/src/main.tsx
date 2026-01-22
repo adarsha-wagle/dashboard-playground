@@ -9,6 +9,7 @@ import { routeTree } from './routeTree.gen'
 
 import './styles.css'
 import './styles/tokens/colors.css'
+// import './styles/style.css'
 import reportWebVitals from './reportWebVitals.ts'
 import { QueryClientProvider } from '@tanstack/react-query'
 

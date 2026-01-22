@@ -45,7 +45,7 @@ function ControlledDatePicker<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={cn('flex flex-col w-full', className)}>
+        <FormItem className={cn('flex w-full flex-col', className)}>
           <FormLabel>{label}</FormLabel>
           <div className="relative">
             <Popover>
@@ -54,7 +54,7 @@ function ControlledDatePicker<T extends FieldValues>({
                   <Button
                     variant="outline"
                     className={cn(
-                      'w-full pl-3 text-left font-normal',
+                      'form-input! w-full',
                       field.value ? 'bg-primary/10!' : 'text-muted-foreground',
                       inputClassName,
                     )}
@@ -68,7 +68,7 @@ function ControlledDatePicker<T extends FieldValues>({
                   </Button>
                 </FormControl>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="form-content w-auto p-0" align="start">
                 <CalendarComponent
                   mode="single"
                   selected={field.value}
@@ -86,14 +86,14 @@ function ControlledDatePicker<T extends FieldValues>({
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="absolute right-8 top-0 h-full hover:bg-transparent"
+                className="absolute top-0 right-8 h-full hover:bg-transparent"
                 onClick={(e) => {
                   e.stopPropagation()
                   field.onChange(null)
                 }}
                 aria-label="Clear date"
               >
-                <X className="h-4 w-4 text-muted-foreground" />
+                <X className="text-muted-foreground h-4 w-4" />
               </Button>
             )}
           </div>

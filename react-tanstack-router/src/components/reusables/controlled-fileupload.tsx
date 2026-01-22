@@ -54,7 +54,7 @@ export function ControlledFileUpload<T extends FieldValues>({
           <FormControl>
             <div
               className={cn(
-                'relative mt-2 rounded-xl border-2 border-dashed p-6 text-center transition-all cursor-pointer',
+                'form-input! bg-background-tertiary relative mt-2 cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-all',
                 dragOver ? 'border-primary bg-primary/5' : 'border-muted',
                 'hover:border-primary',
               )}
@@ -88,13 +88,13 @@ export function ControlledFileUpload<T extends FieldValues>({
                 }}
               />
 
-              <div className="flex flex-col items-center gap-2 text-muted-foreground">
+              <div className="text-muted-foreground flex flex-col items-center gap-2">
                 {accept.includes('image') ? (
                   <ImageIcon className="h-8 w-8" />
                 ) : (
                   <Upload className="h-8 w-8" />
                 )}
-                <p className="font-medium text-sm">{placeholder}</p>
+                <p className="text-sm font-medium">{placeholder}</p>
                 <p className="text-xs">
                   {multiple ? `${maxFiles} files max` : 'Single file'} ·{' '}
                   {formatFileSize(maxSize)}
@@ -132,14 +132,14 @@ export function FilePreviewGrid({ value, multiple, onChange }: PreviewProps) {
   const files = Array.isArray(value) ? value : [value]
 
   return (
-    <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+    <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
       {files.map((file, idx) => {
         const isImage = file instanceof File && file.type.startsWith('image/')
 
         return (
           <div
             key={idx}
-            className="group relative overflow-hidden rounded-xl border bg-background shadow-sm hover:shadow-md transition"
+            className="group bg-background relative overflow-hidden rounded-xl border shadow-sm transition hover:shadow-md"
           >
             {isImage ? (
               <img
@@ -149,8 +149,8 @@ export function FilePreviewGrid({ value, multiple, onChange }: PreviewProps) {
               />
             ) : (
               <div className="flex h-32 flex-col items-center justify-center gap-2">
-                <FileIcon className="h-6 w-6 text-muted-foreground" />
-                <p className="text-xs truncate px-2">{file.name}</p>
+                <FileIcon className="text-muted-foreground h-6 w-6" />
+                <p className="truncate px-2 text-xs">{file.name}</p>
               </div>
             )}
 
@@ -160,13 +160,13 @@ export function FilePreviewGrid({ value, multiple, onChange }: PreviewProps) {
                 if (!multiple) return onChange(null)
                 onChange(files.filter((_, i) => i !== idx))
               }}
-              className="absolute top-2 right-2 rounded-full bg-black/60 p-1 text-white opacity-0 group-hover:opacity-100 transition"
+              className="absolute top-2 right-2 rounded-full bg-black/60 p-1 text-white opacity-0 transition group-hover:opacity-100"
             >
               <X className="h-3 w-3" />
             </button>
 
             {multiple && (
-              <div className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition">
+              <div className="absolute bottom-2 left-2 opacity-0 transition group-hover:opacity-100">
                 <Grip className="h-4 w-4 text-white" />
               </div>
             )}

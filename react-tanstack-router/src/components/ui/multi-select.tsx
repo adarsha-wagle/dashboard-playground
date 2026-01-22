@@ -21,7 +21,6 @@ import {
   CommandSeparator,
 } from '@/components/ui/command'
 import { Button, buttonVariants } from './button'
-import { toast } from 'sonner'
 
 /**
  * Variants for the multi-select component to handle different styles.
@@ -191,13 +190,13 @@ export const MultiSelect = React.forwardRef<
             {...props}
             onClick={handleTogglePopover}
             className={cn(
-              'w-full border text-left font-normal pl-3 ',
+              'w-full border pl-3 text-left font-normal',
               className,
             )}
             variant="outline"
           >
             {selectedValues.length > 0 ? (
-              <div className="flex justify-between items-center w-full">
+              <div className="flex w-full items-center justify-between">
                 <div className="flex flex-wrap items-center gap-1">
                   {selectedValues.slice(0, maxCount).map((value) => {
                     const option = options.find((o) => o.value === value)
@@ -205,20 +204,20 @@ export const MultiSelect = React.forwardRef<
                     return (
                       <Badge
                         className={cn(
-                          'bg-primary-foreground text-foreground border-foreground/1 hover:bg-transparent  rounded-sm',
+                          'bg-primary-foreground text-foreground border-foreground/1 rounded-sm hover:bg-transparent',
 
                           multiSelectVariants({ variant }),
                         )}
                         style={{ animationDuration: `${animation}s` }}
                       >
                         {IconComponent && (
-                          <IconComponent className="size-4 mr-1" />
+                          <IconComponent className="mr-1 size-4" />
                         )}
                         {option?.label}
                         <Button
                           type="button"
                           variant="ghost"
-                          className="p-0! size-4"
+                          className="size-4 p-0!"
                           onClick={(event) => {
                             event.stopPropagation()
                             toggleOption(value)
@@ -232,7 +231,7 @@ export const MultiSelect = React.forwardRef<
                   {selectedValues.length > maxCount && (
                     <Badge
                       className={cn(
-                        ' bg-primary-foreground text-foreground border-foreground/1 hover:bg-transparent  rounded-sm',
+                        'bg-primary-foreground text-foreground border-foreground/1 rounded-sm hover:bg-transparent',
 
                         multiSelectVariants({ variant }),
                       )}
@@ -242,7 +241,7 @@ export const MultiSelect = React.forwardRef<
                       <Button
                         type="button"
                         variant="ghost"
-                        className="p-0! size-4"
+                        className="size-4 p-0!"
                         onClick={(event) => {
                           event.stopPropagation()
                           clearExtraOptions()
@@ -263,31 +262,31 @@ export const MultiSelect = React.forwardRef<
                       handleClear()
                     }}
                   >
-                    <XIcon className="h-4 mx-2 cursor-pointer text-muted-foreground" />
+                    <XIcon className="text-muted-foreground mx-2 h-4 cursor-pointer" />
                   </Button>
                   <Separator
                     orientation="vertical"
-                    className="flex min-h-6 h-full"
+                    className="flex h-full min-h-6"
                   />
-                  <ChevronDown className="h-4 ml-2 cursor-pointer text-muted-foreground" />
+                  <ChevronDown className="text-muted-foreground ml-2 h-4 cursor-pointer" />
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-between w-full mx-auto">
-                <span className="text-left text-muted-foreground">
+              <div className="mx-auto flex w-full items-center justify-between">
+                <span className="text-muted-foreground text-left">
                   {placeholder}
                 </span>
-                <ChevronDown className="h-4 cursor-pointer text-muted-foreground" />
+                <ChevronDown className="text-muted-foreground h-4 cursor-pointer" />
               </div>
             )}
           </MultiSelectButton>
         </PopoverTrigger>
         <PopoverContent
-          className=" p-0 bg-gray-100"
+          className="p-0"
           align="start"
           onEscapeKeyDown={() => setIsPopoverOpen(false)}
         >
-          <Command>
+          <Command className="form-content">
             <CommandInput
               placeholder="Search..."
               className="border-b"
@@ -303,17 +302,15 @@ export const MultiSelect = React.forwardRef<
                 >
                   <div
                     className={cn(
-                      'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                      'border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border',
                       selectedValues.length === options.length
-                        ? ' text-primary-foreground'
+                        ? 'text-primary-foreground'
                         : 'opacity-50 [&_svg]:invisible',
                     )}
                   >
-                    <CheckIcon className="h-4 w-4" />
+                    <CheckIcon className="size-4" />
                   </div>
-                  <span className="responsive__fontsize17 font-afacad">
-                    (Select All)
-                  </span>
+                  <span>(Select All)</span>
                 </CommandItem>
                 {options.map((option) => {
                   const isSelected = selectedValues.includes(option.value)
@@ -325,16 +322,16 @@ export const MultiSelect = React.forwardRef<
                     >
                       <div
                         className={cn(
-                          'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                          'border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border',
                           isSelected
-                            ? ' text-primary-foreground'
+                            ? 'text-primary-foreground'
                             : 'opacity-50 [&_svg]:invisible',
                         )}
                       >
-                        <CheckIcon className="h-4 w-4" />
+                        <CheckIcon className="border-primary" />
                       </div>
                       {option.icon && (
-                        <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+                        <option.icon className="text-muted-foreground mr-2 h-4 w-4" />
                       )}
                       <span className="responsive__fontsize17 font-afacad">
                         {option.label}
@@ -350,19 +347,19 @@ export const MultiSelect = React.forwardRef<
                     <>
                       <CommandItem
                         onSelect={handleClear}
-                        className="flex-1 justify-center cursor-pointer font-afacad"
+                        className="font-afacad flex-1 cursor-pointer justify-center"
                       >
                         Clear
                       </CommandItem>
                       <Separator
                         orientation="vertical"
-                        className="flex min-h-6 h-full"
+                        className="flex h-full min-h-6"
                       />
                     </>
                   )}
                   <CommandItem
                     onSelect={() => setIsPopoverOpen(false)}
-                    className="flex-1 justify-center cursor-pointer max-w-full font-afacad"
+                    className="font-afacad max-w-full flex-1 cursor-pointer justify-center"
                   >
                     Close
                   </CommandItem>

@@ -12,7 +12,6 @@ import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useGetPaginatedInvoices } from '../table/shared/invoice-service'
-import { ServerAutocompleteInput } from '../server-autocomplete/components/server-autocomplete-input'
 import ControlledDatePicker from '@/components/reusables/controlled-date-picker'
 import ControlledTextAreaField from '@/components/reusables/controlled-textarea'
 import { ControlledSelectField } from '@/components/reusables/controlled-select-field'
@@ -28,6 +27,7 @@ import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
 import SecondaryHeader from '@/components/layouts/authenticated/secondary-header'
 import ControlledTextEditor from '@/components/reusables/controlled-text-editor'
 import Main from '@/components/layouts/authenticated/main'
+import { ControlledServerAutocomplete } from '@/components/reusables/controlled-server-auto-complete'
 
 function InputFieldsPage() {
   const form = useForm<TFormSchema>({
@@ -107,7 +107,7 @@ function InputFieldsPage() {
             <div className="space-y-4">
               <SecondaryHeader title="3. Controlled Server Autocomplete" />
               <div className="grid grid-cols-2 gap-x-8 gap-y-6">
-                <ServerAutocompleteInput
+                <ControlledServerAutocomplete
                   control={form.control}
                   name="customerName"
                   label="Server Autocomplete"

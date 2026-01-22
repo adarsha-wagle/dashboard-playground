@@ -15,8 +15,10 @@ function PrimaryHeader({ title, description, className }: TPrimaryHeaderProps) {
       transition={{ duration: 0.4, delay: 0.1 }}
       className={className}
     >
-      <h1 className="text-2xl font-bold text-foreground">{title}</h1>
-      {description && <p className=" text-muted-foreground ">{description}</p>}
+      <h1 className="text-foreground text-24 font-semibold">{title}</h1>
+      {description && (
+        <p className="text-muted-foreground text-16">{description}</p>
+      )}
     </motion.div>
   )
 }

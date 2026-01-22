@@ -50,7 +50,10 @@ export function ControlledRadioGroup<T extends FieldValues>({
                   className="flex items-center gap-3"
                 >
                   <FormControl>
-                    <RadioGroupItem value={option.value} />
+                    <RadioGroupItem
+                      value={option.value}
+                      className="form-radio!"
+                    />
                   </FormControl>
                   <FormLabel className="font-normal">{option.label}</FormLabel>
                 </FormItem>

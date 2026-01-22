@@ -1,10 +1,10 @@
 import { Form } from '@/components/ui/form'
 import { useGetPaginatedInvoices } from '../table/shared/invoice-service'
-import { ServerAutocompleteInput } from './components/server-autocomplete-input'
 
 import { useForm } from 'react-hook-form'
 import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
 import Main from '@/components/layouts/authenticated/main'
+import { ControlledServerAutocomplete } from '@/components/reusables/controlled-server-auto-complete'
 
 function ServerAutocompletePage() {
   const form = useForm({
@@ -22,7 +22,7 @@ function ServerAutocompletePage() {
         description="Server Side autocomplete field that has downshift feature, debounce fetching and integrates with seamlessly with reactquery"
       />
       <Form {...form}>
-        <ServerAutocompleteInput
+        <ControlledServerAutocomplete
           control={form.control}
           name="invoice"
           label="Select Invoice"

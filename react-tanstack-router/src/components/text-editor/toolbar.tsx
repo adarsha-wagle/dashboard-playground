@@ -1,4 +1,6 @@
 // build extensions
+import { cn } from '@/lib/utils'
+import type { HTMLProps } from 'react'
 import { RichTextAttachment } from 'reactjs-tiptap-editor/attachment'
 import { RichTextBlockquote } from 'reactjs-tiptap-editor/blockquote'
 import { RichTextBold } from 'reactjs-tiptap-editor/bold'
@@ -29,9 +31,18 @@ import { RichTextAlign } from 'reactjs-tiptap-editor/textalign'
 import { RichTextTextDirection } from 'reactjs-tiptap-editor/textdirection'
 import { RichTextUnderline } from 'reactjs-tiptap-editor/textunderline'
 
-export const RichTextToolbar = () => {
+type TRichTextToolbar = {
+  className?: HTMLProps<HTMLElement>['className']
+}
+
+export const RichTextToolbar = ({ className }: TRichTextToolbar) => {
   return (
-    <div className="flex items-center p-1! gap-2 flex-wrap border-b! border-solid border-border!">
+    <div
+      className={cn(
+        'border-border! flex flex-wrap items-center gap-2 border-b! border-solid p-1!',
+        className,
+      )}
+    >
       <RichTextSearchAndReplace />
       <RichTextClear />
       <RichTextFontFamily />

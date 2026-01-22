@@ -70,7 +70,7 @@ export function ControlledSelectField<
         <FormItem className={cn('w-full', className)}>
           <FormLabel>
             {label}
-            {required && <span className="text-pink-400 ml-1">*</span>}
+            {required && <span className="ml-1 text-pink-400">*</span>}
           </FormLabel>
 
           <FormControl>
@@ -79,23 +79,25 @@ export function ControlledSelectField<
               onValueChange={field.onChange}
               defaultValue={field.value as string}
             >
-              <SelectTrigger className={cn('w-full', inputClassName)}>
+              <SelectTrigger
+                className={cn('form-input! w-full', inputClassName)}
+              >
                 <SelectValue
                   placeholder={placeholder}
-                  className="text-gray-950 py-2 pl-4 capitalize"
+                  className="py-2 pl-4 text-gray-950 capitalize"
                 />
               </SelectTrigger>
 
-              <SelectContent className="bg-gray-100">
+              <SelectContent className="form-content">
                 {options.map((option) => (
                   <SelectItem
                     key={String(option[setKey])}
                     value={String(option[setKey])}
-                    className="responsive__fontsize17 font-afacad text-gray-950 capitalize flex items-center gap-2"
+                    className="responsive__fontsize17 font-afacad flex items-center gap-2 text-gray-950 capitalize"
                   >
                     {/* Render icon if exists */}
                     {option.icon && (
-                      <option.icon className="w-4 h-4 text-gray-600" />
+                      <option.icon className="h-4 w-4 text-gray-600" />
                     )}
                     {String(option[showKey])}
                   </SelectItem>

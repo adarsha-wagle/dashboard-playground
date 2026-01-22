@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from '../ui/form'
 import { Textarea } from '../ui/textarea'
+import { InputGroup, InputGroupTextarea } from '../ui/input-group'
 
 type TControlledTextAreaFieldProps<T extends FieldValues> = {
   name: Path<T>
@@ -48,17 +49,16 @@ function ControlledTextAreaField<T extends FieldValues>({
         <FormItem className={cn('w-full', className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Textarea
-              {...field}
-              placeholder={placeholder}
-              defaultValue={defaultValue}
-              required={required}
-              rows={rows}
-              className={cn(
-                'w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary',
-                textareaClassName,
-              )}
-            />
+            <InputGroup className="form-input! w-full">
+              <InputGroupTextarea
+                {...field}
+                placeholder={placeholder}
+                defaultValue={defaultValue}
+                required={required}
+                rows={rows}
+                className={cn(textareaClassName)}
+              />
+            </InputGroup>
           </FormControl>
           <FormMessage />
         </FormItem>

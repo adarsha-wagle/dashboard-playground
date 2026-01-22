@@ -82,6 +82,9 @@
   --shadow-xl:
     0 20px 25px -5px hsl(var(--color-text-primary) / 0.1),
     0 8px 10px -6px hsl(var(--color-text-primary) / 0.1);
+
+  /* ===== MISC ===== */
+  --ring: var(--color-primary-light);
 }
 
 .dark {
@@ -157,9 +160,6 @@
 
   /* ===== BORDER COLORS ===== */
   --color-border: 240 4% 16%;
-  --color-border-strong: 240 4% 25%;
-  --color-border-hover: 240 4% 35%;
-  --color-border-focus: var(--color-primary-main);
 
   /* ===== COMPONENT COLORS ===== */
   --color-input-background: var(--color-background-secondary);
@@ -182,4 +182,7 @@
   --shadow-xl:
     0 20px 25px -5px hsl(var(--color-background) / 0.6),
     0 8px 10px -6px hsl(var(--color-background) / 0.4);
+
+  /* ===== SHADOWS ===== */
+  --ring: var(--color-primary-light);
 }

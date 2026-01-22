@@ -9,7 +9,6 @@ import { Eye, EyeOff } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
-import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import {
   FormControl,
@@ -18,12 +17,13 @@ import {
   FormLabel,
   FormMessage,
 } from '../ui/form'
+import { InputGroup, InputGroupAddon, InputGroupInput } from '../ui/input-group'
 
 type TControlledInputFieldProps<T extends FieldValues> = {
   name: Path<T>
   label: string
   control: Control<T>
-  type?: 'text' | 'password' | 'date-picker' | 'email'
+  type?: 'text' | 'password' | 'date-picker' | 'email' | 'number'
   defaultValue?: PathValue<T, Path<T>> | ''
   className?: HTMLProps<HTMLElement>['className']
   inputClassName?: HTMLProps<HTMLElement>['className']
@@ -53,32 +53,34 @@ function ControlledInputField<T extends FieldValues>({
         <FormItem className={cn('w-full', className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <div className="relative">
-              <Input
+            <InputGroup className="form-input! w-full">
+              <InputGroupInput
                 placeholder={placeholder}
                 {...field}
                 defaultValue={defaultValue}
                 type={isPassword && showPassword ? 'text' : type}
                 required={required}
-                className={cn(isPassword && 'pr-10', inputClassName)}
+                className={cn(inputClassName)}
               />
               {isPassword && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-muted-foreground" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </Button>
+                <InputGroupAddon align="inline-end" className="p-0">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={
+                      showPassword ? 'Hide password' : 'Show password'
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOff className="text-muted-foreground size-4" />
+                    ) : (
+                      <Eye className="text-muted-foreground size-4" />
+                    )}
+                  </Button>
+                </InputGroupAddon>
               )}
-            </div>
+            </InputGroup>
           </FormControl>
           <FormMessage />
         </FormItem>

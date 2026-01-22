@@ -90,7 +90,7 @@ function ControlledTextEditor<T extends FieldValues>({
               <div className={cn('w-full', editorClassName)}>
                 {!editor ? (
                   <div
-                    className="overflow-hidden rounded-lg bg-background border border-border flex items-center justify-center"
+                    className="bg-background border-border flex items-center justify-center overflow-hidden rounded-lg border"
                     style={{ minHeight }}
                   >
                     <span className="text-muted-foreground">
@@ -99,9 +99,9 @@ function ControlledTextEditor<T extends FieldValues>({
                   </div>
                 ) : (
                   <RichTextProvider editor={editor}>
-                    <div className="overflow-hidden rounded-lg bg-background border! border-border!">
+                    <div className="bg-background border-border! overflow-hidden rounded-lg border!">
                       <div className="flex max-h-full w-full flex-col">
-                        <RichTextToolbar />
+                        <RichTextToolbar className="bg-background-tertiary" />
 
                         <div
                           className="prose prose-sm max-w-none p-4"

@@ -19,9 +19,9 @@ function SecondaryHeader({
       transition={{ duration: 0.4, delay: 0.1 }}
       className={className}
     >
-      <h1 className="text-foreground/80 text-xl font-semibold">{title}</h1>
+      <h1 className="text-foreground/80 text-20 font-semibold">{title}</h1>
       {description && (
-        <p className="text-muted-foreground text-sm">{description}</p>
+        <p className="text-muted-foreground text-14">{description}</p>
       )}
     </motion.div>
   )

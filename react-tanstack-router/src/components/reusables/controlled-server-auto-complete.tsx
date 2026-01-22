@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react'
 import { type Control, type FieldValues, type Path } from 'react-hook-form'
 import { useCombobox } from 'downshift'
 import { Search, X, Loader2 } from 'lucide-react'
-import { Input } from '@/components/ui/input'
 import type { IPaginationResult } from '@/types/api'
 import {
   FormControl,
@@ -13,6 +12,8 @@ import {
 } from '@/components/ui/form'
 import { cn } from '@/lib/utils'
 import { useDebounce } from '@/hooks/use-debounce'
+import { InputGroup, InputGroupAddon, InputGroupInput } from '../ui/input-group'
+import { Button } from '../ui/button'
 
 // Generic types
 interface AutocompleteItem {
@@ -50,7 +51,7 @@ interface ServerAutocompleteProps<
   className?: string
 }
 
-export const ServerAutocompleteInput = <
+export const ControlledServerAutocomplete = <
   T extends FieldValues,
   TItem extends AutocompleteItem,
   TFilter extends Record<string, any>,
@@ -130,55 +131,53 @@ export const ServerAutocompleteInput = <
 
               <FormControl>
                 <div className="relative">
-                  <div className="relative">
-                    <Input
+                  <InputGroup className="form-input!">
+                    <InputGroupInput
                       {...getInputProps({
                         disabled,
                       })}
                       placeholder={placeholder}
                     />
 
-                    <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                      {isLoading && (
-                        <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
-                      )}
+                    {isLoading && (
+                      <InputGroupAddon align="inline-end">
+                        <Loader2 className="text-primary h-4 w-4 animate-spin" />
+                      </InputGroupAddon>
+                    )}
+                    {value && (
+                      <InputGroupAddon
+                        align="inline-end"
+                        className="cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          selectItem(null)
+                          setInputValue('')
+                          onChange(null)
+                        }}
+                      >
+                        <Button variant="ghost" size="icon-sm" className="p-0!">
+                          <X />
+                        </Button>
+                      </InputGroupAddon>
+                    )}
 
-                      {value && !disabled && (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            selectItem(null)
-                            setInputValue('')
-                            onChange(null)
-                          }}
-                          className="p-1 hover:bg-muted rounded transition"
-                        >
-                          <X className="w-4 h-4 text-muted-foreground" />
-                        </button>
-                      )}
-
-                      {!disabled && (
-                        <button
-                          type="button"
-                          {...getToggleButtonProps()}
-                          className="p-1 hover:bg-muted rounded transition"
-                        >
-                          <Search className="w-4 h-4 text-muted-foreground" />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-
+                    <InputGroupAddon
+                      align="inline-end"
+                      {...getToggleButtonProps()}
+                    >
+                      <Search />
+                    </InputGroupAddon>
+                  </InputGroup>
                   <ul
                     {...getMenuProps()}
                     className={cn(
-                      'absolute z-50 w-full mt-1 bg-popover border border-border rounded-lg shadow-lg max-h-60 overflow-auto scrollbar-thin',
+                      'form-content',
+                      'border-border scrollbar-thin absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg border shadow-lg',
                       !(isOpen && items.length) && 'hidden',
                     )}
                   >
                     {isOpen && !isLoading && items.length === 0 && (
-                      <li className="px-4 py-3 text-sm text-muted-foreground text-center">
+                      <li className="text-muted-foreground px-4 py-3 text-center text-sm">
                         No results found
                       </li>
                     )}
@@ -189,29 +188,29 @@ export const ServerAutocompleteInput = <
                           key={item.id}
                           {...getItemProps({ item, index })}
                           className={cn(
-                            'px-4 py-2 cursor-pointer transition',
+                            'cursor-pointer px-4 py-2 transition',
                             highlightedIndex === index
                               ? 'bg-accent text-accent-foreground'
                               : 'hover:bg-accent/50',
                           )}
                         >
-                          <div className="font-medium text-sm">
+                          <div className="text-sm font-medium">
                             {String(item[displayField])}
                           </div>
                           {secondaryField && (
-                            <div className="text-xs text-muted-foreground">
+                            <div className="text-muted-foreground text-xs">
                               {String(item[secondaryField])}
                             </div>
                           )}
                         </li>
                       ))}
-                  </ul>
 
-                  {isError && (
-                    <p className="mt-1 text-sm text-destructive">
-                      Failed to load options
-                    </p>
-                  )}
+                    {isError && (
+                      <p className="text-error-main text-14 mt-1">
+                        Failed to load options
+                      </p>
+                    )}
+                  </ul>
                 </div>
               </FormControl>
 

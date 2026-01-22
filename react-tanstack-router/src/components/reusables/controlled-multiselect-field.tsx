@@ -6,8 +6,6 @@ import {
   type FieldValues,
   type Path,
   type PathValue,
-  type FieldErrors,
-  get,
 } from 'react-hook-form'
 
 import {
@@ -69,7 +67,7 @@ export function ControlledMultiSelectField<
         <FormItem className={cn('w-full', className)}>
           <FormLabel>
             {label}
-            {required && <span className="text-pink-400 ml-1">*</span>}
+            {required && <span className="ml-1 text-pink-400">*</span>}
           </FormLabel>
 
           <FormControl>
@@ -82,7 +80,7 @@ export function ControlledMultiSelectField<
               variant="default"
               onValueChange={field.onChange}
               placeholder={placeholder}
-              className={inputClassName}
+              className={cn('form-input! w-full', inputClassName)}
               maxCount={3}
               animation={0.2}
             />
