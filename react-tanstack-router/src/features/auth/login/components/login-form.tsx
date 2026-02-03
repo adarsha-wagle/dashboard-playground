@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import ControlledInputField from '@/components/reusables/controlled-input-field'
+import ControlledInputField from '@/components/form/controlled-input-field'
 
 import { LoginSchema, type TLoginSchema } from '../../shared/auth-type'
 import { useLoginMutation } from '../../shared/auth-services'

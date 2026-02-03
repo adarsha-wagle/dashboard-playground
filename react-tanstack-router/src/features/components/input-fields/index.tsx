@@ -7,27 +7,27 @@ import {
   multiSelectOptions,
   type TFormSchema,
 } from './shared/input-fields-type'
-import ControlledInputField from '@/components/reusables/controlled-input-field'
+import ControlledInputField from '@/components/form/controlled-input-field'
 import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useGetPaginatedInvoices } from '../table/shared/invoice-service'
-import ControlledDatePicker from '@/components/reusables/controlled-date-picker'
-import ControlledTextAreaField from '@/components/reusables/controlled-textarea'
-import { ControlledSelectField } from '@/components/reusables/controlled-select-field'
-import { ControlledMultiSelectField } from '@/components/reusables/controlled-multiselect-field'
-import { ControlledSlider } from '@/components/reusables/controlled-slider'
-import { ControlledDualSlider } from '@/components/reusables/controlled-dual-slider'
-import { ControlledDateRangePicker } from '@/components/reusables/controlled-date-range-picker'
-import { ControlledRadioGroup } from '@/components/reusables/controlled-radio'
-import { ControlledSwitch } from '@/components/reusables/controlled-switch'
-import { ControlledCheckbox } from '@/components/reusables/controlled-checkbox'
-import { ControlledFileUpload } from '@/components/reusables/controlled-fileupload'
+import ControlledDatePicker from '@/components/form/controlled-date-picker'
+import ControlledTextAreaField from '@/components/form/controlled-textarea'
+import { ControlledSelectField } from '@/components/form/controlled-select-field'
+import { ControlledMultiSelectField } from '@/components/form/controlled-multiselect-field'
+import { ControlledSlider } from '@/components/form/controlled-slider'
+import { ControlledDualSlider } from '@/components/form/controlled-dual-slider'
+import { ControlledDateRangePicker } from '@/components/form/controlled-date-range-picker'
+import { ControlledRadioGroup } from '@/components/form/controlled-radio'
+import { ControlledSwitch } from '@/components/form/controlled-switch'
+import { ControlledCheckbox } from '@/components/form/controlled-checkbox'
+import { ControlledFileUpload } from '@/components/form/controlled-fileupload'
 import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
 import SecondaryHeader from '@/components/layouts/authenticated/secondary-header'
-import ControlledTextEditor from '@/components/reusables/controlled-text-editor'
+import ControlledTextEditor from '@/components/form/controlled-text-editor'
 import Main from '@/components/layouts/authenticated/main'
-import { ControlledServerAutocomplete } from '@/components/reusables/controlled-server-auto-complete'
+import { ControlledServerAutocomplete } from '@/components/form/controlled-server-auto-complete'
 
 function InputFieldsPage() {
   const form = useForm<TFormSchema>({
@@ -72,7 +72,6 @@ function InputFieldsPage() {
                 <ControlledInputField
                   control={form.control}
                   name="password"
-                  type="password"
                   label="Password"
                   placeholder="Password"
                   required

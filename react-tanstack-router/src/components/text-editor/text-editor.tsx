@@ -65,9 +65,9 @@ function TextEditor() {
 
   return (
     <>
-      <div className=" w-full max-w-300 mx-auto my-0">
+      <div className="mx-auto my-0 w-full max-w-6xl">
         <RichTextProvider editor={editor}>
-          <div className="overflow-hidden rounded-lg bg-background border! border-border!">
+          <div className="form-texteditor border-border! overflow-hidden rounded-lg border!">
             <div className="flex max-h-full w-full flex-col">
               <RichTextToolbar />
 

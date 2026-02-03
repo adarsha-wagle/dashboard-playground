@@ -17,6 +17,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCreateInvoice } from '../shared/invoice-service'
 import { DialogOverlay } from '@radix-ui/react-dialog'
+import { ButtonPrimary } from '@/components/reusables/button-primary'
 
 const defaultValues: TInvoiceSchema = {
   customer: 'test',
@@ -53,9 +54,12 @@ function InvoiceAdd() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <div className="flex justify-end">
-            <Button size="small" className="bg-black!">
+            <ButtonPrimary
+              size="sm"
+              className="text-secondary-lighter rounded-lg"
+            >
               Create Invoice
-            </Button>
+            </ButtonPrimary>
           </div>
         </DialogTrigger>
 
@@ -67,16 +71,29 @@ function InvoiceAdd() {
               Fill in invoice details and add line items.
             </DialogDescription>
           </DialogHeader>
-          <InvoiceForm onSubmit={onSubmit} form={form} />
-          {/* Footer */}
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="danger">Cancel</Button>
-            </DialogClose>
-            <Button type="submit" disabled={invoiceMutation.isPending}>
-              {invoiceMutation.isPending ? 'Creating...' : 'Create Invoice'}
-            </Button>
-          </DialogFooter>{' '}
+          <div className="grid grid-cols-2 gap-6">
+            <InvoiceForm onSubmit={onSubmit} form={form} />
+            {/* Footer */}
+            <DialogFooter>
+              <DialogClose asChild>
+                <ButtonPrimary
+                  type="submit"
+                  loadingText="Creating..."
+                  variant="destructive"
+                  className="bg-error-main"
+                >
+                  
+                </ButtonPrimary>
+              </DialogClose>
+              <ButtonPrimary
+                type="submit"
+                isLoading={invoiceMutation.isPending}
+                loadingText="Creating..."
+              >
+                Create
+              </ButtonPrimary>
+            </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </AnimatePresence>

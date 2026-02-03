@@ -399,6 +399,13 @@ body {
   @apply bg-background-tertiary;
 }
 
+@utility form-file {
+  @apply bg-background-tertiary rounded-xl border-2 border-dashed p-6 text-center;
+}
+@utility form-texteditor {
+  @apply bg-background-tertiary;
+}
+
 @utility form-checkbox {
   @apply border-primary-light bg-background-tertiary border;
   @apply h-4 w-4 cursor-pointer rounded-sm;
@@ -429,4 +436,8 @@ body {
 
   /* Thumb (indicator/toggle) styles */
   @apply **:data-[slot='switch-thumb']:bg-background-secondary;
+}
+
+.reactjs-tiptap-editor .ProseMirror.ProseMirror.ProseMirror {
+  outline: none;
 }

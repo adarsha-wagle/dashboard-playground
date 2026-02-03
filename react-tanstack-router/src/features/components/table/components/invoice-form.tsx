@@ -1,15 +1,25 @@
-'use client'
-
 import { useFieldArray, type UseFormReturn } from 'react-hook-form'
+import { Plus, Trash2, Package, User, FileText } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-
-import ControlledInputField from '@/components/reusables/controlled-input-field'
-
-import { type TInvoiceSchema } from '../shared/invoice-type'
+import ControlledInputField from '@/components/form/controlled-input-field'
+import ControlledDatePicker from '@/components/form/controlled-date-picker'
+import { Separator } from '@/components/ui/separator'
+import { cn } from '@/lib/utils'
 import { Form } from '@/components/ui/form'
-import ControlledDatePicker from '@/components/reusables/controlled-date-picker'
-import ControlledTextAreaField from '@/components/reusables/controlled-textarea'
+
+export type InvoiceItem = {
+  item: string
+  qty: number
+  price: number
+}
+
+export type TInvoiceSchema = {
+  customer: string
+  date: string
+  dueDate: string
+  items: InvoiceItem[]
+}
 
 type TInvoiceFormProps = {
   onSubmit: (data: TInvoiceSchema) => void
@@ -17,101 +27,223 @@ type TInvoiceFormProps = {
 }
 
 export function InvoiceForm({ onSubmit, form }: TInvoiceFormProps) {
-  const { control, handleSubmit } = form
+  const { control, handleSubmit, watch } = form
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'items',
   })
 
+  // Calculate totals
+  const items = watch('items') || []
+  const subtotal = items.reduce(
+    (acc, item) => acc + (item.qty || 0) * (item.price || 0),
+    0,
+  )
+
   return (
-    <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Customer & Dates */}
-        <div className="grid grid-cols-2 gap-4">
-          <ControlledInputField
-            control={control}
-            name="customer"
-            label="Customer"
-            placeholder="Customer name"
-            required
-          />
-          <ControlledDatePicker
-            control={control}
-            name="date"
-            label="Invoice Date"
-            required
-          />{' '}
-          <ControlledDatePicker
-            control={control}
-            name="date"
-            label="Invoice Date"
-            required
-          />
-          <ControlledInputField
-            control={control}
-            name="dueDate"
-            label="Due Date"
-            required
-          />
-        </div>
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="col-span-2 space-y-6"
+        >
+          {/* Customer & Dates Section */}
+          <div className="space-y-4">
+            <div className="text-foreground flex items-center gap-2 text-sm font-medium">
+              <User className="text-primary h-4 w-4" />
+              <span>Customer Details</span>
+            </div>
 
-        <ControlledTextAreaField
-          control={control}
-          name="description"
-          label="Description"
-          placeholder="Optional description"
-        />
-
-        {/* Items */}
-        <div className="space-y-4">
-          <h3 className="font-semibold">Items</h3>
-
-          {fields.map((field, index) => (
-            <div key={field.id} className="grid grid-cols-4 items-end gap-3">
+            <div className="grid gap-4 sm:grid-cols-3">
               <ControlledInputField
                 control={control}
-                name={`items.${index}.item`}
-                label="Item"
-                placeholder="Item name"
-                required
+                name="customer"
+                label="Customer Name"
+                placeholder="Enter customer name"
+                className="sm:col-span-1"
               />
-
-              <ControlledInputField
+              <ControlledDatePicker
                 control={control}
-                name={`items.${index}.qty`}
-                label="Qty"
-                required
-                type="number"
+                name="date"
+                label="Invoice Date"
+                placeholder="Select date"
               />
-
-              <ControlledInputField
+              <ControlledDatePicker
                 control={control}
-                name={`items.${index}.price`}
-                label="Price"
-                type="number"
-                required
+                name="dueDate"
+                label="Due Date"
+                placeholder="Select due date"
               />
+            </div>
+          </div>
 
+          <Separator className="bg-border/60" />
+
+          {/* Line Items Section */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="text-foreground flex items-center gap-2 text-sm font-medium">
+                <Package className="text-primary h-4 w-4" />
+                <span>Line Items</span>
+              </div>
+              <span className="text-muted-foreground text-xs">
+                {fields.length} item{fields.length !== 1 ? 's' : ''}
+              </span>
+            </div>
+
+            {/* Items Header - Desktop */}
+            <div className="bg-muted/40 text-muted-foreground hidden gap-3 rounded-lg px-3 py-2 text-xs font-medium tracking-wide uppercase sm:grid sm:grid-cols-12">
+              <div className="col-span-5">Description</div>
+              <div className="col-span-2 text-center">Qty</div>
+              <div className="col-span-3 text-center">Price</div>
+              <div className="col-span-2 text-right">Total</div>
+            </div>
+
+            {/* Items List */}
+            <div className="space-y-3">
+              {fields.length === 0 ? (
+                <div className="border-border/60 bg-muted/20 flex flex-col items-center justify-center rounded-lg border border-dashed px-4 py-8">
+                  <FileText className="text-muted-foreground/40 mb-2 h-8 w-8" />
+                  <p className="text-muted-foreground text-sm">
+                    No items added yet
+                  </p>
+                  <Button
+                    type="button"
+                    variant="link"
+                    size="sm"
+                    onClick={() => append({ item: '', qty: 1, price: 0 })}
+                    className="text-primary mt-1"
+                  >
+                    Add your first item
+                  </Button>
+                </div>
+              ) : (
+                fields.map((field, index) => {
+                  const qty = items[index]?.qty || 0
+                  const price = items[index]?.price || 0
+                  const lineTotal = qty * price
+
+                  return (
+                    <div
+                      key={field.id}
+                      className={cn(
+                        'group border-border/50 bg-card/50 relative grid gap-3 rounded-lg border p-3',
+                        'hover:border-border transition-all duration-200 hover:shadow-sm',
+                        'sm:grid-cols-12 sm:items-end',
+                      )}
+                    >
+                      {/* Item Description */}
+                      <div className="sm:col-span-5">
+                        <ControlledInputField
+                          control={control}
+                          name={`items.${index}.item`}
+                          label={index === 0 ? 'Item' : ''}
+                          placeholder="Item description"
+                          inputClassName="bg-background"
+                        />
+                        <span className="text-muted-foreground mt-1 text-xs sm:hidden">
+                          Description
+                        </span>
+                      </div>
+
+                      {/* Quantity */}
+                      <div className="sm:col-span-2">
+                        <ControlledInputField
+                          control={control}
+                          name={`items.${index}.qty`}
+                          type="number"
+                          placeholder="0"
+                          inputClassName="bg-background text-center"
+                        />
+                        <span className="text-muted-foreground mt-1 text-xs sm:hidden">
+                          Quantity
+                        </span>
+                      </div>
+
+                      {/* Price */}
+                      <div className="sm:col-span-3">
+                        <ControlledInputField
+                          control={control}
+                          name={`items.${index}.price`}
+                          type="number"
+                          placeholder="0.00"
+                          inputClassName="bg-background text-center"
+                        />
+                        <span className="text-muted-foreground mt-1 text-xs sm:hidden">
+                          Unit Price
+                        </span>
+                      </div>
+
+                      {/* Line Total & Delete */}
+                      <div className="flex items-center justify-between gap-2 sm:col-span-2 sm:justify-end">
+                        <span className="text-foreground text-sm font-medium tabular-nums">
+                          ${lineTotal.toFixed(2)}
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => remove(index)}
+                          className={cn(
+                            'text-muted-foreground/60 hover:text-destructive hover:bg-destructive/10 h-8 w-8',
+                            'opacity-60 transition-opacity group-hover:opacity-100',
+                          )}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          <span className="sr-only">Remove item</span>
+                        </Button>
+                      </div>
+                    </div>
+                  )
+                })
+              )}
+            </div>
+
+            {/* Add Item Button */}
+            {fields.length > 0 && (
               <Button
                 type="button"
-                variant="destructive"
-                onClick={() => remove(index)}
+                variant="outline"
+                size="sm"
+                onClick={() => append({ item: '', qty: 1, price: 0 })}
+                className="border-border/60 text-muted-foreground hover:text-foreground hover:border-border hover:bg-muted/30 w-full border-dashed"
               >
-                Remove
+                <Plus className="mr-2 h-4 w-4" />
+                Add Item
               </Button>
-            </div>
-          ))}
+            )}
+          </div>
+        </form>
+      </Form>
+      <div className="">
+        {/* Summary Section */}
+        {fields.length > 0 && (
+          <>
+            <Separator className="bg-border/60" />
 
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => append({ item: '', qty: 1, price: 0 })}
-          >
-            + Add Item
-          </Button>
-        </div>
-      </form>
-    </Form>
+            <div className="flex justify-end">
+              <div className="bg-muted/30 w-full space-y-2 rounded-lg p-4 sm:w-64">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="font-medium tabular-nums">
+                    ${subtotal.toFixed(2)}
+                  </span>
+                </div>
+                <Separator className="bg-border/60" />
+                <div className="flex justify-between text-base font-semibold">
+                  <span>Total</span>
+                  <span className="text-primary tabular-nums">
+                    ${subtotal.toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </>
   )
 }
+
+export default InvoiceForm

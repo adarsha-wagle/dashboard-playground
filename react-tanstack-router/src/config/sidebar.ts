@@ -12,8 +12,10 @@ import {
   Webhook,
   CreditCard,
   LogInIcon,
+  Fingerprint,
+  BookText,
+  ReceiptText,
 } from 'lucide-react'
-
 export const navigationData: ITreeNode[] = [
   {
     id: 'dashboard',
@@ -103,22 +105,25 @@ export const navigationData: ITreeNode[] = [
   {
     id: 'auth',
     label: 'Authentication',
-    icon: LogInIcon,
+    icon: Fingerprint,
     children: [
       {
         id: 'auth-login',
         label: 'Login',
         to: '/dashboard-auth/login',
+        icon: LogInIcon,
       },
       {
         id: 'auth-signup',
         label: 'Sign-up',
         to: '/dashboard-auth/register',
+        icon: BookText,
       },
       {
         id: 'auth-implementation',
-        label: 'ImplementationDetails',
+        label: 'Implementation Details',
         to: '/dashboard-auth/implementation',
+        icon: ReceiptText,
       },
     ],
   },

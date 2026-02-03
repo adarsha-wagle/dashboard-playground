@@ -132,10 +132,11 @@ export const TreeItem: React.FC<TreeItemProps> = ({ node, level = 0 }) => {
         {Icon && (
           <Icon
             className={cn(
-              'h-5 w-5 shrink-0 transition-colors duration-150',
+              'size-5 shrink-0 transition-colors duration-150',
               isActive
                 ? 'text-primary'
                 : 'text-sidebar-icon group-hover:text-primary',
+              level > 0 && 'size-4',
             )}
           />
         )}
