@@ -13,7 +13,6 @@ import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
-import { Route as DemoStorybookRouteImport } from './routes/demo/storybook'
 import { Route as PublicAuthRouteRouteImport } from './routes/_public/auth/route'
 import { Route as PublicBlogsIndexRouteImport } from './routes/_public/blogs/index'
 import { Route as PublicAboutIndexRouteImport } from './routes/_public/about/index'
@@ -54,11 +53,6 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
 const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
   id: '/demo/tanstack-query',
   path: '/demo/tanstack-query',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoStorybookRoute = DemoStorybookRouteImport.update({
-  id: '/demo/storybook',
-  path: '/demo/storybook',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicAuthRouteRoute = PublicAuthRouteRouteImport.update({
@@ -196,7 +190,6 @@ const AuthenticatedAnalyticsAreaChartIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/auth': typeof PublicAuthRouteRouteWithChildren
-  '/demo/storybook': typeof DemoStorybookRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/': typeof PublicIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
@@ -224,7 +217,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/auth': typeof PublicAuthRouteRouteWithChildren
-  '/demo/storybook': typeof DemoStorybookRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/': typeof PublicIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
@@ -255,7 +247,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_public': typeof PublicRouteRouteWithChildren
   '/_public/auth': typeof PublicAuthRouteRouteWithChildren
-  '/demo/storybook': typeof DemoStorybookRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/_public/': typeof PublicIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
@@ -285,7 +276,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/auth'
-    | '/demo/storybook'
     | '/demo/tanstack-query'
     | '/'
     | '/dashboard'
@@ -313,7 +303,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
-    | '/demo/storybook'
     | '/demo/tanstack-query'
     | '/'
     | '/dashboard'
@@ -343,7 +332,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/_public'
     | '/_public/auth'
-    | '/demo/storybook'
     | '/demo/tanstack-query'
     | '/_public/'
     | '/_authenticated/dashboard/'
@@ -373,7 +361,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   PublicRouteRoute: typeof PublicRouteRouteWithChildren
-  DemoStorybookRoute: typeof DemoStorybookRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
 }
 
@@ -405,13 +392,6 @@ declare module '@tanstack/react-router' {
       path: '/demo/tanstack-query'
       fullPath: '/demo/tanstack-query'
       preLoaderRoute: typeof DemoTanstackQueryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/storybook': {
-      id: '/demo/storybook'
-      path: '/demo/storybook'
-      fullPath: '/demo/storybook'
-      preLoaderRoute: typeof DemoStorybookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/auth': {
@@ -672,7 +652,6 @@ const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   PublicRouteRoute: PublicRouteRouteWithChildren,
-  DemoStorybookRoute: DemoStorybookRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,4 +1,4 @@
-import { CustomBarChart } from '@/components/charts/custom-bar-graph'
+import { CustomBarChart } from '@/components/charts/custom-bar-chart'
 import Main from '@/components/layouts/authenticated/main'
 import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
 

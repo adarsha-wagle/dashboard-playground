@@ -1,6 +1,5 @@
 import React from 'react'
 import { InvoiceForm } from './invoice-form'
-import { Button } from '@/components/storybook'
 import {
   DialogContent,
   DialogHeader,
@@ -20,6 +19,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCreateInvoice } from '../shared/invoice-service'
 import { Edit } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 type InvoiceEditProps = {
   invoice: IInvoice
@@ -29,7 +29,7 @@ function InvoiceEdit({ invoice }: InvoiceEditProps) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false)
 
   const form = useForm<TInvoiceSchema>({
-    resolver: zodResolver(InvoiceSchema),
+    resolver: zodResolver(InvoiceSchema) as any,
     defaultValues: invoice,
   })
 
@@ -60,7 +60,7 @@ function InvoiceEdit({ invoice }: InvoiceEditProps) {
         />
       </DialogTrigger>
 
-      <DialogContent className="max-w-3xl! w-full">
+      <DialogContent className="w-full max-w-3xl!">
         <DialogHeader>
           <DialogTitle>Edit Invoice</DialogTitle>
           <DialogDescription>
@@ -72,7 +72,7 @@ function InvoiceEdit({ invoice }: InvoiceEditProps) {
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="danger">Cancel</Button>
+            <Button variant="destructive">Cancel</Button>
           </DialogClose>
           <Button type="submit" disabled={updateInvoiceMutation.isPending}>
             {updateInvoiceMutation.isPending ? 'Updating...' : 'Update Invoice'}

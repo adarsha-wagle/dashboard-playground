@@ -1,5 +1,3 @@
-'use client'
-
 import {
   ChartContainer,
   ChartTooltip,
@@ -27,7 +25,6 @@ export interface AreaChartConfig {
   strokeWidth?: number
   fillOpacity?: number
   color?: string
-
   // Axis styling moved here
   xAxis?: IAxisStyle
   yAxis?: IAxisStyle

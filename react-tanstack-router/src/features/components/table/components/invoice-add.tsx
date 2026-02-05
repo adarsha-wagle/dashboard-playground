@@ -1,7 +1,6 @@
 import React, { memo } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { InvoiceForm } from './invoice-form'
-import { Button } from '@/components/storybook'
 import {
   DialogContent,
   DialogHeader,
@@ -81,9 +80,7 @@ function InvoiceAdd() {
                   loadingText="Creating..."
                   variant="destructive"
                   className="bg-error-main"
-                >
-                  
-                </ButtonPrimary>
+                ></ButtonPrimary>
               </DialogClose>
               <ButtonPrimary
                 type="submit"

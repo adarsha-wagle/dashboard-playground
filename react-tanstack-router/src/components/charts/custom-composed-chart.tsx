@@ -1,5 +1,3 @@
-'use client'
-
 import {
   ChartContainer,
   ChartTooltip,
@@ -77,13 +75,13 @@ export function CustomComposedChart<T extends ComposedDatumBase>({
   const areaKeys = areaKey ? (Array.isArray(areaKey) ? areaKey : [areaKey]) : []
 
   return (
-    <div className={cn('border p-6 rounded-lg', className)}>
+    <div className={cn('rounded-lg border p-6', className)}>
       <div>
-        {title && <h3 className="text-lg font-semibold mb-4">{title}</h3>}
+        {title && <h3 className="mb-4 text-lg font-semibold">{title}</h3>}
 
         <ChartContainer
           config={chartConfig}
-          className={cn('mx-auto w-full h-75', composedClassName)}
+          className={cn('mx-auto h-75 w-full', composedClassName)}
         >
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={chartData}>
