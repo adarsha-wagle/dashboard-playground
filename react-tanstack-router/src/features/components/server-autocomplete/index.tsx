@@ -16,7 +16,7 @@ function ServerAutocompletePage() {
   })
 
   return (
-    <Main>
+    <Main className="h-full">
       <PrimaryHeader
         title="Server Side Autocomplete"
         description="Server Side autocomplete field that has downshift feature, debounce fetching and integrates with seamlessly with reactquery"

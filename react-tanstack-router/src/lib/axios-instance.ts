@@ -104,7 +104,7 @@ api.interceptors.response.use(
         useAuthStore.getState().resetAuth({
           accessToken: newAccessToken,
           isAuthenticated: true,
-          isAuthError: false,
+          isRefreshError: false,
           isRefreshing: false,
           isPreviousLoggedIn: true,
         })
@@ -123,7 +123,7 @@ api.interceptors.response.use(
         processQueue(refreshError as AxiosError, null)
 
         resetAuth({
-          isAuthError: true,
+          isRefreshError: true,
           isRefreshing: false,
           isPreviousLoggedIn: false,
         })

@@ -15,7 +15,7 @@ export const useLoginMutation = () => {
       resetAuth({
         accessToken,
         isAuthenticated: true,
-        isAuthError: false,
+        isRefreshError: false,
         isRefreshing: false,
         isPreviousLoggedIn: true,
       })

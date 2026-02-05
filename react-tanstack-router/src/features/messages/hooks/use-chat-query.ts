@@ -1,79 +1,79 @@
-"use client";
+'use client'
 
 import {
   useMutation,
   useQueryClient,
   useInfiniteQuery,
-} from "@tanstack/react-query";
+} from '@tanstack/react-query'
 import {
-  IMessage,
-  IConversation,
-  IReaction,
-  TReactionType,
-} from "../_shared/chat-type";
-import { useChatContext } from "../_shared/chat-provider";
-import { API_URL } from "@/config/env";
+  type IMessage,
+  type IConversation,
+  type IReaction,
+  type TReactionType,
+} from '../shared/chat-type'
+import { useChatContext } from '../shared/chat-provider'
+import { CONFIG } from '@/config/constant'
 
 // Query Keys
 export const chatKeys = {
-  all: ["chat"] as const,
-  conversations: () => [...chatKeys.all, "conversations"] as const,
+  all: ['chat'] as const,
+  conversations: () => [...chatKeys.all, 'conversations'] as const,
   conversation: (participantId: string) =>
     [...chatKeys.conversations(), participantId] as const,
   messages: (participantId: string) =>
-    [...chatKeys.conversation(participantId), "messages"] as const,
-};
+    [...chatKeys.conversation(participantId), 'messages'] as const,
+}
 
 // Types
 interface SendMessageData {
-  content: string;
-  receiverId: string;
+  content: string
+  receiverId: string
 }
 
 interface IOptimisticMessage extends IMessage {
-  tempId: string;
+  tempId: string
 }
 
 interface MessageHistoryResponse {
-  messages: IMessage[];
-  hasMore: boolean;
-  total: number;
-  page: number;
-  limit: number;
+  messages: IMessage[]
+  hasMore: boolean
+  total: number
+  page: number
+  limit: number
 }
 
 const fetchMessagesFromServer = async (
   roomId: string,
   page: number,
-  limit: number = 40
+  limit: number = 40,
 ): Promise<MessageHistoryResponse> => {
   const response = await fetch(
-    `${API_URL}/api/messages?roomId=${roomId}&page=${page}&limit=${limit}`
-  );
+    `${CONFIG.API_URL}/api/messages?roomId=${roomId}&page=${page}&limit=${limit}`,
+  )
   if (!response.ok) {
-    throw new Error("Failed to fetch messages");
+    throw new Error('Failed to fetch messages')
   }
-  return response.json();
-};
+  return response.json()
+}
 
 // Custom hook for chat queries
 export const useChatQuery = () => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
-  const { emitWithQueue } = useChatContext();
+  const { emitWithQueue } = useChatContext()
 
   // Get conversation messages
   const useConversationMessages = (
     participantId: string | undefined,
-    currentUserId: string
+    currentUserId: string,
   ) => {
     const roomId =
       participantId && currentUserId
-        ? [currentUserId, participantId].sort().join("-")
-        : "general";
+        ? [currentUserId, participantId].sort().join('-')
+        : 'general'
 
     return useInfiniteQuery({
-      queryKey: chatKeys.messages(participantId || ""),
+      queryKey: chatKeys.messages(participantId || ''),
       queryFn: ({ pageParam = 1 }) =>
         fetchMessagesFromServer(roomId, pageParam, 20),
       getNextPageParam: (lastPage) =>
@@ -89,12 +89,12 @@ export const useChatQuery = () => {
         // Flatten all messages from all pages
         messages: data.pages.flatMap((page) => page.messages),
       }),
-    });
-  };
+    })
+  }
 
   // Send message mutation with optimistic update
   const useSendMessage = (currentUserId: string, participantId: string) => {
-    const tempId = crypto.randomUUID();
+    const tempId = crypto.randomUUID()
     return useMutation({
       mutationFn: async (data: SendMessageData) => {
         const optimisticMessage: IOptimisticMessage = {
@@ -106,15 +106,15 @@ export const useChatQuery = () => {
           timestamp: new Date().toISOString(),
           isRead: false,
           reactions: [],
-          roomId: "",
-          status: "sending",
+          roomId: '',
+          status: 'sending',
           readBy: [currentUserId],
-        };
+        }
 
-        emitWithQueue("message:send", {
+        emitWithQueue('message:send', {
           msg: optimisticMessage,
           tempId,
-        });
+        })
 
         // // Emit via Socket.io
         // socketState?.emit("message:send", {
@@ -122,18 +122,18 @@ export const useChatQuery = () => {
         //   tempId,
         // });
 
-        return { optimisticMessage, tempId };
+        return { optimisticMessage, tempId }
       },
       onMutate: async (data) => {
         // Cancel outgoing refetches
         await queryClient.cancelQueries({
           queryKey: chatKeys.messages(participantId),
-        });
+        })
 
         // Snapshot previous value
         const previousData = queryClient.getQueryData(
-          chatKeys.messages(participantId)
-        );
+          chatKeys.messages(participantId),
+        )
 
         // Create optimistic message
         const optimisticMessage: IOptimisticMessage = {
@@ -145,16 +145,16 @@ export const useChatQuery = () => {
           timestamp: new Date().toISOString(),
           isRead: false,
           reactions: [],
-          roomId: "general",
-          status: "sending",
+          roomId: 'general',
+          status: 'sending',
           readBy: [currentUserId],
-        };
+        }
 
         // Optimistically update cache for infinite query
         queryClient.setQueryData(
           chatKeys.messages(participantId),
           (old: any) => {
-            if (!old) return old;
+            if (!old) return old
             return {
               ...old,
               pages: old.pages.map(
@@ -164,19 +164,19 @@ export const useChatQuery = () => {
                         ...page,
                         messages: [...page.messages, optimisticMessage],
                       }
-                    : page
+                    : page,
               ),
-            };
-          }
-        );
+            }
+          },
+        )
 
         // Update conversations cache
         queryClient.setQueryData<IConversation[]>(
           chatKeys.conversations(),
           (old = []) => {
             const existingConv = old.find(
-              (c) => c.participantId === participantId
-            );
+              (c) => c.participantId === participantId,
+            )
             if (existingConv) {
               return old.map((conv) =>
                 conv.participantId === participantId
@@ -184,8 +184,8 @@ export const useChatQuery = () => {
                       ...conv,
                       messages: [...conv.messages, optimisticMessage],
                     }
-                  : conv
-              );
+                  : conv,
+              )
             }
             return [
               ...old,
@@ -195,24 +195,24 @@ export const useChatQuery = () => {
                 messages: [optimisticMessage],
                 unreadCount: 0,
               },
-            ];
-          }
-        );
+            ]
+          },
+        )
 
-        return { previousData, tempId };
+        return { previousData, tempId }
       },
       onError: (err, variables, context) => {
         // Rollback on error
         if (context?.previousData) {
           queryClient.setQueryData(
             chatKeys.messages(participantId),
-            context.previousData
-          );
+            context.previousData,
+          )
         }
-        console.error("Failed to send message:", err);
+        console.error('Failed to send message:', err)
       },
-    });
-  };
+    })
+  }
 
   // Update message status mutation
   const useUpdateMessageStatus = (participantId: string) => {
@@ -222,69 +222,69 @@ export const useChatQuery = () => {
         tempId,
         isRead,
       }: {
-        serverId?: string;
-        tempId?: string;
-        isRead?: boolean;
-        readBy?: string[];
-        case: "read" | "readAll" | "msgStatus" | "reaction";
-        reactions?: IReaction[];
+        serverId?: string
+        tempId?: string
+        isRead?: boolean
+        readBy?: string[]
+        case: 'read' | 'readAll' | 'msgStatus' | 'reaction'
+        reactions?: IReaction[]
       }) => {
-        return { tempId, serverId, isRead };
+        return { tempId, serverId, isRead }
       },
       onMutate: async ({
         case: case_,
-        serverId = "",
-        tempId = "",
+        serverId = '',
+        tempId = '',
         isRead = false,
         readBy = [],
         reactions = [],
       }) => {
         await queryClient.cancelQueries({
           queryKey: chatKeys.messages(participantId),
-        });
+        })
 
         queryClient.setQueryData(
           chatKeys.messages(participantId),
           (old: any) => {
-            if (!old) return old;
+            if (!old) return old
             return {
               ...old,
               pages: old.pages.map((page: MessageHistoryResponse) => ({
                 ...page,
                 messages: page.messages.map((msg) => {
-                  const optMsg = msg as IOptimisticMessage;
-                  if (case_ === "read" && isRead) {
+                  const optMsg = msg as IOptimisticMessage
+                  if (case_ === 'read' && isRead) {
                     return {
                       ...msg,
                       readBy: [...msg.readBy, ...readBy],
-                    };
+                    }
                   } else if (
-                    (case_ === "msgStatus" && optMsg.tempId === tempId) ||
+                    (case_ === 'msgStatus' && optMsg.tempId === tempId) ||
                     optMsg.id === tempId
                   ) {
                     return {
                       ...msg,
                       id: serverId,
-                      status: "sent",
-                    };
-                  } else if (case_ === "readAll") {
+                      status: 'sent',
+                    }
+                  } else if (case_ === 'readAll') {
                     return {
                       ...msg,
                       readBy: [...msg.readBy, ...readBy],
-                    };
-                  } else if (case_ === "reaction" && optMsg.id === serverId) {
+                    }
+                  } else if (case_ === 'reaction' && optMsg.id === serverId) {
                     return {
                       ...msg,
                       id: serverId,
                       reactions: reactions,
-                    };
+                    }
                   }
-                  return msg;
+                  return msg
                 }),
               })),
-            };
-          }
-        );
+            }
+          },
+        )
 
         // Update in conversations cache too
         queryClient.setQueryData<IConversation[]>(
@@ -295,22 +295,22 @@ export const useChatQuery = () => {
                 ? {
                     ...conv,
                     messages: conv.messages.map((msg) => {
-                      const optMsg = msg as IOptimisticMessage;
+                      const optMsg = msg as IOptimisticMessage
                       if (optMsg.tempId === tempId) {
                         return {
                           ...msg,
                           id: serverId,
-                        };
+                        }
                       }
-                      return msg;
+                      return msg
                     }),
                   }
-                : conv
-            )
-        );
+                : conv,
+            ),
+        )
       },
-    });
-  };
+    })
+  }
 
   // Add received message mutation
   const useAddReceivedMessage = () => {
@@ -318,21 +318,21 @@ export const useChatQuery = () => {
       mutationFn: async (message: IMessage) => message,
       onSuccess: (message) => {
         // Determine which conversation this belongs to
-        const participantId = message.senderId;
+        const participantId = message.senderId
 
         // Update infinite query cache
         queryClient.setQueryData(
           chatKeys.messages(participantId),
           (old: any) => {
-            if (!old) return old;
+            if (!old) return old
 
             // Check if message already exists
             const messageExists = old.pages.some(
               (page: MessageHistoryResponse) =>
-                page.messages.some((m) => m.id === message.id)
-            );
+                page.messages.some((m) => m.id === message.id),
+            )
 
-            if (messageExists) return old;
+            if (messageExists) return old
 
             return {
               ...old,
@@ -343,19 +343,19 @@ export const useChatQuery = () => {
                         ...page,
                         messages: [...page.messages, message],
                       }
-                    : page
+                    : page,
               ),
-            };
-          }
-        );
+            }
+          },
+        )
 
         // Update conversations cache
         queryClient.setQueryData<IConversation[]>(
           chatKeys.conversations(),
           (old = []) => {
             const existingConv = old.find(
-              (c) => c.participantId === participantId
-            );
+              (c) => c.participantId === participantId,
+            )
             if (existingConv) {
               return old.map((conv) =>
                 conv.participantId === participantId
@@ -367,8 +367,8 @@ export const useChatQuery = () => {
                       ],
                       unreadCount: conv.unreadCount + 1,
                     }
-                  : conv
-              );
+                  : conv,
+              )
             }
             return [
               ...old,
@@ -378,12 +378,12 @@ export const useChatQuery = () => {
                 messages: [message],
                 unreadCount: 1,
               },
-            ];
-          }
-        );
+            ]
+          },
+        )
       },
-    });
-  };
+    })
+  }
 
   // React to message mutation - FIXED to prevent infinite fetching
   const useReactToMessage = (participantId: string, currentUserId: string) => {
@@ -393,47 +393,47 @@ export const useChatQuery = () => {
         emoji,
         type,
       }: {
-        messageId: string;
-        emoji: string;
-        type: TReactionType;
+        messageId: string
+        emoji: string
+        type: TReactionType
       }) => {
         // Emit Message reaction
-        emitWithQueue?.("message:reaction", {
+        emitWithQueue?.('message:reaction', {
           emoji,
           messageId,
           type,
-        });
-        return { messageId, emoji, type };
+        })
+        return { messageId, emoji, type }
       },
 
       onMutate: async ({ messageId, emoji, type }) => {
         await queryClient.cancelQueries({
           queryKey: chatKeys.messages(participantId),
-        });
+        })
 
         const previousData = queryClient.getQueryData(
-          chatKeys.messages(participantId)
-        );
+          chatKeys.messages(participantId),
+        )
 
         queryClient.setQueryData(
           chatKeys.messages(participantId),
           (old: any) => {
-            if (!old) return old;
+            if (!old) return old
 
             return {
               ...old,
               pages: old.pages.map((page: MessageHistoryResponse) => ({
                 ...page,
                 messages: page.messages.map((msg) => {
-                  if (msg.id !== messageId) return msg;
+                  if (msg.id !== messageId) return msg
 
                   // ADD reaction
-                  if (type === "add") {
+                  if (type === 'add') {
                     const alreadyExists = msg.reactions.some(
-                      (r) => r.userId === currentUserId && r.emoji === emoji
-                    );
+                      (r) => r.userId === currentUserId && r.emoji === emoji,
+                    )
 
-                    if (alreadyExists) return msg;
+                    if (alreadyExists) return msg
 
                     return {
                       ...msg,
@@ -442,48 +442,48 @@ export const useChatQuery = () => {
                         {
                           emoji,
                           userId: currentUserId,
-                          userName: "You",
+                          userName: 'You',
                         },
                       ],
-                    };
+                    }
                   }
 
                   // REMOVE reaction
-                  if (type === "remove") {
+                  if (type === 'remove') {
                     return {
                       ...msg,
                       reactions: msg.reactions.filter(
                         (r) =>
-                          !(r.userId === currentUserId && r.emoji === emoji)
+                          !(r.userId === currentUserId && r.emoji === emoji),
                       ),
-                    };
+                    }
                   }
 
-                  return msg;
+                  return msg
                 }),
               })),
               pageParams: old.pageParams,
-            };
-          }
-        );
+            }
+          },
+        )
 
-        return { previousData };
+        return { previousData }
       },
 
       onError: (_err, _variables, context) => {
         if (context?.previousData) {
           queryClient.setQueryData(
             chatKeys.messages(participantId),
-            context.previousData
-          );
+            context.previousData,
+          )
         }
       },
 
       onSettled: () => {
         // Intentionally no refetch
       },
-    });
-  };
+    })
+  }
 
   return {
     useConversationMessages,
@@ -491,5 +491,5 @@ export const useChatQuery = () => {
     useUpdateMessageStatus,
     useAddReceivedMessage,
     useReactToMessage,
-  };
-};
+  }
+}

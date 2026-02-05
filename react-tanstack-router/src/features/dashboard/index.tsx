@@ -4,13 +4,25 @@ import PrimaryHeader from '@/components/layouts/authenticated/primary-header'
 function DashboardPage() {
   return (
     <Main>
-      <PrimaryHeader title="Dashboard" description="My Nigga" />
-      <section className="my-20 h-50 bg-white"> Some Content</section>
-      <section className="my-20 h-50 bg-white"> Some Content</section>
-      <section className="my-20 h-50 bg-white"> Some Content</section>
-      <section className="my-20 h-50 bg-white"> Some Content</section>
-      <section className="my-20 h-50 bg-white"> Some Content</section>
-      <section className="my-20 h-50 bg-white"> Some Content</section>
+      <PrimaryHeader title="Dashboard" description="Brrrr" />
+      <section className="bg-background-secondary my-20 h-50 rounded-xl border p-6 shadow-xs">
+        Some Content
+      </section>{' '}
+      <section className="bg-background-secondary my-20 h-50 rounded-xl border p-6 shadow-xs">
+        Some Content
+      </section>{' '}
+      <section className="bg-background-secondary my-20 h-50 rounded-xl border p-6 shadow-xs">
+        Some Content
+      </section>{' '}
+      <section className="bg-background-secondary my-20 h-50 rounded-xl border p-6 shadow-xs">
+        Some Content
+      </section>{' '}
+      <section className="bg-background-secondary my-20 h-50 rounded-xl border p-6 shadow-xs">
+        Some Content
+      </section>{' '}
+      <section className="bg-background-secondary my-20 h-50 rounded-xl border p-6 shadow-xs">
+        Some Content
+      </section>
     </Main>
   )
 }

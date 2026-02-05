@@ -1,20 +1,18 @@
-"use client";
-
-import { cn } from "@/lib/utils";
-import { useChatContext } from "../_shared/chat-provider";
-import { ChatArea } from "./chat-area";
+import { cn } from '@/lib/utils'
+import { useChatContext } from '../shared/chat-provider'
+import { ChatArea } from './chat-area'
 
 function ChatContainer() {
   const { selectedUser, socketState, currentUser, socketError, emitWithQueue } =
-    useChatContext();
+    useChatContext()
 
   if (!selectedUser) {
     return (
-      <div className={cn("flex-1 min-w-0")}>
-        <div className="flex h-full flex-col items-center justify-center bg-background">
+      <div className={cn('min-w-0 flex-1')}>
+        <div className="bg-background flex h-full flex-col items-center justify-center">
           <div className="text-center">
             <div className="mb-4 text-6xl">💬</div>
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="text-foreground text-xl font-semibold">
               Select a conversation
             </h2>
             <p className="text-muted-foreground">
@@ -23,25 +21,25 @@ function ChatContainer() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   if (!socketState)
     return (
-      <div className={cn("flex-1 min-w-0")}>
-        <div className="flex h-full flex-col items-center justify-center bg-background">
+      <div className={cn('min-w-0 flex-1')}>
+        <div className="bg-background flex h-full flex-col items-center justify-center">
           <div className="text-center">
             <div className="mb-4 text-6xl">💬</div>
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="text-foreground text-xl font-semibold">
               Therre was an Error connecting to the socket
             </h2>
             <p className="text-muted-foreground">
-              {socketError || "Please refresh the page and try again."}
+              {socketError || 'Please refresh the page and try again.'}
             </p>
           </div>
         </div>
       </div>
-    );
+    )
 
   return (
     <ChatArea
@@ -50,7 +48,7 @@ function ChatContainer() {
       currentUser={currentUser}
       emitWithQueue={emitWithQueue}
     />
-  );
+  )
 }
 
-export default ChatContainer;
+export default ChatContainer

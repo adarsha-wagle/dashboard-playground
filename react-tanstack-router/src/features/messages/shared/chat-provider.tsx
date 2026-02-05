@@ -1,63 +1,61 @@
-"use client";
-
 import {
   createContext,
   useContext,
   useState,
-  ReactNode,
+  type ReactNode,
   useEffect,
-} from "react";
-import { Socket } from "socket.io-client";
-import { IUser } from "./chat-type";
+} from 'react'
+import { Socket } from 'socket.io-client'
+import { type IUser } from './chat-type'
 import {
-  IClientToServerEvents,
-  IServerToClientEvents,
+  type IClientToServerEvents,
+  type IServerToClientEvents,
   useSocketIO,
-} from "@/hooks/use-socketio";
-import { useLocalStorage } from "@/hooks/use-localstorage";
+} from '@/hooks/use-socketio'
+import { useLocalStorage } from '@/hooks/use-localstorage'
 
 interface IChatContext {
-  selectedUser: IUser | null;
-  setSelectedUser: (userId: IUser | null) => void;
-  setIsSidebarOpen: (value: boolean) => void;
-  isSidebarOpen: boolean;
-  socketState: Socket<IServerToClientEvents, IClientToServerEvents> | null;
-  currentUser: IUser;
-  setCurrentUser: (user: IUser) => void;
-  socketError: string | null;
+  selectedUser: IUser | null
+  setSelectedUser: (userId: IUser | null) => void
+  setIsSidebarOpen: (value: boolean) => void
+  isSidebarOpen: boolean
+  socketState: Socket<IServerToClientEvents, IClientToServerEvents> | null
+  currentUser: IUser
+  setCurrentUser: (user: IUser) => void
+  socketError: string | null
   emitWithQueue: <K extends keyof IClientToServerEvents>(
     event: K,
-    data: Parameters<IClientToServerEvents[K]>[0]
-  ) => void;
+    data: Parameters<IClientToServerEvents[K]>[0],
+  ) => void
 }
 
-const ChatContext = createContext<IChatContext | undefined>(undefined);
+const ChatContext = createContext<IChatContext | undefined>(undefined)
 
 interface TChatProviderProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 // 4. Create typed provider
 export function ChatProvider({ children }: TChatProviderProps) {
-  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
-  const { getItem } = useLocalStorage("userInfo");
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
+  const { getItem } = useLocalStorage('userInfo')
   const [currentUser, setCurrentUser] = useState<IUser>({
-    avatar: getItem()?.avatar || "",
-    id: getItem()?.id || "",
-    name: getItem()?.name || "",
-    status: "online",
-    roomId: "general",
-  });
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
-  const { socket, isConnected, error, emitWithQueue } = useSocketIO();
+    avatar: getItem()?.avatar || '',
+    id: getItem()?.id || '',
+    name: getItem()?.name || '',
+    status: 'online',
+    roomId: 'general',
+  })
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
+  const { socket, isConnected, error, emitWithQueue } = useSocketIO()
 
   useEffect(() => {
-    if (!socket || !isConnected) return;
+    if (!socket || !isConnected) return
 
-    socket.emit("user:join", {
+    socket.emit('user:join', {
       user: currentUser,
-    });
-  }, [socket, isConnected]);
+    })
+  }, [socket, isConnected])
 
   return (
     <ChatContext.Provider
@@ -75,13 +73,13 @@ export function ChatProvider({ children }: TChatProviderProps) {
     >
       {children}
     </ChatContext.Provider>
-  );
+  )
 }
 
 export function useChatContext(): IChatContext {
-  const context = useContext(ChatContext);
+  const context = useContext(ChatContext)
   if (context === undefined) {
-    throw new Error("useChatContext must be used within ChatProvider");
+    throw new Error('useChatContext must be used within ChatProvider')
   }
-  return context;
+  return context
 }

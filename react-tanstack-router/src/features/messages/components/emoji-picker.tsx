@@ -1,27 +1,25 @@
-"use client";
-
-import { useState } from "react";
-import { Smile } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState } from 'react'
+import { Smile } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { emojiCategories } from "../_shared/data";
+} from '@/components/ui/popover'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { emojiCategories } from '../shared/data'
 
 interface EmojiPickerProps {
-  onEmojiSelect: (emoji: string) => void;
+  onEmojiSelect: (emoji: string) => void
 }
 
 export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
   const handleSelect = (emoji: string) => {
-    onEmojiSelect(emoji);
-    setOpen(false);
-  };
+    onEmojiSelect(emoji)
+    setOpen(false)
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -29,7 +27,7 @@ export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="h-9 w-9 text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground h-9 w-9"
         >
           <Smile className="h-5 w-5" />
         </Button>
@@ -60,7 +58,7 @@ export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
                   <button
                     key={`${emoji}-${index}`}
                     onClick={() => handleSelect(emoji)}
-                    className="flex h-8 w-8 items-center justify-center rounded hover:bg-accent text-lg transition-transform hover:scale-110"
+                    className="hover:bg-accent flex h-8 w-8 items-center justify-center rounded text-lg transition-transform hover:scale-110"
                   >
                     {emoji}
                   </button>
@@ -71,5 +69,5 @@ export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
         </Tabs>
       </PopoverContent>
     </Popover>
-  );
+  )
 }

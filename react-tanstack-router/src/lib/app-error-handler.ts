@@ -107,7 +107,7 @@ export class AppErrorHandler {
     return error.code === EErrorCode.VALIDATION
   }
 
-  static isAuthError(error: AppError): boolean {
+  static isRefreshError(error: AppError): boolean {
     return error.code === EErrorCode.AUTHENTICATION || error.statusCode === 401
   }
 

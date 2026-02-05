@@ -51,7 +51,7 @@ export const queryClient = new QueryClient({
       const appError = AppErrorHandler.handleApiError(
         error as AxiosError<IApiErrorResponse>,
       )
-      if (AppErrorHandler.isAuthError(appError)) {
+      if (AppErrorHandler.isRefreshError(appError)) {
         handleAuthError()
       } else {
         toast.error(appError.message)
@@ -75,7 +75,7 @@ export const queryClient = new QueryClient({
         error as AxiosError<IApiErrorResponse>,
       )
 
-      if (AppErrorHandler.isAuthError(appError)) {
+      if (AppErrorHandler.isRefreshError(appError)) {
         handleAuthError()
         toast.error(appError.message)
       } else {
@@ -89,7 +89,7 @@ export const queryClient = new QueryClient({
 function handleAuthError(): void {
   resetAuth({
     isRefreshing: false,
-    isAuthError: true,
+    isRefreshError: true,
     isPreviousLoggedIn: false,
   })
 }

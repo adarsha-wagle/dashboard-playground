@@ -11,7 +11,7 @@ export const Route = createFileRoute('/_authenticated')({
   beforeLoad: async () => {
     const authStore = useAuthStore.getState()
 
-    if (authStore.isAuthError || !authStore.isPreviousLoggedIn) {
+    if (authStore.isRefreshError || !authStore.isPreviousLoggedIn) {
       redirect({
         to: '/auth/login',
         throw: true,
@@ -36,10 +36,10 @@ export const Route = createFileRoute('/_authenticated')({
 })
 
 function AuthenticatedRouteLayout() {
-  const { isAuthError } = useAuthStore()
+  const { isRefreshError } = useAuthStore()
 
   // If there is refresh Error (refresh token deleted/expired) then show this error or you can create a custom error page
-  if (isAuthError) {
+  if (isRefreshError) {
     return (
       <div>
         Oops it looks like your token just expired. Please

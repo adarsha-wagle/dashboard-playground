@@ -1,28 +1,26 @@
-"use client";
+import { Menu } from 'lucide-react'
 
-import { Menu } from "lucide-react";
+import { Avatar } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { getTimeAgo } from '@/lib/utils'
 
-import { Avatar } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getTimeAgo } from "@/lib/utils";
-
-import { IUser } from "../_shared/chat-type";
-import { useChatContext } from "../_shared/chat-provider";
+import { type IUser } from '../shared/chat-type'
+import { useChatContext } from '../shared/chat-provider'
 
 type TChatHeaderProps = {
-  selectedUser: IUser;
-};
+  selectedUser: IUser
+}
 
 function ChatHeader({ selectedUser }: TChatHeaderProps) {
-  const { setIsSidebarOpen, isSidebarOpen } = useChatContext();
+  const { setIsSidebarOpen, isSidebarOpen } = useChatContext()
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+    setIsSidebarOpen(!isSidebarOpen)
+  }
 
   return (
-    <div className="flex items-center gap-3 border-b border-border px-4 py-3">
+    <div className="border-border flex items-center gap-3 border-b px-4 py-3">
       {/* Sidebar Toggle Button for desktop */}
 
       <Button
@@ -38,18 +36,18 @@ function ChatHeader({ selectedUser }: TChatHeaderProps) {
         <AvatarImage src={selectedUser.avatar} alt={selectedUser.name} />
         <AvatarFallback>{selectedUser.name.charAt(0)}</AvatarFallback>
       </Avatar>
-      <div className="flex-1 min-w-0">
-        <h2 className="font-semibold text-foreground truncate">
+      <div className="min-w-0 flex-1">
+        <h2 className="text-foreground truncate font-semibold">
           {selectedUser.name}
         </h2>
-        <p className="text-sm text-muted-foreground">
-          {selectedUser.status === "online"
-            ? "Online"
-            : `Last seen ${getTimeAgo(selectedUser?.lastSeen || "")}`}
+        <p className="text-muted-foreground text-sm">
+          {selectedUser.status === 'online'
+            ? 'Online'
+            : `Last seen ${getTimeAgo(selectedUser?.lastSeen || '')}`}
         </p>
       </div>
     </div>
-  );
+  )
 }
 
-export { ChatHeader };
+export { ChatHeader }

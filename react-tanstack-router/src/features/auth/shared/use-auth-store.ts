@@ -9,7 +9,7 @@ type TAccessToken = string | null
 
 type TAuthActions = {
   setUser: (user: IUser | null) => void
-  setIsAuthLoading: (isRefreshing: boolean) => void
+  setIsRefreshing: (isRefreshing: boolean) => void
   setIsAuthenticated: (isAuthenticated: boolean) => void
   setAccessToken: (token: TAccessToken | null) => void
   resetAuth: (param?: Partial<TAuthState>) => void
@@ -22,7 +22,7 @@ type TAuthState = {
   user: IUser | null
   isAuthenticated: boolean
   accessToken: TAccessToken | null
-  isAuthError: boolean
+  isRefreshError: boolean
   isPreviousLoggedIn: boolean
 }
 
@@ -32,8 +32,8 @@ const initAuthState: TAuthState = {
   user: null,
   isAuthenticated: false,
   accessToken: null,
-  isRefreshing: false,
-  isAuthError: false,
+  isRefreshing: true,
+  isRefreshError: false,
   isPreviousLoggedIn: false,
 }
 
@@ -43,7 +43,7 @@ export const useAuthStore = create<TAuthStore>()(
       ...initAuthState,
 
       setUser: (user) => set({ user }),
-      setIsAuthLoading: (isRefreshing) => set({ isRefreshing }),
+      setIsRefreshing: (isRefreshing) => set({ isRefreshing }),
       setIsAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
       setAccessToken: (token) => set({ accessToken: token }),
       setIsPreviousLoggedIn: (status) => set({ isPreviousLoggedIn: status }),
@@ -63,7 +63,7 @@ export const useAuthStore = create<TAuthStore>()(
             accessToken,
             isAuthenticated: true,
             isRefreshing: false,
-            isAuthError: false,
+            isRefreshError: false,
             isPreviousLoggedIn: true,
           })
 
@@ -74,7 +74,7 @@ export const useAuthStore = create<TAuthStore>()(
           set({
             ...initAuthState,
             isRefreshing: false,
-            isAuthError: true,
+            isRefreshError: true,
           })
           return false
         }

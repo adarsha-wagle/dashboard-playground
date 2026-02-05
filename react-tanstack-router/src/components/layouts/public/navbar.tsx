@@ -6,12 +6,12 @@ const navItems = [
   { label: 'Home', to: '/' },
   { label: 'Blogs', to: '/blogs' },
   { label: 'About', to: '/about' },
-  { label: 'Invoices', to: '/invoices' },
+  { label: 'Dashboard', to: '/dashboard' },
 ]
 
 export default function Navbar() {
   return (
-    <header className="w-full border-b bg-background">
+    <header className="bg-background w-full border-b">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         {/* Logo */}
         <Link to="/" className="text-lg font-semibold tracking-tight">
@@ -25,7 +25,7 @@ export default function Navbar() {
               key={item.to}
               to={item.to}
               className={cn(
-                'text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
+                'text-muted-foreground hover:text-foreground text-sm font-medium transition-colors',
                 '[&.active]:text-foreground [&.active]:font-semibold',
               )}
             >

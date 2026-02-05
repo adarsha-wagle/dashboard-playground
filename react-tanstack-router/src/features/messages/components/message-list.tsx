@@ -1,60 +1,62 @@
-"use client";
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { ArrowDown, Loader2 } from 'lucide-react'
+import { useInView } from 'react-intersection-observer'
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { ArrowDown, Loader2 } from "lucide-react";
-import { useInView } from "react-intersection-observer";
+import { cn, getLocalTime } from '@/lib/utils'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Button } from '@/components/ui/button'
+import { MessageBubble } from './message-bubble'
 
-import { cn, getLocalTime } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { MessageBubble } from "./message-bubble";
-
-import { IMessage, IUser, TReactionType } from "../_shared/chat-type";
-import { useChatQuery } from "../_hooks/use-chat-query";
-import { useMessageScroll } from "../_hooks/use-message-scroll";
+import {
+  type IMessage,
+  type IUser,
+  type TReactionType,
+} from '../shared/chat-type'
+import { useChatQuery } from '../hooks/use-chat-query'
+import { useMessageScroll } from '../hooks/use-message-scroll'
 
 type TMessageListProps = {
-  messages: IMessage[];
-  isLoading?: boolean;
-  hasMore?: boolean;
-  isFetchingMore?: boolean;
-  onLoadMore?: () => void;
-  selectedUser: IUser;
-  currentUser: IUser;
-};
+  messages: IMessage[]
+  isLoading?: boolean
+  hasMore?: boolean
+  isFetchingMore?: boolean
+  onLoadMore?: () => void
+  selectedUser: IUser
+  currentUser: IUser
+}
 
 const shouldShowAvatar = (messages: IMessage[], index: number) => {
-  if (index === 0) return true;
-  const current = messages[index];
-  const previous = messages[index - 1];
-  if (current.senderId !== previous.senderId) return true;
+  if (index === 0) return true
+  const current = messages[index]
+  const previous = messages[index - 1]
+  if (current.senderId !== previous.senderId) return true
   const timeDiff =
     new Date(current.timestamp).getTime() -
-    new Date(previous.timestamp).getTime();
-  return timeDiff > 5 * 60 * 1000;
-};
+    new Date(previous.timestamp).getTime()
+  return timeDiff > 5 * 60 * 1000
+}
 
 const groupMessages = (messages: IMessage[]) => {
-  const groups: { date: string; messages: IMessage[] }[] = [];
-  let currentDate = "";
+  const groups: { date: string; messages: IMessage[] }[] = []
+  let currentDate = ''
 
   const sortedMessages = [...messages].sort(
-    (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-  );
+    (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+  )
 
   sortedMessages.forEach((message) => {
-    const messageDate = getLocalTime(message.timestamp);
+    const messageDate = getLocalTime(message.timestamp)
 
     if (messageDate !== currentDate) {
-      currentDate = messageDate;
-      groups.push({ date: messageDate, messages: [message] });
+      currentDate = messageDate
+      groups.push({ date: messageDate, messages: [message] })
     } else {
-      groups[groups.length - 1].messages.push(message);
+      groups[groups.length - 1].messages.push(message)
     }
-  });
+  })
 
-  return groups;
-};
+  return groups
+}
 
 function MessageList({
   messages,
@@ -65,8 +67,8 @@ function MessageList({
   selectedUser,
   currentUser,
 }: TMessageListProps) {
-  const chatQuery = useChatQuery();
-  const isInitialLoadRef = useRef<boolean>(true);
+  const chatQuery = useChatQuery()
+  const isInitialLoadRef = useRef<boolean>(true)
 
   // Use custom scroll hook
   const {
@@ -75,84 +77,84 @@ function MessageList({
     scrollToBottom,
     showScrollButton,
     handleScroll,
-  } = useMessageScroll({ messages, isFetchingMore });
+  } = useMessageScroll({ messages, isFetchingMore })
 
   const reactToMessageMutation = chatQuery.useReactToMessage(
-    selectedUser?.id || "",
-    currentUser.id
-  );
+    selectedUser?.id || '',
+    currentUser.id,
+  )
 
   // Use react-intersection-observer for infinite scroll
   const { ref: topSentinelRef } = useInView({
     threshold: 0,
-    rootMargin: "100px",
+    rootMargin: '100px',
     onChange: (inView) => {
       if (inView && hasMore && !isFetchingMore && onLoadMore) {
         const scrollContainer = scrollAreaRef.current?.querySelector(
-          "[data-radix-scroll-area-viewport]"
-        ) as HTMLElement;
+          '[data-radix-scroll-area-viewport]',
+        ) as HTMLElement
 
         if (scrollContainer && !isInitialLoadRef.current) {
           // Only trigger if we're actually near the top
-          const isNearTop = scrollContainer.scrollTop < 200;
+          const isNearTop = scrollContainer.scrollTop < 200
           if (isNearTop) {
-            onLoadMore();
+            onLoadMore()
           }
         }
       }
     },
-  });
+  })
 
   const handleReact = useCallback(
     (messageId: string, emoji: string, type: TReactionType) => {
-      reactToMessageMutation.mutate({ messageId, emoji, type });
+      reactToMessageMutation.mutate({ messageId, emoji, type })
     },
-    [reactToMessageMutation]
-  );
+    [reactToMessageMutation],
+  )
 
-  const messageGroups = useMemo(() => groupMessages(messages), [messages]);
+  const messageGroups = useMemo(() => groupMessages(messages), [messages])
 
   useEffect(() => {
     if (isInitialLoadRef.current && messages.length > 0) {
       const timer = setTimeout(() => {
-        isInitialLoadRef.current = false;
-      }, 300);
-      return () => clearTimeout(timer);
+        isInitialLoadRef.current = false
+      }, 300)
+      return () => clearTimeout(timer)
     }
-  }, [messages.length]);
+  }, [messages.length])
 
   if (isLoading && messages.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="flex flex-1 items-center justify-center">
+        <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
       </div>
-    );
+    )
   }
 
   if (messages.length === 0 && !isLoading) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center space-y-2">
-          <div className="text-4xl mb-4">💬</div>
+      <div className="flex flex-1 items-center justify-center">
+        <div className="space-y-2 text-center">
+          <div className="mb-4 text-4xl">💬</div>
           <p className="text-muted-foreground">
             No messages yet. Start the conversation!
           </p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <ScrollArea
       ref={scrollAreaRef}
-      className="flex-1 relative h-[80vh]"
+      className="relative h-[80vh] flex-1"
       onScrollCapture={handleScroll}
     >
       <div className="py-4">
         <div ref={topSentinelRef} className="h-1">
           {isFetchingMore && (
             <div className="flex justify-center py-4">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              <Loader2 className="text-muted-foreground h-6 w-6 animate-spin" />
             </div>
           )}
         </div>
@@ -163,7 +165,7 @@ function MessageList({
               variant="ghost"
               size="sm"
               onClick={onLoadMore}
-              className="text-xs text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground text-xs"
             >
               Load older messages
             </Button>
@@ -173,7 +175,7 @@ function MessageList({
         {messageGroups.map((group, groupIndex) => (
           <div key={`${group.date}-${groupIndex}`}>
             <div className="flex items-center justify-center py-4">
-              <span className="rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground">
+              <span className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs">
                 {group.date}
               </span>
             </div>
@@ -183,21 +185,24 @@ function MessageList({
                 <div
                   key={`${message.id}-${messageIndex}`}
                   className={cn(
-                    "animate-fade-in",
+                    'animate-fade-in',
                     Object.keys(
-                      message.reactions.reduce((acc, r) => {
-                        acc[r.emoji] = true;
-                        return acc;
-                      }, {} as Record<string, boolean>)
-                    ).length > 0 && "mb-4"
+                      message.reactions.reduce(
+                        (acc, r) => {
+                          acc[r.emoji] = true
+                          return acc
+                        },
+                        {} as Record<string, boolean>,
+                      ),
+                    ).length > 0 && 'mb-4',
                   )}
                 >
                   <MessageBubble
                     message={message}
                     isOwn={message.senderId === currentUser.id}
                     showAvatar={shouldShowAvatar(group.messages, messageIndex)}
-                    receiverId={selectedUser?.id || ""}
-                    receieverAvatar={selectedUser?.avatar || ""}
+                    receiverId={selectedUser?.id || ''}
+                    receieverAvatar={selectedUser?.avatar || ''}
                     onReact={handleReact}
                     currentUserId={currentUser.id}
                   />
@@ -211,8 +216,8 @@ function MessageList({
           <Button
             variant="secondary"
             size="icon"
-            className="fixed bottom-24 right-8 h-10 w-10 rounded-full shadow-lg z-50"
-            onClick={() => scrollToBottom("smooth")}
+            className="fixed right-8 bottom-24 z-50 h-10 w-10 rounded-full shadow-lg"
+            onClick={() => scrollToBottom('smooth')}
           >
             <ArrowDown className="h-5 w-5" />
           </Button>
@@ -221,7 +226,7 @@ function MessageList({
         <div ref={bottomRef} />
       </div>
     </ScrollArea>
-  );
+  )
 }
 
-export { MessageList };
+export { MessageList }

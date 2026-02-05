@@ -52,3 +52,40 @@ export const cleanObj = (obj: Record<string, any>) => {
   )
   return _obj
 }
+
+export function getTimeAgo(dateString: string): string {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  const now = new Date()
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+
+  const units: { name: string; seconds: number }[] = [
+    { name: 'year', seconds: 31536000 },
+    { name: 'month', seconds: 2592000 },
+    { name: 'day', seconds: 86400 },
+    { name: 'hour', seconds: 3600 },
+    { name: 'minute', seconds: 60 },
+    { name: 'second', seconds: 1 },
+  ]
+
+  const unit = units.find((ut) => {
+    const elapsed = Math.floor(diffInSeconds / ut.seconds)
+    return elapsed > 0
+  })
+
+  if (unit) {
+    const elapsed = Math.floor(diffInSeconds / unit.seconds)
+    return elapsed === 1 ? `1 ${unit.name} ago` : `${elapsed} ${unit.name}s ago`
+  }
+
+  return 'just now'
+}
+
+export const getLocalTime = (date: string): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  }
+  return new Date(date).toLocaleTimeString('en-US', options)
+}
