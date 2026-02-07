@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogTrigger,
   DialogDescription,
-  DialogFooter,
   DialogClose,
 } from '@/components/ui/dialog'
 import {
@@ -52,7 +51,7 @@ function InvoiceEdit({ invoice }: InvoiceEditProps) {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Edit
           onClick={() => setIsDialogOpen(true)}
           className="cursor-pointer"
@@ -70,14 +69,14 @@ function InvoiceEdit({ invoice }: InvoiceEditProps) {
 
         <InvoiceForm form={form} onSubmit={onSubmit} />
 
-        <DialogFooter>
-          <DialogClose asChild>
+        <div>
+          <DialogClose>
             <Button variant="destructive">Cancel</Button>
           </DialogClose>
           <Button type="submit" disabled={updateInvoiceMutation.isPending}>
             {updateInvoiceMutation.isPending ? 'Updating...' : 'Update Invoice'}
           </Button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   )

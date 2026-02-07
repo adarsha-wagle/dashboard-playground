@@ -1,5 +1,4 @@
 import React, { memo } from 'react'
-import { AnimatePresence } from 'framer-motion'
 import { InvoiceForm } from './invoice-form'
 import {
   DialogContent,
@@ -15,8 +14,8 @@ import { InvoiceSchema, type TInvoiceSchema } from '../shared/invoice-type'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCreateInvoice } from '../shared/invoice-service'
-import { DialogOverlay } from '@radix-ui/react-dialog'
 import { ButtonPrimary } from '@/components/reusables/button-primary'
+import { X } from 'lucide-react'
 
 const defaultValues: TInvoiceSchema = {
   customer: 'test',
@@ -49,51 +48,55 @@ function InvoiceAdd() {
   console.log('Invoice Re-rendering')
 
   return (
-    <AnimatePresence>
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger asChild>
-          <div className="flex justify-end">
-            <ButtonPrimary
-              size="sm"
-              className="text-secondary-lighter rounded-lg"
-            >
-              Create Invoice
-            </ButtonPrimary>
-          </div>
-        </DialogTrigger>
+    <Dialog
+      open={isDialogOpen}
+      onOpenChange={setIsDialogOpen}
+      animation="morph"
+      morphing
+    >
+      <DialogTrigger>
+        <ButtonPrimary
+          size="sm"
+          className="text-secondary-lighter rounded-lg"
+          onClick={() => setIsDialogOpen(true)}
+        >
+          Create Invoice
+        </ButtonPrimary>
+      </DialogTrigger>
 
-        <DialogContent className="w-full max-w-3xl!">
-          <DialogOverlay />
-          <DialogHeader>
-            <DialogTitle>Create Invoice</DialogTitle>
-            <DialogDescription>
-              Fill in invoice details and add line items.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid grid-cols-2 gap-6">
-            <InvoiceForm onSubmit={onSubmit} form={form} />
-            {/* Footer */}
-            <DialogFooter>
-              <DialogClose asChild>
-                <ButtonPrimary
-                  type="submit"
-                  loadingText="Creating..."
-                  variant="destructive"
-                  className="bg-error-main"
-                ></ButtonPrimary>
-              </DialogClose>
-              <ButtonPrimary
-                type="submit"
-                isLoading={invoiceMutation.isPending}
-                loadingText="Creating..."
-              >
-                Create
-              </ButtonPrimary>
-            </DialogFooter>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </AnimatePresence>
+      <DialogContent className="w-full max-w-3xl">
+        <DialogClose>
+          <X />
+        </DialogClose>
+        <DialogHeader className="px-0">
+          <DialogTitle>Create Invoice</DialogTitle>
+          <DialogDescription>
+            Fill in invoice details and add line items.
+          </DialogDescription>
+        </DialogHeader>
+        <InvoiceForm onSubmit={onSubmit} form={form} />
+        {/* Footer */}
+        <DialogFooter className="items-start pb-0">
+          <ButtonPrimary
+            type="submit"
+            loadingText="Creating..."
+            variant="destructive"
+            className="bg-error-main px-6"
+            onClick={() => setIsDialogOpen(false)}
+          >
+            Close
+          </ButtonPrimary>
+          <ButtonPrimary
+            type="submit"
+            className="px-8"
+            isLoading={invoiceMutation.isPending}
+            loadingText="Creating..."
+          >
+            Create
+          </ButtonPrimary>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }
 

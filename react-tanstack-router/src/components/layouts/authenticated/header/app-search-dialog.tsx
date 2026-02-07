@@ -1,12 +1,23 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { useEffect, useMemo, useState } from 'react'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import type { ITreeNode } from '../sidebar/types'
 import { navigationData } from '@/config/sidebar'
-import { ArrowRight, ChevronDown, Search } from 'lucide-react'
-import { Input } from '@/components/ui/input'
+import { ArrowRight, ChevronDown, Search, X } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from '@/components/ui/input-group'
+import { Kbd } from '@/components/ui/kbd'
+import { useRouter } from '@tanstack/react-router'
 
 interface SearchResult {
   id: string
@@ -44,15 +55,12 @@ const flattenNavigationData = (
   return results
 }
 
-export const AppSearchDialog = ({
-  open,
-  onOpenChange,
-}: {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}) => {
+export const AppSearchDialog = () => {
   const [searchQuery, setSearchQuery] = useState('')
+  const [open, setOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(0)
+
+  const router = useRouter()
 
   const allPages = useMemo(() => flattenNavigationData(navigationData), [])
 
@@ -68,15 +76,16 @@ export const AppSearchDialog = ({
   }, [searchQuery, allPages])
 
   useEffect(() => {
-    setSelectedIndex(0)
-  }, [searchQuery])
-
-  useEffect(() => {
     if (!open) {
       setSearchQuery('')
       setSelectedIndex(0)
     }
   }, [open])
+
+  const handleResultClick = (result: SearchResult) => {
+    setOpen(false)
+    router.navigate({ to: result.to })
+  }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
@@ -92,14 +101,23 @@ export const AppSearchDialog = ({
     }
   }
 
-  const handleResultClick = (result: SearchResult) => {
-    console.log('Navigate to:', result.to)
-    onOpenChange(false)
-  }
-
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl gap-0 overflow-hidden p-0">
+    <Dialog open={open} onOpenChange={setOpen} morphing animation="morph">
+      <DialogTrigger asChild>
+        <InputGroup
+          className="form-input w-full max-w-md shadow-xs"
+          onClick={() => setOpen(true)}
+        >
+          <InputGroupInput placeholder="Search Anything" />
+          <InputGroupAddon>
+            <Search />
+          </InputGroupAddon>
+          <InputGroupAddon align="inline-end">
+            <Kbd />
+          </InputGroupAddon>
+        </InputGroup>
+      </DialogTrigger>
+      <DialogContent className="w-full max-w-xl">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -107,21 +125,23 @@ export const AppSearchDialog = ({
           transition={{ duration: 0.2 }}
         >
           <div className="flex items-center border-b px-4 py-3">
-            <Search className="text-muted-foreground mr-3 h-5 w-5" />
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Search pages, components, analytics..."
-              className="border-0 text-base focus-visible:ring-0 focus-visible:ring-offset-0"
-              autoFocus
-            />
-            <kbd className="bg-muted text-muted-foreground ml-2 hidden h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium select-none sm:inline-flex">
-              ESC
-            </kbd>
+            <InputGroup className="form-input w-full">
+              <InputGroupInput
+                placeholder="Search Anything"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+              <InputGroupAddon>
+                <Search />
+              </InputGroupAddon>
+              <InputGroupAddon align="inline-end">
+                <Kbd />
+              </InputGroupAddon>
+            </InputGroup>
           </div>
 
-          <div className="max-h-[400px] overflow-y-auto p-2">
+          <div className="scrollbar-thin max-h-100 overflow-x-hidden overflow-y-auto p-2">
             {filteredResults.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -158,13 +178,13 @@ export const AppSearchDialog = ({
                         {Icon && (
                           <div
                             className={cn(
-                              'flex h-9 w-9 items-center justify-center rounded-md transition-colors',
+                              'flex size-8 items-center justify-center rounded-md transition-colors',
                               selectedIndex === index
                                 ? 'bg-primary/10 text-primary'
                                 : 'bg-muted text-muted-foreground',
                             )}
                           >
-                            <Icon className="h-4 w-4" />
+                            <Icon className="size-4" />
                           </div>
                         )}
                         <div className="min-w-0 flex-1">
@@ -186,7 +206,7 @@ export const AppSearchDialog = ({
                               <React.Fragment key={idx}>
                                 <span>{pathItem}</span>
                                 {idx < result.path.length - 2 && (
-                                  <ChevronDown className="h-3 w-3 rotate-[-90deg]" />
+                                  <ChevronDown className="h-3 w-3 -rotate-90" />
                                 )}
                               </React.Fragment>
                             ))}
@@ -209,27 +229,10 @@ export const AppSearchDialog = ({
               </div>
             )}
           </div>
-
-          <div className="bg-muted/50 border-t px-4 py-2">
-            <div className="text-muted-foreground flex items-center justify-between text-xs">
-              <div className="flex items-center gap-4">
-                <span className="flex items-center gap-1">
-                  <kbd className="bg-background inline-flex h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] select-none">
-                    ↑↓
-                  </kbd>
-                  Navigate
-                </span>
-                <span className="flex items-center gap-1">
-                  <kbd className="bg-background inline-flex h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] select-none">
-                    ↵
-                  </kbd>
-                  Select
-                </span>
-              </div>
-              <span>{filteredResults.length} results</span>
-            </div>
-          </div>
         </motion.div>
+        <DialogClose>
+          <X className="size-5" />
+        </DialogClose>
       </DialogContent>
     </Dialog>
   )

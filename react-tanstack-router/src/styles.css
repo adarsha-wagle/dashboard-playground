@@ -1,4 +1,7 @@
 @import 'tailwindcss';
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
   /* ===== TRANSITIONS ===== */
@@ -440,4 +443,13 @@ body {
 
 .reactjs-tiptap-editor .ProseMirror.ProseMirror.ProseMirror {
   outline: none;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

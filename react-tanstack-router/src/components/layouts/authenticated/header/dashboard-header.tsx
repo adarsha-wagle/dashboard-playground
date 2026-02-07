@@ -1,4 +1,3 @@
-import React from 'react'
 import { motion } from 'framer-motion'
 import { Search, Bell, Settings, HelpCircle, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -12,13 +11,9 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from '@/components/ui/input-group'
-import { Kbd } from '@/components/ui/kbd'
+
 import SecondaryHeader from '../secondary-header'
+import { AppSearchDialog } from './app-search-dialog'
 
 export const DashboardHeader = () => {
   return (
@@ -30,25 +25,7 @@ export const DashboardHeader = () => {
 
       {/* Center section - Search */}
       <div className="hidden flex-1 justify-center px-8 md:flex">
-        <InputGroup className="w-full max-w-md">
-          <InputGroupInput placeholder="Search Anything" />
-          <InputGroupAddon>
-            <Search />
-          </InputGroupAddon>
-          <InputGroupAddon align="inline-end">
-            <Kbd />
-          </InputGroupAddon>
-        </InputGroup>
-        {/* <motion.div
-          className="relative w-full max-w-md"
-          whileFocus={{ scale: 1.02 }}
-        >
-          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-          <Input type="text" placeholder="Search anything..." />
-          <kbd className="border-border bg-muted text-muted-foreground pointer-events-none absolute top-1/2 right-3 hidden -translate-y-1/2 rounded border px-1.5 py-0.5 text-[10px] font-medium select-none sm:inline-block">
-            ⌘K
-          </kbd>
-        </motion.div> */}
+        <AppSearchDialog />
       </div>
 
       {/* Right section - Actions */}
